@@ -45,8 +45,8 @@
                             <?php foreach ($pengampu_list as $pengampu): ?>
                             <tr>
                                 <td><?= $no++; ?></td>
-                                <td><?= $pengampu['nama']; ?></td>
-                                <td><?= $pengampu['nama']; ?></td>
+                                <td><?= $pengampu['matakuliah']; ?></td>
+                                <td><?= $pengampu['dosen']; ?></td>
                                 <td><?= $pengampu['kelas']; ?></td>
                                 <td><?= $pengampu['tahun']; ?></td>
                                 <td><?= $pengampu['prodi']; ?></td>

@@ -76,3 +76,9 @@ $routes->post('/pengampu/store', 'Pengampu::store');
 $routes->get('/pengampu/edit/(:num)', 'Pengampu::edit/$1');
 $routes->post('/pengampu/update/(:num)', 'Pengampu::update/$1');
 $routes->get('/pengampu/delete/(:num)', 'Pengampu::delete/$1');
+
+$routes->get('/waktutidakbersedia', 'Waktutidakbersedia::index');
+$routes->post('/waktutidakbersedia/store', 'Waktutidakbersedia::store');
+$routes->post('/waktutidakbersedia/update/(:num)', 'Waktutidakbersedia::update/$1');
+$routes->get('/waktutidakbersedia/delete/(:num)', 'Waktutidakbersedia::delete/$1');
+
