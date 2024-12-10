@@ -17,7 +17,7 @@ use App\Models\UserModel;
 use App\Models\MatakuliahModel;
 use App\Models\RuangModel;
 
-class Penjadwalan2 extends Controller {
+class Penjadwalan2 extends BaseController {
     private $PRAKTIKUM = 'PRAKTIKUM';
     private $TEORI = 'TEORI';
     private $LABORATORIUM = 'LABORATORIUM';
