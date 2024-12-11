@@ -2,22 +2,22 @@
 
 namespace App\Controllers;
 
-use App\Models\TahunAkademikModel;
+use App\Models\TahunakademikModel;
 
 class TahunAkademik extends BaseController
 {
-    protected $tahunAkademikModel;
+    protected $tahunakademikModel;
 
     public function __construct()
     {
-        $this->tahunAkademikModel = new TahunAkademikModel();
+        $this->tahunakademikModel = new TahunakademikModel();
     }
 
     // Menampilkan halaman utama data tahun akademik
     public function index()
     {
         $data = [
-            'tahun_akademik' => $this->tahunAkademikModel->findAll()
+            'tahun_akademik' => $this->tahunakademikModel->findAll()
         ];
         return view('tahunakademik', $data);
     }
@@ -25,7 +25,7 @@ class TahunAkademik extends BaseController
     // Menyimpan data baru
     public function store()
     {
-        $this->tahunAkademikModel->save([
+        $this->tahunakademikModel->save([
             'tahun' => $this->request->getPost('tahun')
         ]);
         return redirect()->to('/tahunakademik')->with('success', 'Data berhasil ditambahkan.');
@@ -35,7 +35,7 @@ class TahunAkademik extends BaseController
     public function edit($id)
     {
         $data = [
-            'tahun' => $this->tahunAkademikModel->find($id)
+            'tahun' => $this->tahunakademikModel->find($id)
         ];
         return view('tahunakademik/edit', $data);
     }
@@ -43,7 +43,7 @@ class TahunAkademik extends BaseController
     // Memperbarui data
     public function update($id)
     {
-        $this->tahunAkademikModel->update($id, [
+        $this->tahunakademikModel->update($id, [
             'tahun' => $this->request->getPost('tahun')
         ]);
         return redirect()->to('/tahunakademik')->with('success', 'Data berhasil diperbarui.');
@@ -52,7 +52,7 @@ class TahunAkademik extends BaseController
     // Menghapus data
     public function delete($id)
     {
-        $this->tahunAkademikModel->delete($id);
+        $this->tahunakademikModel->delete($id);
         return redirect()->to('/tahunakademik')->with('success', 'Data berhasil dihapus.');
     }
 }
