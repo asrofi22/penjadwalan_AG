@@ -82,3 +82,8 @@ $routes->post('/waktutidakbersedia/store', 'Waktutidakbersedia::store');
 $routes->post('/waktutidakbersedia/update/(:num)', 'Waktutidakbersedia::update/$1');
 $routes->get('/waktutidakbersedia/delete/(:num)', 'Waktutidakbersedia::delete/$1');
 
+$routes->get('/penjadwalan', 'Penjadwalan::index');
+$routes->post('/penjadwalan/generate', 'Penjadwalan::generate');
+
+
+

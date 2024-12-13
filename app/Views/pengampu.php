@@ -60,10 +60,10 @@
                                             data-id="<?= $pengampu['id']; ?>"
                                             data-id_mk="<?= $pengampu['id_mk']; ?>"
                                             data-id_dosen="<?= $pengampu['id_dosen']; ?>"
-                                            data-id_kelas="<?= $pengampu['id_kelas']; ?>"
-                                            data-id_tahun_akademik="<?= $pengampu['id_tahun_akademik']; ?>"
+                                            data-kelas="<?= $pengampu['kelas']; ?>"
+                                            data-tahun_akademik="<?= $pengampu['tahun_akademik']; ?>"
                                             data-id_prodi="<?= $pengampu['id_prodi']; ?>"
-                                            data-id_semester="<?= $pengampu['id_semester']; ?>"
+                                            data-semester="<?= $pengampu['semester']; ?>"
                                             data-kuota="<?= $pengampu['kuota']; ?>"
                                             data-id_ruang="<?= $pengampu['id_ruang']; ?>">
                                         Edit
@@ -110,16 +110,16 @@
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label for="id_kelas" class="form-label">Kelas</label>
-                                <select class="form-control" id="id_kelas" name="id_kelas" required>
+                                <label for="kelas" class="form-label">Kelas</label>
+                                <select class="form-control" id="kelas" name="kelas" required>
                                     <?php foreach ($kelas_list as $kelas): ?>
                                     <option value="<?= $kelas['id']; ?>"><?= $kelas['nama_kelas']; ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label for="id_tahun_akademik" class="form-label">Tahun Akademik</label>
-                                <select class="form-control" id="id_tahun_akademik" name="id_tahun_akademik" required>
+                                <label for="tahun_akademik" class="form-label">Tahun Akademik</label>
+                                <select class="form-control" id="tahun_akademik" name="tahun_akademik" required>
                                     <?php foreach ($tahun_akademik_list as $tahun): ?>
                                     <option value="<?= $tahun['id']; ?>"><?= $tahun['tahun']; ?></option>
                                     <?php endforeach; ?>
@@ -134,8 +134,8 @@
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label for="editIdSemester" class="form-label">Semester</label>
-                                <select class="form-control" id="editIdSemester" name="id_semester" required>
+                                <label for="semester" class="form-label">Semester</label>
+                                <select class="form-control" id="semester" name="semester" required>
                                     <?php foreach ($semester_list as $semester): ?>
                                     <option value="<?= $semester['id']; ?>"><?= $semester['nama_semester']; ?></option>
                                     <?php endforeach; ?>
@@ -192,16 +192,16 @@
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label for="editIdKelas" class="form-label">Kelas</label>
-                                <select class="form-control" id="editIdKelas" name="id_kelas" required>
+                                <label for="editKelas" class="form-label">Kelas</label>
+                                <select class="form-control" id="editIdKelas" name="kelas" required>
                                     <?php foreach ($kelas_list as $kelas): ?>
                                     <option value="<?= $kelas['id']; ?>"><?= $kelas['nama_kelas']; ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label for="editIdTahunAkademik" class="form-label">Tahun Akademik</label>
-                                <select class="form-control" id="editIdTahunAkademik" name="id_tahun_akademik" required>
+                                <label for="editTahunAkademik" class="form-label">Tahun Akademik</label>
+                                <select class="form-control" id="editTahunAkademik" name="tahun_akademik" required>
                                     <?php foreach ($tahun_akademik_list as $tahun): ?>
                                     <option value="<?= $tahun['id']; ?>"><?= $tahun['tahun']; ?></option>
                                     <?php endforeach; ?>
@@ -216,8 +216,8 @@
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label for="editIdSemester" class="form-label">Semester</label>
-                                <select class="form-control" id="editIdSemester" name="id_semester" required>
+                                <label for="editSemester" class="form-label">Semester</label>
+                                <select class="form-control" id="editSemester" name="semester" required>
                                     <?php foreach ($semester_list as $semester): ?>
                                     <option value="<?= $semester['id']; ?>"><?= $semester['nama_semester']; ?></option>
                                     <?php endforeach; ?>
@@ -256,10 +256,10 @@
         const id = button.getAttribute('data-id');
         const id_mk = button.getAttribute('data-id_mk');
         const id_dosen = button.getAttribute('data-id_dosen');
-        const id_kelas = button.getAttribute('data-id_kelas');
-        const id_tahun_akademik = button.getAttribute('data-id_tahun_akademik');
+        const kelas = button.getAttribute('data-kelas');
+        const tahun_akademik = button.getAttribute('data-tahun_akademik');
         const id_prodi = button.getAttribute('data-id_prodi');
-        const id_semester = button.getAttribute('data-id_semester');
+        const semester = button.getAttribute('data-semester');
         const kuota = button.getAttribute('data-kuota');
         const id_ruang = button.getAttribute('data-id_ruang');
 
@@ -267,10 +267,10 @@
         document.getElementById('editId').value = id;
         document.getElementById('editIdMk').value = id_mk;
         document.getElementById('editIdDosen').value = id_dosen;
-        document.getElementById('editIdKelas').value = id_kelas;
-        document.getElementById('editIdTahunAkademik').value = id_tahun_akademik;
+        document.getElementById('editKelas').value = kelas;
+        document.getElementById('editTahunAkademik').value = tahun_akademik;
         document.getElementById('editIdProdi').value = id_prodi;
-        document.getElementById('editIdSemester').value = id_semester;
+        document.getElementById('editSemester').value = semester;
         document.getElementById('editKuota').value = kuota;
         document.getElementById('editIdRuang').value = id_ruang;
 

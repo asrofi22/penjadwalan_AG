@@ -23,6 +23,11 @@ class Prodi extends BaseController
         return view('prodi', $data);
     }
 
+    public function semua_prodi(){
+		$result = $this->prodiModel->findAll();
+		echo json_encode($result);
+	}
+
     public function store()
     {
         $this->prodiModel->save([

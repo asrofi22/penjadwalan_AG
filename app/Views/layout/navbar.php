@@ -72,7 +72,7 @@
                                 <div class="nav-link-icon"><i data-feather="rewind"></i></div>
                                 Waktu Tidak Bersedia
                             </a>
-                            <a class="nav-link" href="/pengampu">
+                            <a class="nav-link" href="/penjadwalan">
                                 <div class="nav-link-icon"><i data-feather="rewind"></i></div>
                                 Penjadwalan
                             </a>

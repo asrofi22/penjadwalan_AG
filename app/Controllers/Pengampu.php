@@ -57,10 +57,10 @@ class Pengampu extends BaseController
         $this->pengampuModel->save([
             'id_mk' => $this->request->getPost('id_mk'),
             'id_dosen' => $this->request->getPost('id_dosen'),
-            'id_kelas' => $this->request->getPost('id_kelas'),
-            'id_tahun_akademik' => $this->request->getPost('id_tahun_akademik'),
+            'kelas' => $this->request->getPost('kelas'),
+            'tahun_akademik' => $this->request->getPost('tahun_akademik'),
             'id_prodi' => $this->request->getPost('id_prodi'),
-            'id_semester' => $this->request->getPost('id_semester'),
+            'semester' => $this->request->getPost('semester'),
             'kuota' => $this->request->getPost('kuota'),
             'id_ruang' => $this->request->getPost('id_ruang'),
         ]);

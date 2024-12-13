@@ -18,10 +18,10 @@ class PenjadwalanModel extends Model
                        a.id_jam,
                        a.id_ruang,
                        b.id,
-                       b.kuota,
-                       f.kapasitas,
                        b.tahun_akademik,
                        b.id_prodi,
+                       b.kuota,
+                       f.kapasitas,
                        c.id_mk,
                        c.jumlah_jam as jumlah_jam,
                        e.id_hari,
@@ -127,5 +127,18 @@ class PenjadwalanModel extends Model
                         ->where('id_pengampu', $id_pengampu)
                         ->update($data);
     }
+
+    public function deleteDuplicates()
+    {
+        return $this->db->table($this->table)
+            ->whereIn('id', function($builder) {
+                $builder->select('id')
+                    ->from($this->table)
+                    ->groupBy('id_pengampu')
+                    ->having('COUNT(*) > 1');
+            })
+            ->delete();
+    }
+
 }
 ?>

@@ -55,4 +55,16 @@ class TahunAkademik extends BaseController
         $this->tahunakademikModel->delete($id);
         return redirect()->to('/tahunakademik')->with('success', 'Data berhasil dihapus.');
     }
+
+    public function semua_tahun()
+    {
+        return $this->tahunakademikModel->findAll(); // Mengembalikan semua data dari tabel tahun akademik
+    }
+    
+    // Mengambil tahun akademik berdasarkan ID
+    public function tahun_awal($id)
+    {
+        return $this->tahunakademikModel->find($id); // Mengembalikan data berdasarkan ID
+    }
+    
 }
