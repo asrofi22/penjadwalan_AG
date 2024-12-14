@@ -39,7 +39,7 @@ class Matakuliah extends BaseController
             'jenis' => $this->request->getPost('jenis'),
             'nama_kode' => $this->request->getPost('nama_kode'),
             'id_prodi' => $this->request->getPost('id_prodi'),
-            'id_matkul' => $this->request->getPost('id_matkul'),
+            'id_mk' => $this->request->getPost('id_mk'),
         ]);
         return redirect()->to('/matakuliah');
     }

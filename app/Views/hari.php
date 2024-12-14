@@ -49,14 +49,14 @@
                             <?php foreach ($hari_list as $hari): ?>
                             <tr>
                                 <td><?= $no++ ?></td>
-                                <td><?= $hari['hari'] ?></td>
+                                <td><?= $hari['nama'] ?></td>
                                 <td><?= $hari['id_hari'] ?></td>
                                 <td>
                                     <button class="btn btn-datatable btn-icon btn-transparent-dark me-2" 
                                             data-bs-toggle="modal" 
                                             data-bs-target="#modalEdit" 
                                             data-id="<?= $hari['id'] ?>" 
-                                            data-hari="<?= $hari['hari'] ?>" 
+                                            data-hari="<?= $hari['nama'] ?>" 
                                             data-id-hari="<?= $hari['id_hari'] ?>">
                                         <i data-feather="edit"></i>
                                     </button>
@@ -83,8 +83,8 @@
                         </div>
                         <div class="modal-body">
                             <div class="mb-3">
-                                <label for="hari" class="form-label">Hari</label>
-                                <select class="form-control" id="hari" name="hari" required>
+                                <label for="nama" class="form-label">Hari</label>
+                                <select class="form-control" id="nama" name="nama" required>
                                     <option value="">Pilih Hari</option>
                                     <option value="Senin">Senin</option>
                                     <option value="Selasa">Selasa</option>
@@ -122,8 +122,8 @@
                         </div>
                         <div class="modal-body">
                             <div class="mb-3">
-                                <label for="hari" class="form-label">Hari</label>
-                                <select class="form-control" id="hari" name="hari" required>
+                                <label for="nama" class="form-label">Hari</label>
+                                <select class="form-control" id="nama" name="nama" required>
                                     <option value="">Pilih Hari</option>
                                     <option value="Senin">Senin</option>
                                     <option value="Selasa">Selasa</option>

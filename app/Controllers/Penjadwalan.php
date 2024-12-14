@@ -53,202 +53,89 @@ class Penjadwalan extends BaseController
         $this->riwayatpenjadwalanModel = new RiwayatpenjadwalanModel();
         $this->ruangModel = new RuangModel();
 
-        
         // Mengatur variabel konstan
         define('IS_TEST', 'FALSE');
     }
 
     public function index()
     {
-        // Cek apakah pengguna sudah login
-        if (!session()->get('logged_in')) {
-            return redirect()->to('/admin');
-        }
-
-        // Membuat array kosong untuk data yang akan diteruskan ke view
+        
         $data = [];
+        $data['jadwal_list'] = $this->penjadwalanModel->findAll();
+        helper(['form']); // Load form helper
 
-        // Memeriksa apakah form disubmit dengan metode POST
+        // Validasi Input
         if ($this->request->getMethod() == 'post') {
-            // Validasi form
-            if (!$this->validate([
-                'prodi' => 'required',
-                'tahun_akademik' => 'required',
-                'semester' => 'required',
+            $rules = [
+                'tipe_semester'          => 'required',
+                'tahun_akademik'         => 'required',
+                'jumlah_populasi'        => 'required|integer',
                 'probabilitas_crossover' => 'required|numeric',
-                'probabilitas_mutasi' => 'required|numeric',
-                'jumlah_generasi' => 'required|numeric',
-            ])) {
-                // Jika validasi gagal, kembalikan ke form dengan error
-                return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
-            }
+                'probabilitas_mutasi'    => 'required|numeric',
+                'jumlah_generasi'        => 'required|integer',
+            ];
 
-            // Mendapatkan data dari form
-            $prodiId = $this->request->getPost('prodi');
-            $tahunAkademikId = $this->request->getPost('tahun_akademik');
-            $semesterId = $this->request->getPost('semester');
-            $probabilitasCrossover = $this->request->getPost('probabilitas_crossover');
-            $probabilitasMutasi = $this->request->getPost('probabilitas_mutasi');
-            $jumlahGenerasi = $this->request->getPost('jumlah_generasi');
+            if ($this->validate($rules)) {
+                // Mulai waktu eksekusi
+                $startTime = microtime(true);
 
-            // Mencatat waktu eksekusi
-            $startTime = microtime(true);
+                // Ambil inputan
+                $jenis_semester  = $this->request->getPost('tipe_semester');
+                $tahun_akademik  = $this->request->getPost('tahun_akademik');
+                $prodi           = $this->request->getPost('prodi');
+                $jumlah_populasi = $this->request->getPost('jumlah_populasi');
+                $crossOver       = $this->request->getPost('probabilitas_crossover');
+                $mutasi          = $this->request->getPost('probabilitas_mutasi');
+                $jumlah_generasi = $this->request->getPost('jumlah_generasi');
 
-            // Menentukan query untuk mengambil data pengampu berdasarkan prodi, semester, dan tahun akademik
-            if ($prodiId) {
-                $pengampuData = $this->pengampuModel->where('id_prodi', $prodiId)
-                                                     ->where('id_tahun_akademik', $tahunAkademikId)
-                                                     ->where('id_semester', $semesterId)
-                                                     ->findAll();
+                // Query data pengampu berdasarkan input
+                $query = $this->pengampuModel
+                        ->select('id')
+                        ->join('semester', 'pengampu.semester = semester.id', 'left')
+                        ->join('tahun_akademik', 'pengampu.tahun_akademik = tahun_akademik.id', 'left')
+                        ->where('semester.tipe_semester', $jenis_semester)
+                        ->where('pengampu.tahun_akademik', $tahun_akademik)
+                        ->get();
+
+
+                if (!empty($prodi)) {
+                    $query->where('pengampu.id_prodi', $prodi);
+                }
+
+                $rs_data = $query->get()->getResult();
+
+                if (empty($rs_data)) {
+                    $data['msg'] = 'Tidak Ada Data dengan Semester dan Tahun Akademik ini';
+                } else {
+                    // Algoritma Genetika
+                    $result = $this->generate($jenis_semester, $tahun_akademik, $rs_data, $jumlah_generasi, $crossOver, $mutasi, $prodi);
+
+                    if (!$result) {
+                        $data['msg'] = 'Tidak ditemukan solusi optimal';
+                    } else {
+                        // Menggunakan Query Builder untuk menghapus duplikat jadwal
+                        $this->penjadwalanModel->query("DELETE FROM jadwalkuliah WHERE id IN 
+                            (SELECT * FROM (SELECT id FROM jadwalkuliah GROUP BY id_pengampu HAVING COUNT(*) > 1) AS A)");    
+
+                        $finishTime = microtime(true);
+                        $totalTime = round(($finishTime - $startTime) / 60, 4);
+                        $data['waktu'] = "Selesai dalam {$totalTime} menit";
+                    }
+                }
             } else {
-                $pengampuData = $this->pengampuModel->findAll();
+                $data['msg'] = $this->validator->listErrors();
             }
-
-            // Jika tidak ada data pengampu ditemukan
-            if (empty($pengampuData)) {
-                return redirect()->back()->with('message', 'Tidak ada data pengampu yang sesuai dengan kriteria!');
-            }
-
-            // Menentukan jumlah populasi untuk algoritma genetika
-            $jumlahPopulasi = count($pengampuData);
-            if ($jumlahPopulasi % 2 != 0) {
-                $jumlahPopulasi++; // Jika ganjil, tambahkan 1 agar genap
-            }
-
-            // Menginisialisasi populasi
-            $this->AmbilData($pengampuData, $prodiId, $tahunAkademikId, $semesterId);
-            $this->Inisialisasi($jumlahPopulasi);
-
-            // Menghitung fitness
-            $fitness = $this->HitungFitness($jumlahPopulasi, $prodiId);
-
-            // Proses Seleksi, Crossover, dan Mutasi
-            $this->Seleksi($fitness, $jumlahPopulasi);
-            $this->StartCrossOver($jumlahPopulasi, $probabilitasCrossover);
-            $fitnessAfterMutation = $this->Mutasi($jumlahPopulasi, $probabilitasMutasi, $prodiId);
-
-            // Mengecek apakah solusi ditemukan dan menyimpannya ke database
-            $jadwalKuliahData = $this->SimpanJadwal($fitnessAfterMutation);
-
-            // Menghitung waktu total yang dibutuhkan untuk penjadwalan
-            $executionTime = microtime(true) - $startTime;
-            $executionTimeInMinutes = round($executionTime / 60, 2);
-
-            // Menyimpan data jadwal dan menampilkan hasil
-            $data['jadwal_list'] = $jadwalKuliahData;
-            $data['execution_time'] = $executionTimeInMinutes . ' menit';
         }
 
-        // Mengambil data prodi, tahun akademik, dan semester untuk form
-        $data['prodi_list'] = $this->prodiModel->findAll();
-        $data['semester_list'] = $this->semesterModel->findAll();
-        $data['tahun_akademik_list'] = $this->tahunakademikModel->findAll();
+        // Load data tambahan ke view
+        $data['page_name']   = 'penjadwalan';
+        $data['page_title']  = 'Penjadwalan';
+        $data['rs_tahun']    = $this->tahunakademikModel->findAll();
+        $data['rs_jadwal']   = $this->penjadwalanModel->findAll();
+        $data['aside']       = 'penjadwalan_bar';
 
-        return view('penjadwalan', $data);
-    }
-
-    private function AmbilData($jenis_semester, $tahun_akademik, $jumlah_populasi, $prodi = null, $query = null)
-    {
-        // 1. Inisialisasi variabel
-        $this->jenisSemester = $jenis_semester;
-        $this->tahunAkademik = $tahun_akademik;
-        $this->jumlahPopulasi = $jumlah_populasi;
-        $this->prodi = $prodi;
-
-        // Array untuk menyimpan data
-        $this->pengampuModel = [];
-        $this->jam = [];
-        $this->hari = [];
-        $this->waktuTidakBersedia = [];
-        $this->waktuTersedia = [];
-        $this->waktuTersimpan = [];
-
-        // 2. Mengambil Data Pengampu Mata Kuliah
-        if ($prodi) {
-            $pengampuQuery = $this->pengampuModel
-                ->where('id_prodi', $prodi)
-                ->where('id_semester', $jenis_semester)
-                ->where('id_tahun_akademik', $tahun_akademik)
-                ->findAll();
-        } else {
-            $pengampuQuery = $this->pengampuModel
-                ->where('id_semester', $jenis_semester)
-                ->where('id_tahun_akademik', $tahun_akademik)
-                ->findAll();
-        }
-
-        foreach ($pengampuQuery as $row) {
-            $this->pengampu[] = [
-                'id_pengampu' => $row['id_pengampu'],
-                'id_dosen' => $row['id_dosen'],
-                'mata_kuliah' => $row['mata_kuliah'],
-                'kelas' => $row['kelas'],
-                'id_prodi' => $row['id_prodi'],
-                'sks' => $row['sks'],
-                'kuota' => $row['kuota']
-            ];
-        }
-
-        // 3. Mengambil Data Jam Berdasarkan SKS
-        $jamQuery = $this->db->table('jam2')->get()->getResultArray();
-
-        foreach ($jamQuery as $row) {
-            $sks = $row['sks'];
-            $this->jam[$sks][] = $row['id_jam'];
-        }
-
-        // 4. Mengambil Data Hari
-        $hariQuery = $this->db->table('hari')->get()->getResultArray();
-
-        foreach ($hariQuery as $row) {
-            $this->hari[] = $row['id_hari'];
-        }
-
-        // 5. Mengambil Waktu Tidak Bersedia Dosen
-        $tidakBersediaQuery = $this->db->table('waktu_tidak_bersedia')->get()->getResultArray();
-
-        foreach ($tidakBersediaQuery as $row) {
-            $this->waktuTidakBersedia[$row['id_dosen']][] = [
-                'id_jam' => $row['id_jam'],
-                'id_hari' => $row['id_hari']
-            ];
-        }
-
-        // 6. Mengambil Waktu Tersedia Berdasarkan Prodi
-        if ($prodi) {
-            $tersediaQuery = $this->db->table('jadwal_tersedia')
-                ->where('id_prodi', $prodi)
-                ->get()
-                ->getResultArray();
-        } else {
-            $tersediaQuery = $this->db->table('jadwal_tersedia')->get()->getResultArray();
-        }
-
-        foreach ($tersediaQuery as $row) {
-            $this->waktuTersedia[] = [
-                'id_jam' => $row['id_jam'],
-                'id_hari' => $row['id_hari'],
-                'id_ruang' => $row['id_ruang']
-            ];
-        }
-
-        // 7. Mengambil Waktu Tersimpan untuk Menghindari Konflik
-        if ($prodi) {
-            $tersimpanQuery = $this->db->table('jadwalpelajaran')
-                ->where('id_prodi', $prodi)
-                ->get()
-                ->getResultArray();
-        } else {
-            $tersimpanQuery = $this->db->table('jadwalpelajaran')->get()->getResultArray();
-        }
-
-        foreach ($tersimpanQuery as $row) {
-            $this->waktuTersimpan[] = [
-                'id_jam' => $row['id_jam'],
-                'id_hari' => $row['id_hari'],
-                'id_ruang' => $row['id_ruang']
-            ];
-        }
+        // Load views
+        echo view('penjadwalan', $data);
     }
 
 
@@ -291,26 +178,42 @@ class Penjadwalan extends BaseController
     }
 
     private function geneticAlgorithm($population, $jam_list, $hari_list, $ruang_list, $maxGenerations = 100)
-    {
-        for ($gen = 0; $gen < $maxGenerations; $gen++) {
-            // Evaluasi fitness
-            $fitness = $this->evaluateFitness($population);
+{
+    for ($gen = 0; $gen < $maxGenerations; $gen++) {
+        // Evaluasi fitness
+        $fitness = $this->evaluateFitness($population);
 
-            // Seleksi individu terbaik
-            $selected = $this->selection($population, $fitness);
-
-            // Crossover
-            $offspring = $this->crossover($selected);
-
-            // Mutasi
-            $population = $this->mutation($offspring, $jam_list, $hari_list, $ruang_list);
+        // Validasi fitness
+        if (empty($fitness)) {
+            log_message('error', 'Fitness array is empty during generation ' . $gen);
+            break; // Keluar dari loop jika fitness tidak bisa dihitung
         }
 
-        // Ambil solusi terbaik
-        $finalFitness = $this->evaluateFitness($population);
-        $bestIndex = array_search(max($finalFitness), $finalFitness);
-        return $population[$bestIndex];
+        // Seleksi individu terbaik
+        $selected = $this->selection($population, $fitness);
+
+        // Crossover
+        $offspring = $this->crossover($selected);
+
+        // Mutasi
+        $population = $this->mutation($offspring, $jam_list, $hari_list, $ruang_list);
     }
+
+    // Ambil solusi terbaik
+    if (empty($population)) {
+        log_message('error', 'Population is empty, cannot determine best schedule.');
+        return null; // Tangani keadaan kosong
+    }
+
+    $finalFitness = $this->evaluateFitness($population);
+    if (empty($finalFitness)) {
+        log_message('error', 'Final fitness is empty, cannot determine best index.');
+        return null; 
+    }
+    
+    $bestIndex = array_search(max($finalFitness), $finalFitness);
+    return $population[$bestIndex];
+}
 
     private function evaluateFitness($population)
     {
@@ -378,10 +281,15 @@ class Penjadwalan extends BaseController
     }
 
     private function saveSchedule($bestSchedule)
-    {
-        $this->penjadwalanModel->truncate(); // Hapus jadwal lama
-        foreach ($bestSchedule as $schedule) {
-            $this->penjadwalanModel->save($schedule);
-        }
+{
+    if (empty($bestSchedule)) {
+        log_message('error', 'Best schedule is empty, nothing to save.');
+        return; // Tidak melakukan apa-apa jika jadwal terbaik tidak ada
     }
+
+    $this->penjadwalanModel->truncate(); // Hapus jadwal lama
+    foreach ($bestSchedule as $schedule) {
+        $this->penjadwalanModel->save($schedule);
+    }
+}
 }

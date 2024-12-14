@@ -30,7 +30,7 @@ class Hari extends BaseController
     public function store()
     {
         $this->HariModel->save([
-            'hari'      => $this->request->getPost('hari'),
+            'nama'      => $this->request->getPost('nama'),
             'id_hari'    => $this->request->getPost('id_hari'),
         ]);
         return redirect()->to('/hari')->with('message', 'Data berhasil ditambahkan!');
