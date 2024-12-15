@@ -82,8 +82,8 @@ $routes->post('/waktutidakbersedia/store', 'Waktutidakbersedia::store');
 $routes->post('/waktutidakbersedia/update/(:num)', 'Waktutidakbersedia::update/$1');
 $routes->get('/waktutidakbersedia/delete/(:num)', 'Waktutidakbersedia::delete/$1');
 
-$routes->get('/penjadwalan', 'Penjadwalan::index');
-$routes->post('/penjadwalan/generate', 'Penjadwalan::generate');
-
-
-
+$routes->get('penjadwalan', 'Penjadwalan3::index'); // Route untuk halaman index (menampilkan form dan tabel jadwal)
+$routes->post('penjadwalan3/proses_penjadwalan', 'Penjadwalan3::proses_penjadwalan');
+$routes->post('penjadwalan/simpan_jadwal', 'Penjadwalan3::simpan_jadwal'); // Route untuk menyimpan jadwal
+$routes->post('penjadwalan/hapus_jadwal', 'Penjadwalan3::hapus_jadwal'); // Route untuk menghapus semua jadwal
+$routes->post('penjadwalan/excel_report', 'Penjadwalan3::excel_report'); // Route untuk mengunduh laporan Excel

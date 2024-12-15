@@ -82,6 +82,21 @@ class Penjadwalan3 extends BaseController {
     private $id_dhuhur;
     private $is_waktu_dosen_tidak_bersedia_empty;
 
+    protected $JamModel;
+    protected $WaktutidakbersediaModel;
+    protected $KelasModel;
+    protected $ProdiModel;
+    protected $SemesterModel;
+    protected $PenjadwalanModel;
+    protected $PengampuModel;
+    protected $TahunakademikModel;
+    protected $DosenModel;
+    protected $HariModel;
+    protected $UserModel;
+    protected $MatakuliahModel;
+    protected $RiwayatpenjadwalanModel;
+    protected $RuangModel;
+
     protected $session;
     protected $form_validation;
     protected $db;
@@ -99,26 +114,20 @@ class Penjadwalan3 extends BaseController {
         $this->pagination = \Config\Services::pagination(); // Mengakses pagination
 
         // Memuat model
-        $modelClasses = [
-            JamModel::class,
-            WaktutidakbersediaModel::class,
-            KelasModel::class,
-            ProdiModel::class,
-            SemesterModel::class,
-            PenjadwalanModel::class,
-            PengampuModel::class,
-            TahunakademikModel::class,
-            DosenModel::class,
-            HariModel::class,
-            UserModel::class,
-            MatakuliahModel::class,
-            RiwayatpenjadwalanModel::class,
-            RuangModel::class
-        ];
-
-        foreach ($modelClasses as $modelClass) {
-            $this->models[strtolower((new \ReflectionClass($modelClass))->getShortName())] = new $modelClass();
-        }
+        $this->JamModel = new JamModel();
+        $this->WaktutidakbersediaModel = new WaktutidakbersediaModel();
+        $this->KelasModel = new KelasModel();
+        $this->ProdiModel = new ProdiModel();
+        $this->SemesterModel = new SemesterModel();
+        $this->PenjadwalanModel = new PenjadwalanModel();
+        $this->PengampuModel = new PengampuModel();
+        $this->TahunakademikModel = new TahunakademikModel();
+        $this->DosenModel = new DosenModel();
+        $this->HariModel = new HariModel();
+        $this->MatakuliahModel = new MatakuliahModel();
+        $this->RiwayatpenjadwalanModel = new RiwayatpenjadwalanModel();
+        $this->RuangModel = new RuangModel();
+        
 
         // Mengatur variabel konstan
         define('IS_TEST', 'FALSE');
@@ -131,14 +140,14 @@ class Penjadwalan3 extends BaseController {
         }
 
         $data = [
-            'prodi_list' => $this->models['prodi']->findAll(),
-            'pengampu_list' => $this->models['pengampu']->getPengampuWithDetails(),
-            'matakuliah_list' => $this->models['matakuliah']->findAll(),
-            'dosen_list' => $this->models['dosen']->findAll(),
-            'kelas_list' => $this->models['kelas']->findAll(),
-            'tahun_akademik_list' => $this->models['tahunakademik']->findAll(),
-            'semester_list' => $this->models['semester']->findAll(),
-            'ruang_list' => $this->models['ruang']->findAll()
+            'prodi_list' => $this->ProdiModel->findAll(),
+            'pengampu_list' => $this->PengampuModel->getPengampuWithDetails(),
+            'matakuliah_list' => $this->MatakuliahModel->findAll(),
+            'dosen_list' => $this->DosenModel->findAll(),
+            'kelas_list' => $this->KelasModel->findAll(),
+            'tahun_akademik_list' => $this->TahunakademikModel->findAll(),
+            'semester_list' => $this->SemesterModel->findAll(),
+            'ruang_list' => $this->RuangModel->findAll()
         ];
 
         return view('penjadwalan', $data);
@@ -602,44 +611,51 @@ class Penjadwalan3 extends BaseController {
     }
 
     public function StartCrossOver($jumlah_populasi, $crossOver)
-    {
-        $this->populasi = $jumlah_populasi;
-        $individu_baru = array_fill(0, $this->populasi, array_fill(0, count($this->pengampu), []));
+{
+    $this->populasi = $jumlah_populasi;
+    $individu_baru = array_fill(0, $this->populasi, array_fill(0, count($this->pengampu), []));
+    $jumlah_pengampu = count($this->pengampu);
 
-        for ($i = 0; $i < $this->populasi; $i += 2) {
-            $cr = mt_rand(0, mt_getrandmax() - 1) / mt_getrandmax(); // Nilai random untuk crossover
+    if ($jumlah_pengampu < 2) {
+        throw new \Exception("Jumlah pengampu harus lebih dari satu untuk crossover."); // Atau Anda bisa mengembalikan atau mencetak error yang lebih sesuai
+    }
 
-            if ($cr < $crossOver) {
-                $a = mt_rand(0, count($this->pengampu) - 2);
-                $b = mt_rand($a, count($this->pengampu) - 1);
+    for ($i = 0; $i < $this->populasi; $i += 2) {
+        $cr = mt_rand(0, mt_getrandmax() - 1) / mt_getrandmax(); // Nilai random untuk crossover
 
-                // Crossover
-                for ($j = 0; $j < count($this->pengampu); $j++) {
-                    if ($j < $a || $j > $b) {
-                        // Tidak melakukan crossover, salin individu langsung
-                        $individu_baru[$i][$j] = $this->individu[$this->induk[$i]][$j];
-                        $individu_baru[$i + 1][$j] = $this->individu[$this->induk[$i + 1]][$j];
-                    } else {
-                        // Melakukan crossover
-                        $individu_baru[$i][$j] = $this->individu[$this->induk[$i + 1]][$j];
-                        $individu_baru[$i + 1][$j] = $this->individu[$this->induk[$i]][$j];
-                    }
-                }
-            } else {
-                // Jika tidak terjadi crossover, salin individu langsung
-                for ($j = 0; $j < count($this->pengampu); $j++) {
+        if ($cr < $crossOver) {
+            $a = mt_rand(0, $jumlah_pengampu - 2);
+            $b = mt_rand($a, $jumlah_pengampu - 1);  // Setelah memeriksa
+
+            // Crossover
+            for ($j = 0; $j < $jumlah_pengampu; $j++) {
+                if ($j < $a || $j > $b) {
+                    // Tidak melakukan crossover, salin individu langsung
                     $individu_baru[$i][$j] = $this->individu[$this->induk[$i]][$j];
                     $individu_baru[$i + 1][$j] = $this->individu[$this->induk[$i + 1]][$j];
+                } else {
+                    // Melakukan crossover
+                    $individu_baru[$i][$j] = $this->individu[$this->induk[$i + 1]][$j];
+                    $individu_baru[$i + 1][$j] = $this->individu[$this->induk[$i]][$j];
                 }
             }
-        }
-
-        // update individu berdasarkan crossover
-        for ($i = 0; $i < $this->populasi; $i += 2) {
-            $this->individu[$i] = $individu_baru[$i];
-            $this->individu[$i + 1] = $individu_baru[$i + 1];
+        } else {
+            // Jika tidak terjadi crossover, salin individu langsung
+            for ($j = 0; $j < $jumlah_pengampu; $j++) {
+                $individu_baru[$i][$j] = $this->individu[$this->induk[$i]][$j];
+                $individu_baru[$i + 1][$j] = $this->individu[$this->induk[$i + 1]][$j];
+            }
         }
     }
+
+    // update individu berdasarkan crossover
+    for ($i = 0; $i < $this->populasi; $i += 2) {
+        $this->individu[$i] = $individu_baru[$i];
+        $this->individu[$i + 1] = $individu_baru[$i + 1];
+    }
+
+    return $individu_baru;
+}
 
     public function Mutasi($jumlah_populasi, $mutasi)
     {
@@ -691,6 +707,56 @@ class Penjadwalan3 extends BaseController {
         }
 
         return $individu_solusi;
+    }
+    public function proses_penjadwalan()
+    {
+        $this->populasi = $this->request->getPost('jumlah_populasi');
+        $this->crossOver = $this->request->getPost('probabilitas_crossover');
+        $this->mutasi = $this->request->getPost('probabilitas_mutasi');
+        $jumlah_generasi = $this->request->getPost('jumlah_generasi');
+
+        // Ambil data berdasarkan semester dan tahun akademik
+        $semester = $this->request->getPost('tipe_semester');
+        $tahun_akademik = $this->request->getPost('tahun_akademik');
+        $prodi = $this->request->getPost('prodi');
+
+        // Ambil data pengampu
+        $this->AmbilData($semester, $tahun_akademik, $this->populasi, $prodi, '', 0, 0);
+
+        // Inisialisasi populasi
+        $this->Inisialisasi($this->populasi);
+        
+        $best_fitness = 0;
+        $best_individual = null;
+
+        // Proses algoritma genetika selama jumlah generasi yang ditentukan
+        for ($i = 0; $i < $jumlah_generasi; $i++) {
+            $fitness = $this->HitungFitness($this->populasi, $prodi);
+            $this->Seleksi($fitness, $this->populasi);
+            $this->StartCrossOver($this->populasi, $this->crossOver);
+            $this->Mutasi($this->populasi, $this->mutasi, $prodi);
+
+            // Temukan individu terbaik
+            foreach ($fitness as $index => $fit) {
+                if ($fit > $best_fitness) {
+                    $best_fitness = $fit;
+                    $best_individual = $index;
+                }
+            }
+        }
+
+        // Simpan hasil penjadwalan terbaik ke dalam database
+        $jadwal_terbaik = $this->getIndividu($best_individual);
+        foreach ($jadwal_terbaik as $item) {
+            $this->models['penjadwalan']->insert([
+                'id_pengampu' => $item['id_pengampu'],
+                'id_jam' => $item['id_jam'],
+                'id_hari' => $item['id_hari'],
+                'id_ruang' => $item['id_ruang'],
+            ]);
+        }
+
+        return redirect()->to('penjadwalan')->with('waktu', 'Proses penjadwalan menggunakan algoritma genetika telah berhasil!');
     }
 }
 ?>

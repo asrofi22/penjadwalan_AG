@@ -10,6 +10,45 @@ class PenjadwalanModel extends Model
     protected $primaryKey = 'id_pengampu';
     protected $allowedFields = ['id_pengampu', 'id_hari', 'id_jam', 'id_ruang'];
 
+    public function cek_jadwal($tipe_semester, $tahun_akademik, $prodi)
+    {
+        return $this->where(['tipe_semester' => $tipe_semester, 'tahun_akademik' => $tahun_akademik, 'id_prodi' => $prodi])->first();
+    }
+
+    function cek_banyak_prodi($tipe_semester,$tahun_akademik){
+		
+		$sql  = "SELECT COUNT( DISTINCT d.id_prodi ) as banyak ,".
+				"       a.id ,".
+				"       c.id ,".
+				"       d.id ".
+				"FROM jadwalkuliah a ".
+				"LEFT JOIN pengampu b ".
+				"ON a.id_pengampu = b.id ".
+				"LEFT JOIN semester c ".
+				"ON b.semester = c.id ".
+				"LEFT JOIN prodi d ".
+				"ON b.id_prodi =d.id ".
+				"WHERE c.tipe$tipe_semester = '$tipe_semester' AND b.tahun_akademik = '$tahun_akademik'";
+		
+		$rs = $this->db->query($sql);
+		return $rs->getResult();
+		
+	}
+
+    public function simpan_jadwal($id_pengampu,$id_jam,$id_hari,$id_ruang){
+	        
+		$data = array(
+						'id_pengampu' => $id_pengampu,
+						'id_hari' => $id_hari,
+						'id_jam' => $id_jam,
+						'id_ruang' => $id_ruang
+						
+					);
+            return $this->insert($data);
+		
+		return $result;
+	}
+
     public function get()
     {
         return $this->db->table('jadwalkuliah a')
@@ -27,7 +66,7 @@ class PenjadwalanModel extends Model
             ->join('semester l', 'b.semester = l.id', 'left')
             ->join('prodi m', 'i.id_prodi = m.id', 'left')
             ->orderBy('e.id', 'ASC')
-            ->orderBy('g.range_jam', 'ASC')
+            ->orderBy('g.Jam_Kuliah', 'ASC')
             ->get()
             ->getResult();
     }
@@ -72,10 +111,10 @@ class PenjadwalanModel extends Model
             ->delete();
     }
 
-    public function simpan_jadwal($data)
-    {
-        return $this->db->table('riwayat_penjadwalan')->insert($data);
-    }
+    // public function simpan_jadwal($data)
+    // {
+    //     return $this->db->table('riwayat_penjadwalan')->insert($data);
+    // }
 
     public function update_jadwal($id_pengampu, $data)
     {
