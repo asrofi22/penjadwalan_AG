@@ -39,7 +39,7 @@
                                 <tr>
                                     <td><?= $no++; ?></td>
                                     <td><?= $item['dosen']; ?></td>
-                                    <td><?= $item['hari']; ?></td>
+                                    <td><?= $item['nama']; ?></td>
                                     <td><?= $item['range_jam']; ?></td>
                                     <td>
                                         <!-- Tombol Edit -->
@@ -89,7 +89,7 @@
                                     <select class="form-select" id="id_hari" name="id_hari" required>
                                         <option value="">Pilih Hari</option>
                                         <?php foreach ($hari_list as $hari): ?>
-                                            <option value="<?= $hari['id']; ?>"><?= $hari['hari']; ?></option>
+                                            <option value="<?= $hari['id']; ?>"><?= $hari['nama']; ?></option>
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
@@ -137,7 +137,7 @@
                                     <select class="form-select" id="editIdHari" name="id_hari" required>
                                         <option value="">Pilih Hari</option>
                                         <?php foreach ($hari_list as $hari): ?>
-                                            <option value="<?= $hari['id']; ?>"><?= $hari['hari']; ?></option>
+                                            <option value="<?= $hari['id']; ?>"><?= $hari['nama']; ?></option>
                                         <?php endforeach; ?>
                                     </select>
                                 </div>

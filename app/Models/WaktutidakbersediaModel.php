@@ -15,7 +15,7 @@ class WaktutidakbersediaModel extends Model
     // Fungsi untuk mengambil semua data waktu tidak bersedia dengan detail
     public function getWaktutidakbersediaWithDetails()
     {
-        return $this->select('waktu_tidak_bersedia.*, dosen.nama AS dosen, hari.hari, jam2.range_jam')
+        return $this->select('waktu_tidak_bersedia.*, dosen.nama AS dosen, hari.nama, jam2.range_jam')
             ->join('dosen', 'waktu_tidak_bersedia.id_dosen = dosen.id', 'LEFT') // Gunakan 'LEFT' sebagai string
             ->join('hari', 'waktu_tidak_bersedia.id_hari = hari.id', 'LEFT')   // Gunakan 'LEFT' sebagai string
             ->join('jam2', 'waktu_tidak_bersedia.id_jam = jam2.id', 'LEFT')     // Gunakan 'LEFT' sebagai string
@@ -26,7 +26,7 @@ class WaktutidakbersediaModel extends Model
     // Fungsi untuk mengambil data waktu tidak bersedia berdasarkan id
     public function getWaktutidakbersedia($id)
     {
-        return $this->select('waktu_tidak_bersedia.*, dosen.nama AS nama_dosen, hari.hari, GROUP_CONCAT(jam.range_jam) AS range_jam')
+        return $this->select('waktu_tidak_bersedia.*, dosen.nama AS nama_dosen, hari.nama, GROUP_CONCAT(jam.range_jam) AS range_jam')
             ->join('dosen', 'waktu_tidak_bersedia.id_dosen = dosen.id', 'left')
             ->join('hari', 'waktu_tidak_bersedia.id_hari = hari.id', 'left')
             ->join('jam', 'FIND_IN_SET(jam.id, waktu_tidak_bersedia.id_jam)', false)

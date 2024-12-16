@@ -9,7 +9,7 @@ class SemesterModel extends Model
     // Konfigurasi untuk tabel `semester`
     protected $table = 'semester';
     protected $primaryKey = 'id';
-    protected $allowedFields = ['nama_semester', 'tipe_semester', 'id_semester'];
+    protected $allowedFields = ['nama_semester', 'semester_tipe', 'id_semester'];
 
     /**
      * Mendapatkan semua data semester beserta tipe_semester-nya
@@ -17,8 +17,8 @@ class SemesterModel extends Model
      */
     public function getSemesterWithTipe()
     {
-        return $this->select('semester.*, tipe_semester.tipe_semester as nama_tipe')
-            ->join('tipe_semester', 'semester.tipe_semester = tipe_semester.id')
+        return $this->select('semester.*, semester_tipe.tipe_semester as nama_tipe')
+            ->join('semester_tipe', 'semester.semester_tipe = semester_tipe.id')
             ->findAll();
     }
 
@@ -28,7 +28,7 @@ class SemesterModel extends Model
     public function getAllTipeSemester()
     {
         $db = \Config\Database::connect();
-        $builder = $db->table('tipe_semester');
+        $builder = $db->table('semester_tipe');
         return $builder->get()->getResultArray();
     }
 }

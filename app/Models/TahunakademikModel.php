@@ -10,5 +10,9 @@ class TahunakademikModel extends Model
     protected $primaryKey = 'id';
     protected $allowedFields = ['tahun'];
 
-    
+    public function tahun_awal($id){
+		$query = $this->db->query("SELECT * FROM tahun_akademik WHERE kode='$id' ");
+		return $query->getResult();
+	
+	}
 }

@@ -11,7 +11,7 @@ class PenjadwalanModel2 extends Model
     protected $allowedFields = ['id_pengampu', 'id_hari', 'id_jam', 'id_ruang']; // Fields yang dapat diisi
 
     // Mengambil semua jadwal
-    public function getAllJadwal() {
+    public function get() {
         return $this->db->query("
             SELECT  e.nama as hari, 
                     IF(c.jumlah_jam='4','2',IF(c.jumlah_jam='1','1',IF(c.jumlah_jam='2','2',IF(c.jumlah_jam='3','3','')))) as sks,

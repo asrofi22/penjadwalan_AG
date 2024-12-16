@@ -48,7 +48,7 @@
                                             data-bs-target="#modalEdit" 
                                             data-id="<?= $semester['id'] ?>" 
                                             data-nama_semester="<?= $semester['nama_semester'] ?>" 
-                                            data-tipe_semester="<?= $semester['tipe_semester'] ?>" 
+                                            data-semester_tipe="<?= $semester['semester_tipe'] ?>" 
                                             data-id_semester="<?= $semester['id_semester'] ?>" >
                                         <i data-feather="edit"></i>
                                     </button>
@@ -78,8 +78,8 @@
                                 <input type="text" class="form-control" id="nama_semester" name="nama_semester" required>
                             </div>
                             <div class="mb-3">
-                                <label for="tipe_semester" class="form-label">Tipe Semester</label>
-                                <select class="form-control" id="tipe_semester" name="tipe_semester" required>
+                                <label for="semester_tipe" class="form-label">Tipe Semester</label>
+                                <select class="form-control" id="semester_tipe" name="semester_tipe" required>
                                     <option value="">Pilih Tipe</option>
                                     <?php foreach ($tipe_semester as $tipe): ?>
                                         <option value="<?= $tipe['id'] ?>"><?= $tipe['tipe_semester'] ?></option>
@@ -118,7 +118,7 @@
                             </div>
                             <div class="mb-3">
                                 <label for="editTipeSemester" class="form-label">Tipe Semester</label>
-                                <select class="form-control" id="editTipeSemester" name="tipe_semester" required>
+                                <select class="form-control" id="editTipeSemester" name="semester_tipe" required>
                                     <option value="">Pilih Tipe</option>
                                     <?php foreach ($tipe_semester as $tipe): ?>
                                         <option value="<?= $tipe['id'] ?>"><?= $tipe['tipe_semester'] ?></option>
@@ -148,13 +148,13 @@
         const button = event.relatedTarget;
         const id = button.getAttribute('data-id');
         const nama_semester = button.getAttribute('data-nama_semester');
-        const tipe_semester = button.getAttribute('data-tipe_semester');
+        const semester_tipe = button.getAttribute('data-semester_tipe');
         const id_semester = button.getAttribute('data-id_semester');
 
         // Isi form edit
         document.getElementById('editId').value = id;
         document.getElementById('editNamaSemester').value = nama_semester;
-        document.getElementById('editTipeSemester').value = tipe_semester;
+        document.getElementById('editTipeSemester').value = semester_tipe;
         document.getElementById('editIdSemester').value = id_semester;
 
         // Atur URL form

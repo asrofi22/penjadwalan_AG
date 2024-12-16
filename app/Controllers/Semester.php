@@ -24,7 +24,7 @@ class Semester extends BaseController
 
         $data = [
             'nama_semester' => $this->request->getPost('nama_semester'),
-            'tipe_semester' => $this->request->getPost('tipe_semester'),
+            'semester_tipe' => $this->request->getPost('tipe_semester'),
             'id_semester'   => $this->request->getPost('id_semester'),
         ];
 
@@ -39,7 +39,7 @@ class Semester extends BaseController
         $data = [
             'id'            => $id,
             'nama_semester' => $this->request->getPost('nama_semester'),
-            'tipe_semester' => $this->request->getPost('tipe_semester'),
+            'semester_tipe' => $this->request->getPost('tipe_semester'),
             'id_semester'   => $this->request->getPost('id_semester'),
         ];
 

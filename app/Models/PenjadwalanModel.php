@@ -10,12 +10,24 @@ class PenjadwalanModel extends Model
     protected $primaryKey = 'id_pengampu';
     protected $allowedFields = ['id_pengampu', 'id_hari', 'id_jam', 'id_ruang'];
 
-    public function cek_jadwal($tipe_semester, $tahun_akademik, $prodi)
-    {
-        return $this->where(['tipe_semester' => $tipe_semester, 'tahun_akademik' => $tahun_akademik, 'id_prodi' => $prodi])->first();
-    }
+    function cek_jadwal($semester_tipe,$tahun_akademik,$prodi){
+		
+		$sql  = "SELECT a.id  ,".
+				"       b.id ,".
+				"       c.id ".
+				"FROM riwayat_penjadwalan a ".
+				"LEFT JOIN pengampu b ".
+				"ON a.id_pengampu = b.id ".
+				"LEFT JOIN semester c ".
+				"ON b.semester = c.id ".
+				"WHERE c.semester_tipe = '$semester_tipe' AND b.tahun_akademik = '$tahun_akademik' AND b.id_prodi = '$prodi'";
+		
+		$rs = $this->db->query($sql);
+		return $rs->getResult();
+		
+	}
 
-    function cek_banyak_prodi($tipe_semester,$tahun_akademik){
+    function cek_banyak_prodi($semester_tipe,$tahun_akademik){
 		
 		$sql  = "SELECT COUNT( DISTINCT d.id_prodi ) as banyak ,".
 				"       a.id ,".
@@ -28,31 +40,57 @@ class PenjadwalanModel extends Model
 				"ON b.semester = c.id ".
 				"LEFT JOIN prodi d ".
 				"ON b.id_prodi =d.id ".
-				"WHERE c.tipe$tipe_semester = '$tipe_semester' AND b.tahun_akademik = '$tahun_akademik'";
+				"WHERE c.semester_tipe = '$semester_tipe' AND b.tahun_akademik = '$tahun_akademik'";
 		
 		$rs = $this->db->query($sql);
 		return $rs->getResult();
 		
 	}
 
+    function cek_banyak_pengampu($semester_tipe,$tahun_akademik, $prodi){
+		
+		$sql  = "SELECT COUNT( a.id ) as banyak  ".
+				"FROM pengampu a ".
+				"LEFT JOIN semester b ".
+				"ON a.semester = b.id ".
+				"WHERE b.semester_tipe = '$semester_tipe' AND a.tahun_akademik = '$tahun_akademik' and a.id_prodi='$prodi'";
+		
+		$rs = $this->db->query($sql);
+		return $rs;
+		
+	}
+
     public function simpan_jadwal($id_pengampu,$id_jam,$id_hari,$id_ruang){
 	        
-		$data = array(
-						'id_pengampu' => $id_pengampu,
-						'id_hari' => $id_hari,
-						'id_jam' => $id_jam,
-						'id_ruang' => $id_ruang
-						
-					);
-            return $this->insert($data);
-		
+		$data = [
+            'id_pengampu' => $id_pengampu,
+            'id_hari' => $id_hari,
+            'id_jam' => $id_jam,
+            'id_ruang' => $id_ruang
+        ];
+    
+        // Menggunakan query builder untuk melakukan insert
+        $builder = $this->db->table('riwayat_penjadwalan');
+        $result = $builder->insert($data);
 		return $result;
 	}
 
-    public function get()
+    public function getAllJadwal()
     {
         return $this->db->table('jadwalkuliah a')
-            ->select("e.nama as hari, a.id_pengampu, a.id_hari, a.id_jam, a.id_ruang, b.id, b.tahun_akademik, b.id_prodi, b.kuota, f.kapasitas, c.id_mk, c.jumlah_jam, e.id_hari, c.nama as nama_mk, c.semester, d.id_dosen, d.nama as dosen, f.id_ruang, f.nama as ruang, g.id_jam, g.range_jam as jam_kuliah, g.sesi, h.id_kelas, h.id as id_kelas, h.nama_kelas, i.id_prodi, i.id, i.prodi as nama_prodi, j.id as id_tipe_semester, j.tipe_semester, k.id as id_tahun, k.tahun as nama_tahun, l.id_semester, l.id as id_semester, l.nama_semester, l.tipe_semester, m.prodi as nama_prodi, m.id as id_prodi")
+            ->select([
+                'e.nama as hari',
+                'c.nama as nama_mk',
+                'd.nama as dosen',
+                'f.nama as ruang',
+                'g.range_jam as jam_kuliah',
+                'b.tahun_akademik',
+                'c.semester',
+                'h.nama_kelas',
+                'i.prodi as nama_prodi',
+                'j.tipe_semester',
+                'k.tahun as nama_tahun'
+            ])
             ->join('pengampu b', 'a.id_pengampu = b.id', 'left')
             ->join('matakuliah c', 'b.id_mk = c.id', 'left')
             ->join('dosen d', 'b.id_dosen = d.id', 'left')
@@ -61,44 +99,55 @@ class PenjadwalanModel extends Model
             ->join('jam2 g', 'a.id_jam = g.id', 'left')
             ->join('kelas h', 'b.kelas = h.id', 'left')
             ->join('prodi i', 'b.id_prodi = i.id', 'left')
-            ->join('tipe_semester j', 'c.semester = j.id', 'left')
+            ->join('semester_tipe j', 'c.semester = j.id', 'left')
             ->join('tahun_akademik k', 'b.tahun_akademik = k.id', 'left')
-            ->join('semester l', 'b.semester = l.id', 'left')
-            ->join('prodi m', 'i.id_prodi = m.id', 'left')
             ->orderBy('e.id', 'ASC')
-            ->orderBy('g.Jam_Kuliah', 'ASC')
+            ->orderBy('g.range_jam', 'ASC')
             ->get()
-            ->getResult();
+            ->getResult(); 
     }
 
     public function getPerDosen($id_dosen = null)
     {
-        return $this->db->table('jadwalkuliah a')
-            ->select("e.nama as hari, CONCAT_WS('-', CONCAT('(', g.id), CONCAT((SELECT id FROM jam WHERE id = (SELECT jm.id FROM jam jm WHERE MID(jm.range_jam,1,5) = MID(g.range_jam,1,5)) + (c.jumlah_jam - 1)), ')')) as sesi, CONCAT_WS('-', MID(g.range_jam,1,5), (SELECT MID(range_jam,7,5) FROM jam WHERE id = (SELECT jm.id FROM jam jm WHERE MID(jm.range_jam,1,5) = MID(g.range_jam,1,5)) + (c.jumlah_jam - 1))) as jam_kuliah, c.nama as nama_mk, c.jumlah_jam, c.semester, b.kelas, d.nama as dosen, f.nama as ruang")
-            ->join('pengampu b', 'a.id_pengampu = b.id')
-            ->join('matakuliah c', 'b.id_mk = c.id')
-            ->join('dosen d', 'b.id_dosen = d.id')
-            ->join('hari e', 'a.id_hari = e.id')
-            ->join('ruang f', 'a.id_ruang = f.id')
-            ->join('jam g', 'a.id_jam = g.id')
-            ->where('b.id_dosen', $id_dosen)
-            ->orderBy('e.id', 'ASC')
-            ->orderBy('g.range_jam', 'ASC')
-            ->get()
-            ->getResult();
+        $rs = $this->db->table('jadwalpelajaran a');
+
+        $rs->select([
+            'e.nama as hari',
+            'CONCAT_WS("-", CONCAT("(", g.id), CONCAT((SELECT id FROM jam WHERE id = (SELECT jm.id FROM jam jm WHERE MID(jm.range_jam, 1, 5) = MID(g.range_jam, 1, 5)) + (c.jumlah_jam - 1)), ")")) as sesi',
+            'CONCAT_WS("-", MID(g.range_jam, 1, 5), (SELECT MID(range_jam, 7, 5) FROM jam WHERE id = (SELECT jm.id FROM jam jm WHERE MID(jm.range_jam, 1, 5) = MID(g.range_jam, 1, 5)) + (c.jumlah_jam - 1))) as jam_kuliah',
+            'c.nama as nama_mk',
+            'c.jumlah_jam as jumlah_jam',
+            'c.semester as semester',
+            'b.kelas as kelas',
+            'd.nama as dosen',
+            'f.nama as ruang'
+        ])
+        ->join('pengampu b', 'a.id_pengampu = b.id', 'left')
+        ->join('matapelajaran c', 'b.id_mk = c.id', 'left')
+        ->join('dosen d', 'b.id_dosen = d.id', 'left')
+        ->join('hari e', 'a.id_hari = e.id', 'left')
+        ->join('ruang f', 'a.id_ruang = f.id', 'left')
+        ->join('jam g', 'a.id_jam = g.id', 'left')
+        ->where('b.id_dosen', $id_dosen)
+        ->orderBy('e.id', 'ASC')
+        ->orderBy('g.range_jam', 'ASC');
+
+        return $rs; // Mengembalikan hasil sebagai array objek
     }
 
-    public function semua_jadwal($tipe_semester, $tahun_akademik)
-    {
-        return $this->db->table('riwayat_penjadwalan a')
-            ->select('a.id_pengampu')
-            ->join('pengampu b', 'a.id_pengampu = b.id')
-            ->join('semester c', 'b.semester = c.id')
-            ->where('c.tipe_semester', $tipe_semester)
-            ->where('b.tahun_akademik', $tahun_akademik)
-            ->get()
-            ->getResult();
-    }
+    public function semua_jadwal($semester_tipe,$tahun_akademik){
+		$sql  = "SELECT a.id_pengampu  ".
+				"FROM riwayat_penjadwalan a ".
+				"LEFT JOIN pengampu b ".
+				"ON a.id_pengampu = b.id ".
+				"LEFT JOIN semester c ".
+				"ON b.semester = c.id ".
+				"WHERE c.semester_tipe = '$semester_tipe' AND b.tahun_akademik = '$tahun_akademik' ";
+		
+		$rs = $this->db->query($sql);
+		return $rs->getResult();
+	
+	}
 
     public function hapus_jadwal($tipe_semester, $tahun_akademik, $prodi)
     {
