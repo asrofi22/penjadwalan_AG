@@ -6,7 +6,7 @@
     <section class="content-header">
         <h1>Penjadwalan</h1>
         <ol class="breadcrumb">
-            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li><a href="#"><i class="fa fa-dashboard"></i>Home</a></li>
             <li class="active">Penjadwalan</li>
         </ol>
     </section>
@@ -69,12 +69,12 @@
                                         if (isset($tahun_a) && $tahun_a == true) {
                                             $tahun_awal = $this->TahunakademikModel->tahun_awal($tahun_a);
                                             foreach ($tahun_awal as $a);
-                                            echo '<option value="' . $a->kode . '">' . $a->tahun . '</option>';
+                                            echo '<option value="' . $a->id . '">' . $a->tahun . '</option>';
                                         }
                                         // Pastikan $rs_tahun sudah didefinisikan
                                         if (isset($rs_tahun) && !empty($rs_tahun)) {
                                             foreach ($rs_tahun as $tahun): ?>
-                                                <option value="<?= $tahun->kode; ?>" <?= $this->session->userdata('pengampu_tahun_akademik') === $tahun->tahun ? 'selected' : ''; ?>>
+                                                <option value="<?= $tahun->id; ?>" <?= $this->session->userdata('pengampu_tahun_akademik') === $tahun->tahun ? 'selected' : ''; ?>>
                                                     <?= $tahun->tahun; ?>
                                                 </option>
                                             <?php endforeach; 
@@ -88,9 +88,9 @@
                                     <select id="prodi" name="prodi" class="input-xlarge">
                                         <?php  
                                         if (isset($prodi) && $prodi == true) {  // Memastikan $prodi terdefinisi
-                                          $kode_prodi = $this->ProdiModel->per_prodi($prodi);
-                                          foreach ($kode_prodi as $j);
-                                          echo '<option value="' . $j->kode . '">' . $j->nama_prodi . '</option>';
+                                          $id_prodi = $this->ProdiModel->per_prodi($prodi);
+                                          foreach ($id_prodi as $j);
+                                          echo '<option value="' . $j->id . '">' . $j->nama_prodi . '</option>';
                                           echo '<option value="0">Semua Prodi</option>';
                                       } else {
                                           echo '<option value="0">Semua Prodi</option>';  // Opsi jika $prodi tidak terdefinisi

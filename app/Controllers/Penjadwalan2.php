@@ -108,11 +108,6 @@ class Penjadwalan2 extends BaseController {
 
     public function __construct()
     {
-        // Memuat pustaka, helper, dan model di CI4
-        $this->session = session(); // Mendapatkan session dari CI4
-        $this->form_validation = \Config\Services::validation(); // Form validation di CI4
-        $this->db = \Config\Database::connect(); // Mengakses database
-        $this->pagination = \Config\Services::pagination(); // Mengakses pagination
 
         // Memuat model
         $this->JamModel = new JamModel();
@@ -173,8 +168,6 @@ class Penjadwalan2 extends BaseController {
 
             if($this->form_validation->run() === true){
                 $start = microtime(true);
-
-                // Bismillah, one step closer to getting S.Kom(edi).  SEMANGATTTTTTTTTTTTTTTTTTTTTTTT
 
                 $jenis_semester = $this->request->getPost('tipe_semester');
                 $prodi = $this->request->getPost('prodi');

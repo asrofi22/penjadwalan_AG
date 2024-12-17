@@ -156,7 +156,7 @@ class Penjadwalan3 extends BaseController {
     public function simpan_jadwal()
     {
         // Mengambil data jadwal
-        $jadwal = $this->models['penjadwalan']->findAll();
+        $jadwal = $this->models['PenjadwalanModel']->findAll();
         
         foreach ($jadwal as $k) {
             $tipe_semester = $k['tipe_semester'];
@@ -164,8 +164,8 @@ class Penjadwalan3 extends BaseController {
             $prodi = $k['id_prodi'];
         }
 
-        $banyak_prodi = $this->models['penjadwalan']->cek_banyak_prodi($tipe_semester, $tahun_akademik);
-        $riwayat = $this->models['penjadwalan']->semua_jadwal($tipe_semester, $tahun_akademik);
+        $banyak_prodi = $this->models['PenjadwalanModel']->cek_banyak_prodi($tipe_semester, $tahun_akademik);
+        $riwayat = $this->models['PenjadwalanModel']->semua_jadwal($tipe_semester, $tahun_akademik);
     
         foreach ($banyak_prodi as $b) {
             if ($b['banyak'] > 1) {
@@ -178,10 +178,10 @@ class Penjadwalan3 extends BaseController {
                     $id_jam = $j['id_jam'];
                     $id_hari = $j['id_hari'];
                     $id_ruang = $j['id_ruang'];
-                    $this->models['penjadwalan']->simpan_jadwal($id_pengampu, $id_jam, $id_hari, $id_ruang);
+                    $this->models['PenjadwalanModel']->simpan_jadwal($id_pengampu, $id_jam, $id_hari, $id_ruang);
                 }
             } else {
-                $cek = $this->models['penjadwalan']->cek_jadwal($tipe_semester, $tahun_akademik, $prodi);
+                $cek = $this->models['PenjadwalanModel']->cek_jadwal($tipe_semester, $tahun_akademik, $prodi);
                 
                 if ($cek) {
                     // Hapus jadwal yang sudah ada
@@ -193,7 +193,7 @@ class Penjadwalan3 extends BaseController {
                         $id_jam = $j['id_jam'];
                         $id_hari = $j['id_hari'];
                         $id_ruang = $j['id_ruang'];
-                        $this->models['penjadwalan']->simpan_jadwal($id_pengampu, $id_jam, $id_hari, $id_ruang);
+                        $this->models['PenjadwalanModel']->simpan_jadwal($id_pengampu, $id_jam, $id_hari, $id_ruang);
                     }
                 } else {
                     // Simpan jadwal
@@ -202,7 +202,7 @@ class Penjadwalan3 extends BaseController {
                         $id_jam = $j['id_jam'];
                         $id_hari = $j['id_hari'];
                         $id_ruang = $j['id_ruang'];
-                        $this->models['penjadwalan']->simpan_jadwal($id_pengampu, $id_jam, $id_hari, $id_ruang);
+                        $this->models['PenjadwalanModel']->simpan_jadwal($id_pengampu, $id_jam, $id_hari, $id_ruang);
                     }
                 }
             }
@@ -211,7 +211,7 @@ class Penjadwalan3 extends BaseController {
         // Menyiapkan data untuk tampilan 
         $data['rs_tahun'] = $this->models['tahunakademik']->findAll();
         $data['waktu'] = "Berhasil menyimpan jadwal";
-        $data['rs_jadwal'] = $this->models['penjadwalan']->findAll();
+        $data['rs_jadwal'] = $this->models['PenjadwalanModel']->findAll();
 
         // Mengatur tampilan (view)
         return view('penjadwalan', $data);
