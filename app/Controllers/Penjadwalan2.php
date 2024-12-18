@@ -149,7 +149,7 @@ class Penjadwalan2 extends BaseController {
         return view('penjadwalan', $data);
 
 
-        $data = array();
+        $data = [];
         $userModel = new UserModel();
         $user = $userModel->find($session->get('user_id'));
 
