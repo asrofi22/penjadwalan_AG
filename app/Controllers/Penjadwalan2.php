@@ -73,8 +73,6 @@ class Penjadwalan2 extends BaseController {
     private $kuota_ruangLaboratorium = array();
     private $ruangLaboratorium = array();
     private $ruangReguler = array();
-    private $logAmbilData;
-    private $logInisialisasi;
 
     private $induk = array();
 
@@ -82,7 +80,6 @@ class Penjadwalan2 extends BaseController {
     private $id_jumat;
     private $range_jumat = array();
     private $id_dhuhur;
-    private $is_waktu_dosen_tidak_bersedia_empty;
 
     protected $session;
     protected $form_validation;
