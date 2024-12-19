@@ -63,25 +63,22 @@
                                         ?>
                                     </select>
 
-                                    <label>Tahun Akademik</label>
-                                    <select id="tahun_akademik" name="tahun_akademik" class="input-xlarge" onchange="change_get()">
-                                        <?php  
-                                        if (isset($tahun_a) && $tahun_a == true) {
+                                    <select id="tahun_akademik" name="tahun_akademik" class="input-xlarge">
+                                        <?php if (isset($tahun_a) && $tahun_a):
                                             $tahun_awal = $this->TahunakademikModel->tahun_awal($tahun_a);
-                                            foreach ($tahun_awal as $a);
-                                            echo '<option value="' . $a->id . '">' . $a->tahun . '</option>';
-                                        }
-                                        // Pastikan $rs_tahun sudah didefinisikan
-                                        if (isset($rs_tahun) && !empty($rs_tahun)) {
+                                            if ($tahun_awal !== null): // Periksa jika data ada
+                                        ?>
+                                                <option value="<?= $tahun_awal->id; ?>"><?= $tahun_awal->tahun; ?></option>
+                                        <?php else: ?>
+                                                <option value="">Tahun Akademik tidak ditemukan</option>
+                                        <?php endif;
+                                        else:
                                             foreach ($rs_tahun as $tahun): ?>
-                                                <option value="<?= $tahun['id']; ?>" <?= $this->session->userdata('pengampu_tahun_akademik') === $tahun->tahun ? 'selected' : ''; ?>>
+                                                <option value="<?= $tahun->id; ?>" <?= ($pengampu_tahun_akademik === $tahun->tahun) ? 'selected' : ''; ?>>  <!-- Gunakan variabel dari controller -->
                                                     <?= $tahun->tahun; ?>
                                                 </option>
-                                            <?php endforeach; 
-                                        } else {
-                                            echo '<option value="">Tidak ada data tahun akademik</option>'; // Opsi jika tidak ada tahun
-                                        }
-                                        ?>
+                                        <?php endforeach;
+                                        endif; ?>
                                     </select>
 
                                     <label>Prodi</label>
