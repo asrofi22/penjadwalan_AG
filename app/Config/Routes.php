@@ -88,9 +88,5 @@ $routes->get('/penjadwalan/excel_report', 'Penjadwalan2::excel_report'); // Rout
 $routes->post('/penjadwalan/simpan_jadwal', 'Penjadwalan2::simpan_jadwal'); // Route to save the schedule
 $routes->post('/penjadwalan/hapus_jadwal', 'Penjadwalan2::hapus_jadwal'); // Route to delete the schedule
 
-$routes->get('/penjadwalan4', 'Penjadwalan4::index');
-$routes->post('proses', 'Penjadwalan4::proses');
-$routes->get('export', 'Penjadwalan4::export');
-$routes->get('riwayat', 'Penjadwalan4::riwayat');
-$routes->get('riwayat/hapus/(:num)', 'Penjadwalan4::hapusRiwayat/$1');
+
 
