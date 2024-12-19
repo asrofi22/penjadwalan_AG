@@ -143,7 +143,9 @@ class Penjadwalan2 extends BaseController {
             'kelas_list' => $this->KelasModel->findAll(),
             'tahun_akademik_list' => $this->TahunakademikModel->findAll(),
             'semester_list' => $this->SemesterModel->findAll(),
-            'ruang_list' => $this->RuangModel->findAll()
+            'ruang_list' => $this->RuangModel->findAll(),
+            'rs_jadwal' => $this->PenjadwalanModel->getAllJadwal(), // Ambil data jadwal di sini
+            'rs_tahun' => $this->TahunakademikModel->semua_tahun() 
         ];
         
         return view('penjadwalan', $data);
@@ -172,11 +174,11 @@ class Penjadwalan2 extends BaseController {
                 $crossOver = $this->request->getPost('probabilitas_crossover');
                 $mutasi = $this->request->getPost('probabilitas_mutasi');
                 $jumlah_generasi = $this->request->getPost('jumlah_generasi');
-                $data['rs_jadwal'] = $PenjadwalanModel->getAllJadwal(); // Pastikan method get() mengembalikan data yang sesuai
+                $rs_jadwal = $this->PenjadwalanModel->getAllJadwal();
+                $rs_tahun = $this->TahunakademikModel->semua_tahun();
 
                 $data['semester_a'] = $this->request->getPost('tipe_semester') ?? false;
                 $data['tahun_a'] = $this->request->getPost('tahun_akademik') ?? false; // atau default ke false jika tidak diatur
-                $data['rs_tahun'] = $this->TahunakademikModel->findAll();
                 $data['tahun_a'] = $this->request->getPost('tahun_akademik') ?? false; // atau default ke false jika tidak diatur
                 $data['prodi'] = $this->request->getPost('prodi') ?? false; // atau default ke false jika tidak diatur
 
@@ -198,12 +200,12 @@ class Penjadwalan2 extends BaseController {
                     $rs_data = $this->db->query("SELECT a.id FROM pengampu a 
                     LEFT JOIN semester b ON a.semester = b.id
                     LEFT JOIN tahun_akademik c ON a.tahun_akademik = c.id
-                    WHERE b.tipe_semester = ? AND a.tahun_akademik = ? AND a.id_prodi = ?", [$jenis_semester, $tahun_akademik, $prodi]);
+                    WHERE b.semester_tipe = ? AND a.tahun_akademik = ? AND a.id_prodi = ?", [$jenis_semester, $tahun_akademik, $prodi]);
                 } else {
                     $rs_data = $this->db->query("SELECT a.id FROM pengampu a 
                     LEFT JOIN semester b ON a.semester = b.id
                     LEFT JOIN tahun_akademik c ON a.tahun_akademik = c.id
-                    WHERE b.tipe_semester = ? AND a.tahun_akademik = ?", [$jenis_semester, $tahun_akademik]);
+                    WHERE b.semester_tipe = ? AND a.tahun_akademik = ?", [$jenis_semester, $tahun_akademik]);
                 }
 
                 // Mengecek apakkah data  ditemukan
@@ -223,7 +225,7 @@ class Penjadwalan2 extends BaseController {
 					
 					$e=0;
 					$c=0;
-					$this->db->query("TRUNCATE TABLE jadwalpelajaran");	
+					$this->db->query("TRUNCATE TABLE jadwalkuliah");	
 					for($f = 0;$f <= $banyak_populasi;$f++ ){
 					$query='asc limit '.$e.',2';
 						$mod = intval($rs_data->getNumRows() % 2);
@@ -303,7 +305,7 @@ class Penjadwalan2 extends BaseController {
 
         // Data yang dikirimkan ke view
         $data['page_name'] = 'penjadwalan';
-        $data['rs_tahun'] = $this->TahunakademikModel->findAll();
+        $data['rs_tahun'] = $this->TahunakademikModel->semua_tahun();
         $data['pengampu_tahun_akademik'] = $pengampu_tahun_akademik;
         $data['rs_jadwal'] = $this->PenjadwalanModel->getAllJadwal();
         echo view('layout/navbar', $datas);

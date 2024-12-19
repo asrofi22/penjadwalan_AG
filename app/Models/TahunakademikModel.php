@@ -15,4 +15,8 @@ class TahunakademikModel extends Model
 		return $query->getResult();
 	
 	}
+  public function semua_tahun()
+    {
+        return $this->tahunakademikModel->findAll(); // Mengembalikan semua data dari tabel tahun akademik
+    }
 }

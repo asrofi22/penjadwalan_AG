@@ -74,7 +74,7 @@
                                         // Pastikan $rs_tahun sudah didefinisikan
                                         if (isset($rs_tahun) && !empty($rs_tahun)) {
                                             foreach ($rs_tahun as $tahun): ?>
-                                                <option value="<?= $tahun->id; ?>" <?= $this->session->userdata('pengampu_tahun_akademik') === $tahun->tahun ? 'selected' : ''; ?>>
+                                                <option value="<?= $tahun['id']; ?>" <?= $this->session->userdata('pengampu_tahun_akademik') === $tahun->tahun ? 'selected' : ''; ?>>
                                                     <?= $tahun->tahun; ?>
                                                 </option>
                                             <?php endforeach; 
@@ -139,11 +139,10 @@
 
                             <!-- // Pastikan rs_jadwal tidak kosong sebelum menjalankan foreach -->
 
-                              <?php foreach ($rs_jadwal->getResult() as $ket): ?>
-                                <label> Semester <?= $ket->tipe_semester ?> Tahun Ajaran <?= $ket->nama_tahun ?> </label>
-                            <?php endforeach; ?>          
-                            <table id="example1" class="table table-bordered table-striped">
-                                <thead>
+                            <?php if (isset($rs_jadwal) && $rs_jadwal->getNumRows() > 0): ?>   
+                              <label> Semester <?= $rs_jadwal->getRow(0)->tipe_semester; ?> Tahun Ajaran <?= $rs_jadwal->getRow(0)->nama_tahun; ?> </label>  <!-- ambil data dari row pertama -->
+                              <table id="example1" class="table table-bordered table-striped">
+                                  <thead>
                                       <tr>
                                           <th>No</th>
                                           <th>Hari</th>
@@ -191,7 +190,12 @@
                                         </tr>
                                     </tfoot>
                                 </table>
-
+                                <?php else: ?>
+                                    <div class="alert alert-info">
+                                    <button type="button" class="close" data-dismiss="alert">×</button>             
+                                    Tidak ada data jadwal yang ditemukan.
+                                </div>  
+                                <?php endif; ?>
                                 <div id="loading-div-background">
                                     <div id="loading-div" class="ui-corner-all">
                                         <img style="height:50px;width:50px;margin:20px;" src="<?php echo base_url()?>assets/loader2.gif" alt="Loading.."/><br>PROCESSING<br>PLEASE WAIT

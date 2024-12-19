@@ -74,6 +74,15 @@ class PenjadwalanModel extends Model
         $result = $builder->insert($data);
 		return $result;
 	}
+    public function detail_pengampu($id_pengampu)
+    {
+        return $this->db->table('pengampu')
+            ->select('nama_mk, nama_kelas')
+            ->join('matakuliah', 'pengampu.id_mk = matakuliah.id')
+            ->join('kelas', 'pengampu.kelas = kelas.id')
+            ->where('pengampu.id', $id_pengampu)
+            ->get()->getRow();
+    }
 
     public function getAllJadwal()
     {
@@ -84,44 +93,19 @@ class PenjadwalanModel extends Model
             "IF(c.jumlah_jam='4','2',IF(c.jumlah_jam='1','1',IF(c.jumlah_jam='2','2',IF(c.jumlah_jam='3','3','')))) as sks",
             "CONCAT_WS('-', CONCAT('(', g.id), CONCAT((SELECT id FROM jam WHERE id = (SELECT jm.id FROM jam jm WHERE MID(jm.range_jam, 1, 5) = MID(g.range_jam, 1, 5)) + (sks - 1)), ')')) as sesi",
             "CONCAT_WS('-', MID(g.range_jam, 1, 5), (SELECT MID(range_jam, 7, 5) FROM jam WHERE id = (SELECT jm.id FROM jam jm WHERE MID(jm.range_jam, 1, 5) = MID(g.range_jam, 1, 5)) + (sks - 1))) as jam_kuliah",
-            'e.nama as hari',
             'a.id_pengampu',
-            'a.id_hari',
-            'a.id_jam',
-            'a.id_ruang',
-            'b.id',
             'b.tahun_akademik',
             'b.id_prodi',
             'b.kuota',
             'f.kapasitas',
-            'c.id_mk',
-            'c.jumlah_jam',
-            'e.id_hari',
             'c.nama as nama_mk',
-            'c.semester',
-            'd.id_dosen',
             'd.nama as dosen',
-            'f.id_ruang',
             'f.nama as ruang',
-            'g.id_jam',
-            'g.range_jam as jam_kuliah',
-            'g.sesi',
-            'h.id_kelas',
-            'h.id as id_kelas',
             'h.nama_kelas',
-            'i.id_prodi',
-            'i.id',
             'i.prodi as nama_prodi',
-            'j.id as id_semester_tipe',
-            'j.tipe_semester',
-            'k.id as id_tahun',
-            'k.tahun as nama_tahun',
-            'l.id_semester',
-            'l.id as id_semester',
             'l.nama_semester',
-            'l.semester_tipe',
-            'm.prodi as nama_prodi',
-            'm.id as id_prodi'
+            'j.tipe_semester',
+            'k.tahun as nama_tahun'
         ])
         ->join('pengampu b', 'a.id_pengampu = b.id', 'left')
         ->join('matakuliah c', 'b.id_mk = c.id', 'left')
@@ -134,10 +118,10 @@ class PenjadwalanModel extends Model
         ->join('semester_tipe j', 'c.semester = j.id', 'left')
         ->join('tahun_akademik k', 'b.tahun_akademik = k.id', 'left')
         ->join('semester l', 'b.semester = l.id', 'left')
-        ->join('prodi m', 'i.id_prodi = m.id', 'left')
         ->orderBy('e.id', 'ASC')
-        ->orderBy('g.range_jam', 'ASC'); // Perbaiki kolom yang digunakan pada orderBy
-        return $builder->get(); 
+        ->orderBy('g.range_jam', 'ASC');
+
+        return $builder->get()->getResult(); //  Kembalikan sebagai array object
     }
 
     public function getPerDosen($id_dosen = null)
