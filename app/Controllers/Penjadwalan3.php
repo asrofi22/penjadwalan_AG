@@ -71,9 +71,6 @@ class Penjadwalan3 extends BaseController {
     private $kuota_ruangReguler = [];
     private $kuota_ruangLaboratorium = [];
     private $ruangLaboratorium = [];
-    private $ruangReguler = [];
-    private $logAmbilData;
-    private $logInisialisasi;
 
     private $induk = [];
 
