@@ -59,17 +59,13 @@ class Penjadwalan3 extends BaseController {
     private $hari = [];
     private $idosen = [];
     private $itersimpan = [];
-    private $itersimpann = [];
     private $itersedia = [];
-    private $itersediaa = [];
 
     private $waktu_dosen = [[]];
     private $waktu_tersedia = [[]];
     private $waktu_tersimpan = [[]];
     private $jenis_mk = [];
 
-    private $kuota_ruangReguler = [];
-    private $kuota_ruangLaboratorium = [];
     private $ruangLaboratorium = [];
 
     private $induk = [];
