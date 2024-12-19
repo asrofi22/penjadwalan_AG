@@ -127,13 +127,7 @@ class Penjadwalan2 extends BaseController {
 
     public function index() 
     {
-        // Menggunakan session() untuk mengakses sesssion di CI4
-        $session = \Config\Services::session();
-        $pengampu_tahun_akademik = $session->get('pengampu_tahun_akademik');
-
-        if (!$session->get('logged_in')) {
-            return redirect()->to('admin');
-        }
+    
 
         $data = [
             'prodi_list' => $this->ProdiModel->findAll(),
@@ -145,7 +139,9 @@ class Penjadwalan2 extends BaseController {
             'semester_list' => $this->SemesterModel->findAll(),
             'ruang_list' => $this->RuangModel->findAll(),
             'rs_jadwal' => $this->PenjadwalanModel->getAllJadwal(), // Ambil data jadwal di sini
-            'rs_tahun' => $this->TahunakademikModel->semua_tahun() 
+            // 'rs_tahun' => $this->TahunakademikModel->semua_tahun() 
+            'rs_tahun' => $this->TahunakademikModel->findAll(),
+            'semua_prodi' => $this->ProdiModel->findAll() // Panggil findAll() di sini
         ];
         
         return view('penjadwalan', $data);
@@ -168,6 +164,8 @@ class Penjadwalan2 extends BaseController {
             if($this->form_validation->run() === true){
                 $start = microtime(true);
 
+                // Bismillahhhhhh
+
                 $jenis_semester = $this->request->getPost('tipe_semester');
                 $prodi = $this->request->getPost('prodi');
                 $tahun_akademik = $this->request->getPost('tahun_akademik');
@@ -175,7 +173,7 @@ class Penjadwalan2 extends BaseController {
                 $mutasi = $this->request->getPost('probabilitas_mutasi');
                 $jumlah_generasi = $this->request->getPost('jumlah_generasi');
                 $rs_jadwal = $this->PenjadwalanModel->getAllJadwal();
-                $rs_tahun = $this->TahunakademikModel->semua_tahun();
+                $rs_tahun = $this->TahunakademikModel->findAll();
 
                 $data['semester_a'] = $this->request->getPost('tipe_semester') ?? false;
                 $data['tahun_a'] = $this->request->getPost('tahun_akademik') ?? false; // atau default ke false jika tidak diatur
@@ -186,7 +184,7 @@ class Penjadwalan2 extends BaseController {
                 // Menyimpan data yang dikirim
                 $data['semester_a'] = $jenis_semester;
                 $data['prodi'] = $prodi;
-                $data['semua_prodi'] = $this->ProdiModel->semua_prodi2();
+                $data['semua_prodi'] = $this->ProdiModel->findAll();
                 $data['tahun_a'] = $tahun_akademik;
 				$datas['tipe_semester'] = $jenis_semester;
 				$datas['tahun_akademik'] = $tahun_akademik;
@@ -196,7 +194,7 @@ class Penjadwalan2 extends BaseController {
 				
 
                 // Query untuk mendapatkan data berdasarkan semester dan tahun akademik
-                if($prodi) {
+                if($prodi==true) {
                     $rs_data = $this->db->query("SELECT a.id FROM pengampu a 
                     LEFT JOIN semester b ON a.semester = b.id
                     LEFT JOIN tahun_akademik c ON a.tahun_akademik = c.id
@@ -305,8 +303,7 @@ class Penjadwalan2 extends BaseController {
 
         // Data yang dikirimkan ke view
         $data['page_name'] = 'penjadwalan';
-        $data['rs_tahun'] = $this->TahunakademikModel->semua_tahun();
-        $data['pengampu_tahun_akademik'] = $pengampu_tahun_akademik;
+        $data['rs_tahun'] = $this->TahunakademikModel->findAll();
         $data['rs_jadwal'] = $this->PenjadwalanModel->getAllJadwal();
         echo view('layout/navbar', $datas);
         return view('penjadwalan', $data);

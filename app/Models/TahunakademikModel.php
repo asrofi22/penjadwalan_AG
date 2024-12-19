@@ -41,9 +41,11 @@ class TahunakademikModel extends Model
         return $this->orderBy('id', 'asc')->findAll(); // Gunakan findAll() dan orderBy()
     }
 
-    public function tahun_awal(int $id)
+    public function tahun_awal($tahun_a)
     {
-        return $this->find($id); // Gunakan find() jika 'id' adalah primary key
+        return $this->where('id', $tahun_a)
+                    ->get()
+                    ->getResult(); // Return as object
     }
 
     public function simpan_tahun(string $tahun): bool

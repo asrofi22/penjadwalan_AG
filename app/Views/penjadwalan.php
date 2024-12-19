@@ -63,36 +63,41 @@
                                         ?>
                                     </select>
 
-                                    <select id="tahun_akademik" name="tahun_akademik" class="input-xlarge">
-                                        <?php if (isset($tahun_a) && $tahun_a):
+                                    <label>Tahun Akademik</label>
+                                    <select id="tahun_akademik" name="tahun_akademik" class="input-xlarge" onchange="change_get()">
+                                        <?php  
+                                        if (isset($tahun_a) && $tahun_a == true) {
                                             $tahun_awal = $this->TahunakademikModel->tahun_awal($tahun_a);
-                                            if ($tahun_awal !== null): // Periksa jika data ada
+                                            foreach ($tahun_awal as $a);
+                                            echo '<option value="' . $a['id'] . '">' . $a['tahun'] . '</option>';
+                                        }
+                                        // Pastikan $rs_tahun sudah didefinisikan
+                                        foreach($rs_tahun as $tahun) { 
                                         ?>
-                                                <option value="<?= $tahun_awal->id; ?>"><?= $tahun_awal->tahun; ?></option>
-                                        <?php else: ?>
-                                                <option value="">Tahun Akademik tidak ditemukan</option>
-                                        <?php endif;
-                                        else:
-                                            foreach ($rs_tahun as $tahun): ?>
-                                                <option value="<?= $tahun->id; ?>" <?= ($pengampu_tahun_akademik === $tahun->tahun) ? 'selected' : ''; ?>>  <!-- Gunakan variabel dari controller -->
-                                                    <?= $tahun->tahun; ?>
-                                                </option>
-                                        <?php endforeach;
-                                        endif; ?>
+                                            <option value="<?php echo $tahun['id'];?>" <?php echo session('pengampu_tahun_akademik') === $tahun['tahun'] ? 'selected':''; ?>> <?php echo $tahun['tahun']; ?>
+                                                
+                                        <?php  
+                                        } 
+                                        ?>
                                     </select>
 
                                     <label>Prodi</label>
                                     <select id="prodi" name="prodi" class="input-xlarge">
-                                        <?php  
-                                        if (isset($prodi) && $prodi == true) {  // Memastikan $prodi terdefinisi
-                                          $id_prodi = $this->ProdiModel->per_prodi($prodi);
-                                          foreach ($id_prodi as $j);
-                                          echo '<option value="' . $j->id . '">' . $j->nama_prodi . '</option>';
-                                          echo '<option value="0">Semua Prodi</option>';
-                                      } else {
-                                          echo '<option value="0">Semua Prodi</option>';  // Opsi jika $prodi tidak terdefinisi
-                                      }
-                                      ?>
+                                    <?php  
+                                        if(isset($prodi) && $prodi == true){
+                                        $id_prodi = $this->ProdiModel->per_prodi($prodi);
+                                            foreach($id_prodi as $j);
+                                            echo'<option value="'.$j['id'].'">'.$j['prodi'].'</option>';
+                                            echo'<option value="0">Semua Prodi</option>';
+                                        }
+                                        else{
+                                            echo'<option value="0">Semua Prodi</option>';
+                                        }
+                                            
+                                            foreach($semua_prodi as $sj) { 
+                                            echo'<option value="'.$sj['prodi'].'">'.$sj['prodi'].'</option>';
+                                            } 
+                                            ?>
                                   </select>
 
                                   <input type="hidden" name="jumlah_populasi" value="<?= isset($jumlah_populasi) ? $jumlah_populasi : '50'; ?>">  
@@ -108,7 +113,7 @@
                               </form>
                           <?php endif; ?>
 
-                          <?php if (isset($rs_jadwal) && $rs_jadwal->num_rows() !== 0): ?>            
+                          <?php if (isset($rs_jadwal) && count($rs_jadwal) !== 0): ?>  
                               <a href="<?= base_url(); ?>index.php/penjadwalan2/hapus_jadwal">
                                   <button id="hapus_jadwal" class="btn btn-danger pull-right" onclick="ShowProgressAnimation();">
                                       <i class="icon-plus"></i> Hapus Jadwal
@@ -136,8 +141,7 @@
 
                             <!-- // Pastikan rs_jadwal tidak kosong sebelum menjalankan foreach -->
 
-                            <?php if (isset($rs_jadwal) && $rs_jadwal->getNumRows() > 0): ?>   
-                              <label> Semester <?= $rs_jadwal->getRow(0)->tipe_semester; ?> Tahun Ajaran <?= $rs_jadwal->getRow(0)->nama_tahun; ?> </label>  <!-- ambil data dari row pertama -->
+                            <?php if (isset($rs_jadwal) && count($rs_jadwal) !== 0): ?>                                <label> Semester <?= $rs_jadwal->getRow(0)->tipe_semester; ?> Tahun Ajaran <?= $rs_jadwal->getRow(0)->nama_tahun; ?> </label>  <!-- ambil data dari row pertama -->
                               <table id="example1" class="table table-bordered table-striped">
                                   <thead>
                                       <tr>
@@ -171,7 +175,7 @@
                                               <td>' . $jadwal->jumlah_jam . '</td>
                                               <td>' . $jadwal->nama_kelas . '</td>
                                                 <td>' . $jadwal->nama_semester . '</td>
-                                                <td>' . $jadwal->nama_prodi . '</td>
+                                                <td>' . $jadwal->prodi . '</td>
                                                 <td>' . $jadwal->kuota . '</td>
                                                 <td>' . $jadwal->ruang . '</td>
                                                 <td>' . $jadwal->kapasitas . '</td>
