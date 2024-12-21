@@ -365,36 +365,36 @@ class Penjadwalan2 extends BaseController {
         //exit();
         
         // Query untuk SKS = 1
-        $rs_data1 = $this->db->query("SELECT * FROM jam2 WHERE sks = '1'");
+        $rs_jam1 = $this->db->query("SELECT * FROM jam2 WHERE sks = '1'");
         $b = 0;
-        foreach ($rs_data->getResult() as $data) {
+        foreach ($rs_jam1->getResult() as $data) {
             $this->jam1[$b] = (int) $data->id;
             $this->sesi1[$b] = (int) $data->sesi;
             $b++;
         }
 
         // Query untuk SKS = 2
-        $rs_data2 = $this->db->query("SELECT * FROM jam2 WHERE sks = '2'");
+        $rs_jam2 = $this->db->query("SELECT * FROM jam2 WHERE sks = '2'");
         $b = 0;
-        foreach ($rs_data->getResult() as $data) {
+        foreach ($rs_jam2->getResult() as $data) {
             $this->jam2[$b] = (int) $data->id;
             $this->sesi2[$b] = (int) $data->sesi;
             $b++;
         }
 
         // Query untuk SKS = 3
-        $rs_data3 = $this->db->query("SELECT * FROM jam2 WHERE sks = '3'");
+        $rs_jam3 = $this->db->query("SELECT * FROM jam2 WHERE sks = '3'");
         $b = 0;
-        foreach ($rs_data->getResult() as $data) {
+        foreach ($rs_jam3->getResult() as $data) {
             $this->jam3[$b] = (int) $data->id;
             $this->sesi3[$b] = (int) $data->sesi;
             $b++;
         }
 
         // Query untuk SKS = 4
-        $rs_data4 = $this->db->query("SELECT * FROM jam2 WHERE sks = '4'");
+        $rs_jam4 = $this->db->query("SELECT * FROM jam2 WHERE sks = '4'");
         $b = 0;
-        foreach ($rs_data->getResult() as $data) {
+        foreach ($rs_jam4->getResult() as $data) {
             $this->jam4[$b] = (int) $data->id;
             $this->sesi4[$b] = (int) $data->sesi;
             $b++;
@@ -407,6 +407,9 @@ class Penjadwalan2 extends BaseController {
             $this->hari[$i] = (int) $data->id;
             $i++;
         }
+
+        //var_dump($this->ruangLaboratorium);
+        //exit(0);
 
         // Query untuk waktu dosen
         $rs_Waktudosen = $this->db->query("SELECT a.id_dosen, CONCAT_WS(':', a.id_hari, b.sesi)
