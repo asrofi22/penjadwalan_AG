@@ -963,7 +963,6 @@ class Penjadwalan2 extends BaseController {
                 }
             }
         }
-
         return $individu_baru;
     }
 
@@ -1050,7 +1049,6 @@ class Penjadwalan2 extends BaseController {
             // Evaluasi fitness setelah mutasi
             $fitness[$i] = $this->CekFitness($i, $prodi);
         }
-
         return $fitness;
     }
 
