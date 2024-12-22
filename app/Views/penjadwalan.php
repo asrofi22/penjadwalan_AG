@@ -49,7 +49,7 @@
                             </div>
 
                             <?php if (!isset($ses_id_dosen)): ?>
-                                <form method="POST" action="<?= base_url('penjadwalan'); ?>">
+                                <form method="POST" action="<?= base_url('penjadwalan/store'); ?>">
                                     <label>Semester</label>
                                     <select id="tipe_semester" name="tipe_semester" class="input-xlarge" onchange="change_get()">            
                                         <?php

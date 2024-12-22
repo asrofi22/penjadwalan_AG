@@ -145,11 +145,13 @@ class Penjadwalan2 extends BaseController {
         ];
         
         return view('penjadwalan', $data);
-
-
-        $data = [];
-        $userModel = new UserModel();
-        $user = $userModel->find($session->get('user_id'));
+    }
+    
+    public function store()
+    {
+        $jenis_semester = $this->request->getPost('tipe_semester');
+        $prodi = $this->request->getPost('prodi');
+        $tahun_akademik = $this->request->getPost('tahun_akademik');
 
         if (!empty($_POST)) {
             $this->validate([
@@ -165,7 +167,7 @@ class Penjadwalan2 extends BaseController {
                 $start = microtime(true);
 
                 // Bismillahhhhhh
-
+                $jumlah_populasi = $this->request->getPost('jumlah_populasi');
                 $jenis_semester = $this->request->getPost('tipe_semester');
                 $prodi = $this->request->getPost('prodi');
                 $tahun_akademik = $this->request->getPost('tahun_akademik');
