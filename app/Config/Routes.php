@@ -85,8 +85,8 @@ $routes->get('/waktutidakbersedia/delete/(:num)', 'Waktutidakbersedia::delete/$1
 $routes->get('/penjadwalan', 'Penjadwalan2::index'); 
 $routes->post('/penjadwalan', 'Penjadwalan2::index'); 
 $routes->get('/penjadwalan/excel_report', 'Penjadwalan2::excel_report'); 
-$routes->post('/penjadwalan/simpan_jadwal', 'Penjadwalan2::simpan_jadwal'); // Route to save the schedule
-$routes->post('/penjadwalan/hapus_jadwal', 'Penjadwalan2::hapus_jadwal'); // Route to delete the schedule
+$routes->post('/penjadwalan/simpan_jadwal', 'Penjadwalan2::simpan_jadwal'); 
+$routes->post('/penjadwalan/hapus_jadwal', 'Penjadwalan2::hapus_jadwal'); 
 
 
 
