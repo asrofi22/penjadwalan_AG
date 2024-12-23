@@ -81,24 +81,30 @@
                                         ?>
                                     </select>
 
-                                    <label>Prodi</label>
                                     <select id="prodi" name="prodi" class="input-xlarge">
-                                    <?php  
-                                        if(isset($prodi) && $prodi == true){
-                                        $id_prodi = $this->ProdiModel->per_prodi($prodi);
-                                            foreach($id_prodi as $j);
-                                            echo'<option value="'.$j['id'].'">'.$j['prodi'].'</option>';
-                                            echo'<option value="0">Semua Prodi</option>';
-                                        }
-                                        else{
-                                            echo'<option value="0">Semua Prodi</option>';
-                                        }
-                                            
-                                            foreach($semua_prodi as $sj) { 
-                                            echo'<option value="'.$sj['prodi'].'">'.$sj['prodi'].'</option>';
-                                            } 
-                                            ?>
-                                  </select>
+                                        <option value="0">Semua Prodi</option>
+                                        <?php  
+                                            if (isset($prodi) && $prodi == true) {
+                                                $id_prodi = $this->ProdiModel->per_prodi($prodi);
+                                                if (!empty($id_prodi)) {
+                                                    foreach($id_prodi as $j) {
+                                                        echo '<option value="'.$j['id'].'">'.$j['prodi'].'</option>';
+                                                    }
+                                                }
+                                            }
+                                        ?>
+                                        <option value="0">Semua Prodi</option>
+                                        <?php  
+                                            if (isset($semua_prodi) && !empty($semua_prodi)) {
+                                                foreach($semua_prodi as $sj) { 
+                                                    echo '<option value="'.$sj['id'].'">'.$sj['prodi'].'</option>';
+                                                } 
+                                            } else {
+                                                echo '<option disabled>Tidak ada Prodi yang tersedia</option>';
+                                            }
+                                        ?>
+                                    </select>
+
 
                                   <input type="hidden" name="jumlah_populasi" value="<?= isset($jumlah_populasi) ? $jumlah_populasi : '50'; ?>">  
                                   
