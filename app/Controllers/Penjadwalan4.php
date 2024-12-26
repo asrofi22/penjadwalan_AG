@@ -39,8 +39,8 @@ class Penjadwalan4 extends Controller
         $pengampuModel = new PengampuModel();
 
         foreach($allTahunAkademik as $tahun) {
-            $countGanjil = $pengampuModel->where('kode_semester', 1)->where('tahun_akademik', $tahun['tahun_akademik'])->countAllResults();
-            $countGenap = $pengampuModel->where('kode_semester', 2)->where('tahun_akademik', $tahun['tahun_akademik'])->countAllResults();
+            $countGanjil = $pengampuModel->where('id_semester', 1)->where('tahun_akademik', $tahun['tahun_akademik'])->countAllResults();
+            $countGenap = $pengampuModel->where('id_semester', 2)->where('tahun_akademik', $tahun['tahun_akademik'])->countAllResults();
             array_push($countPengampuTabel, [
                 'tahun_akademik' => $tahun['tahun_akademik'],
                 'semester_ganjil_count' => $countGanjil,
@@ -64,11 +64,11 @@ class Penjadwalan4 extends Controller
 
         foreach($countPengampuTabel as $countPengampu){
             if($countPengampu['semester_ganjil_count'] == 0) {
-                return redirect()->to('/pengampu')->with('status', 'Harap Menambahkan Data Kelas di Semester Ganjil Tahun Ajaran '.$countPengampu['tahun_akademik']);
+                return redirect()->to('/pengampu')->with('status', 'Harap Menambahkan Data Kelas di Semester Ganjil Tahun Akademik '.$countPengampu['tahun_akademik']);
             }
 
             if($countPengampu['semester_genap_count'] == 0) {
-                return redirect()->to('/pengampu')->with('status', 'Harap Menambahkan Data Kelas di Semester Genap Tahun Ajaran '.$countPengampu['tahun_akademik']);
+                return redirect()->to('/pengampu')->with('status', 'Harap Menambahkan Data Kelas di Semester Genap Tahun Akademik '.$countPengampu['tahun_akademik']);
             }
         }
 
@@ -123,11 +123,11 @@ class Penjadwalan4 extends Controller
                 $idDosen = $dosenModel->where('nama', $namaDosen)->first()['id_dosen'];
                 $semester = $request->getPost('semester');
                 $tahun_akademik = $request->getPost('tahun_akademik');
-                $kodeKelasBySemesterAndYear = (new PengampuModel())->where('kode_dosen', $idDosen)->where('id_semester', $semester)->where('tahun_akademik', $tahun_akademik)->findAll();
+                $idKelasBySemesterAndYear = (new PengampuModel())->where('id_dosen', $idDosen)->where('id_semester', $semester)->where('tahun_akademik', $tahun_akademik)->findAll();
                 
                 $kelasBySemesterAndYear = [];
                 $kelasModel = new KelasModel();
-                foreach ($kodeKelasBySemesterAndYear as $key => $kelas) {
+                foreach ($idKelasBySemesterAndYear as $key => $kelas) {
                     $kelasBySemesterAndYear[$key] = $kelasModel->where('id_kelas', $kelas['id_kelas'])->where('tahun_akademik', $tahun_akademik)->first();
                 }
                 
@@ -195,7 +195,7 @@ class Penjadwalan4 extends Controller
         }
 
         if(!$tahunAkademik) { 
-            session()->setFlashdata('errorTahunAkademik', "Harap Memilih Tahun Ajaran Terlebih Dahulu!");
+            session()->setFlashdata('errorTahunAkademik', "Harap Memilih Tahun Akademik Terlebih Dahulu!");
             return redirect()->back();
         }
 
@@ -255,7 +255,7 @@ class Penjadwalan4 extends Controller
         $lastIdWaktu = $waktuTable[count($waktuTable) - 1]['id_waktu'];
 
         function random_id_ruang($id_prodi) {
-            $nama_prodi = (new ProdiModel())->where('kode_prodi', $id_prodi)->first()['nama_prodi'];
+            $nama_prodi = (new ProdiModel())->where('id_prodi', $id_prodi)->first()['nama_prodi'];
             $ruangByProdi = (new RuangModel())->where('nama_prodi', $nama_prodi)->findAll();
 
             if (count($ruangByProdi) == 0) {
@@ -718,8 +718,8 @@ class Penjadwalan4 extends Controller
 
         return view('penjadwalankuliah.generatejadwal', compact(
             'user_login', 'semesterModel->findAll()', 'algoritma_proses', 'execution_time', 
-            'fixJadwal', 'kodeSemester', 'countRequest', 'tahunAjaran', 
-            'allTahunAjaran', 'allDosen', 'allHari', 'countKuliahTabel'
+            'fixJadwal', 'idSemester', 'countRequest', 'tahunAkademik', 
+            'allTahunAkademik', 'allDosen', 'allHari', 'countPengampuTabel'
         ));
     }
 
