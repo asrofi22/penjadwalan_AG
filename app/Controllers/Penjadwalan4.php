@@ -18,12 +18,14 @@ use App\Models\{
     MatakuliahModel, 
     KelasModel
 };
+use function helper;
 use CodeIgniter\Controller;
 
 class Penjadwalan4 extends Controller
 {
     public function generatejadwalform()
     {
+        helper(['form']);
         $session = session();
         $user_login = $session->get('user_login');
         // $requestKuliahModel = new RequestKuliahModel();
@@ -33,16 +35,17 @@ class Penjadwalan4 extends Controller
         // $countRequest = $requestKuliahModel->countAll() + $requestRuangModel->countAll() + $requestWaktuModel->countAll();
         
         $semesterModel = new SemesterModel();
+        $semester = $semesterModel->findAll();
         $allTahunAkademik = (new TahunakademikModel())->findAll();
 
         $countPengampuTabel = [];
         $pengampuModel = new PengampuModel();
 
         foreach($allTahunAkademik as $tahun) {
-            $countGanjil = $pengampuModel->where('id_semester', 1)->where('tahun_akademik', $tahun['tahun_akademik'])->countAllResults();
-            $countGenap = $pengampuModel->where('id_semester', 2)->where('tahun_akademik', $tahun['tahun_akademik'])->countAllResults();
+            $countGanjil = $pengampuModel->whereIn('semester', [1, 3, 5])->where('tahun_akademik', $tahun['tahun'])->countAllResults();
+            $countGenap = $pengampuModel->whereIn('semester', [2, 4, 6])->where('tahun_akademik', $tahun['tahun'])->countAllResults();
             array_push($countPengampuTabel, [
-                'tahun_akademik' => $tahun['tahun_akademik'],
+                'tahun_akademik' => $tahun['tahun'],
                 'semester_ganjil_count' => $countGanjil,
                 'semester_genap_count' => $countGenap
             ]);
@@ -58,19 +61,19 @@ class Penjadwalan4 extends Controller
         $hariModel = new HariModel();
         $allHari = $hariModel->findAll();
 
-        if(count($pengampu) == 0) {
-            return redirect()->to('/pengampu')->with('status', 'Harap Mengisi Data Kelas Terlebih Dahulu!');
-        }
+        // if(count($pengampu) == 0) {
+        //     return redirect()->to('/kelas')->with('status', 'Harap Mengisi Data Kelas Terlebih Dahulu!');
+        // }
 
-        foreach($countPengampuTabel as $countPengampu){
-            if($countPengampu['semester_ganjil_count'] == 0) {
-                return redirect()->to('/pengampu')->with('status', 'Harap Menambahkan Data Kelas di Semester Ganjil Tahun Akademik '.$countPengampu['tahun_akademik']);
-            }
+        // foreach($countPengampuTabel as $countPengampu){
+        //     if($countPengampu['semester_ganjil_count'] == 0) {
+        //         return redirect()->to('/kelas')->with('status', 'Harap Menambahkan Data Kelas di Semester Ganjil Tahun Akademik '.$countPengampu['tahun_akademik']);
+        //     }
 
-            if($countPengampu['semester_genap_count'] == 0) {
-                return redirect()->to('/pengampu')->with('status', 'Harap Menambahkan Data Kelas di Semester Genap Tahun Akademik '.$countPengampu['tahun_akademik']);
-            }
-        }
+        //     if($countPengampu['semester_genap_count'] == 0) {
+        //         return redirect()->to('/kelas')->with('status', 'Harap Menambahkan Data Kelas di Semester Genap Tahun Akademik '.$countPengampu['tahun_akademik']);
+        //     }
+        // }
 
         if(count($ruang) == 0) {
             return redirect()->to('/ruang')->with('status', 'Harap Mengisi Data Ruang Terlebih Dahulu!');
@@ -82,12 +85,14 @@ class Penjadwalan4 extends Controller
 
         foreach($countPengampuTabel as $countPengampu){
             $pengampu = $pengampuModel->where('tahun_akademik', $countPengampu['tahun_akademik'])->findAll();
+            if (count($pengampu) > 0){
             if ($pengampu[count($pengampu)-1]['id_pengampu'] != count($pengampu)) {
                 for ($i=0; $i < count($pengampu); $i++) { 
                     $pengampuModel->update($pengampu[$i]['id_pengampu'], [
                         'id_pengampu' => $i+1,
                     ]);
                 }
+            }
             }
         }
 
@@ -98,18 +103,19 @@ class Penjadwalan4 extends Controller
                 ]);
             }
         }
-        if ($waktu[count($waktu)-1]['id_waktu'] != count($waktu)) {
+        if ($waktu[count($waktu)-1]['id'] != count($waktu)) {
             for ($i = 0; $i < count($waktu); $i++) { 
-                $waktuModel->update($waktu[$i]['id_waktu'], [
-                    'id_waktu' => $i+1,
+                $waktuModel->update($waktu[$i]['id'], [
+                    'id' => $i+1,
                 ]);
             }
         }
 
         $algoritma_proses = [];
         $execution_time = [];
+        $semesters = $semesterModel->findAll(); // Get all semesters once
 
-        return view('penjadwalankuliah.generatejadwal', compact('user_login', 'semesterModel->findAll()', 'algoritma_proses', 'countRequest', 'execution_time', 'allDosen', 'allHari', 'countPengampuTabel', 'allTahunAkademik'));
+        return view('generatejadwal', compact('user_login', 'semesters', 'algoritma_proses', 'execution_time', 'allDosen', 'allHari', 'countPengampuTabel', 'allTahunAkademik'));
     }
 
     public function generate_action()
@@ -122,13 +128,13 @@ class Penjadwalan4 extends Controller
                 $dosenModel = new DosenModel();
                 $idDosen = $dosenModel->where('nama', $namaDosen)->first()['id_dosen'];
                 $semester = $request->getPost('semester');
-                $tahun_akademik = $request->getPost('tahun_akademik');
-                $idKelasBySemesterAndYear = (new PengampuModel())->where('id_dosen', $idDosen)->where('id_semester', $semester)->where('tahun_akademik', $tahun_akademik)->findAll();
+                $tahun = $request->getPost('tahun_akademik');
+                $idKelasBySemesterAndYear = (new PengampuModel())->where('id_dosen', $idDosen)->where('semester', $semester)->where('tahun_akademik', $tahun)->findAll();
                 
                 $kelasBySemesterAndYear = [];
                 $kelasModel = new KelasModel();
                 foreach ($idKelasBySemesterAndYear as $key => $kelas) {
-                    $kelasBySemesterAndYear[$key] = $kelasModel->where('id_kelas', $kelas['id_kelas'])->where('tahun_akademik', $tahun_akademik)->first();
+                    $kelasBySemesterAndYear[$key] = $kelasModel->where('id_kelas', $kelas['id_kelas'])->where('tahun_akademik', $tahun)->first();
                 }
                 
                 return $this->response->setJSON(['allKelas' => $kelasBySemesterAndYear]);
@@ -179,11 +185,11 @@ class Penjadwalan4 extends Controller
 
         $countPengampuTabel = [];
         foreach ($allTahunAkademik as $tahun) {
-            $countGanjil = (new PengampuModel())->where('id_semester', 1)->where('tahun_akademik', $tahun['tahun_akademik'])->countAllResults();
-            $countGenap = (new PengampuModel())->where('id_semester', 2)->where('tahun_akademik', $tahun['tahun_akademik'])->countAllResults();
+            $countGanjil = (new PengampuModel())->where('semester', 1)->where('tahun_akademik', $tahun['tahun'])->countAllResults();
+            $countGenap = (new PengampuModel())->where('semester', 2)->where('tahun_akademik', $tahun['tahun'])->countAllResults();
 
             array_push($countPengampuTabel, [
-                'tahun_akademik' => $tahun['tahun_akademik'],
+                'tahun_akademik' => $tahun['tahun'],
                 'semester_ganjil_count' => $countGanjil,
                 'semester_genap_count' => $countGenap
             ]);
@@ -220,10 +226,10 @@ class Penjadwalan4 extends Controller
         }
         $jam = $this->request->getPost('jam');
 
-        $id_waktu = [];
+        $id = [];
         foreach ((array) $hari as $key => $value) {
-            array_push($id_waktu,
-                (new WaktuModel())->where('id_hari', $value)->where('id_jam', $jam[$key])->first()['id_waktu']
+            array_push($id,
+                (new WaktuModel())->where('id_hari', $value)->where('id_jam', $jam[$key])->first()['id']
             );
         }
 
@@ -239,20 +245,20 @@ class Penjadwalan4 extends Controller
             array_push($prioritas_kelas, [
                 'id_pengampu' => $id_pengampu[$key],
                 'id_kelas' => $value,
-                'id_waktu' => $id_waktu[$key]
+                'id' => $id[$key]
             ]);
         }
 
         // Get kuliah, ruang, and waktu
-        $pengampuTable = (new PengampuModel())->where('id_semester', $idSemester)->where('tahun_akademik', $tahunAkademik)->findAll();
+        $pengampuTable = (new PengampuModel())->where('semester', $idSemester)->where('tahun_akademik', $tahunAkademik)->findAll();
         $ruangTable = (new RuangModel())->findAll();
 
         $firstIdRuang = $ruangTable[0]['id_ruang'];
         $lastIdRuang = $ruangTable[count($ruangTable) - 1]['id_ruang'];
 
         $waktuTable = (new WaktuModel())->findAll();
-        $firstIdWaktu = $waktuTable[0]['id_waktu'];
-        $lastIdWaktu = $waktuTable[count($waktuTable) - 1]['id_waktu'];
+        $firstIdWaktu = $waktuTable[0]['id'];
+        $lastIdWaktu = $waktuTable[count($waktuTable) - 1]['id'];
 
         function random_id_ruang($id_prodi) {
             $nama_prodi = (new ProdiModel())->where('id_prodi', $id_prodi)->first()['nama_prodi'];
@@ -283,28 +289,28 @@ class Penjadwalan4 extends Controller
             return rand(1, $length);
         }
 
-        function individuWithDetail($individu, $tahun_akademik) {
+        function individuWithDetail($individu, $tahun) {
             $individuWithDetail = [];
             for ($i = 0; $i < count($individu); $i++) {
                 $individuWithDetail[$i] = [];
                 for ($j = 0; $j < count($individu[$j]); $j++) { 
                     $id_mk = (new PengampuModel())->where('id_pengampu', $individu[$i][$j][0])
-                        ->where('tahun_akademik', $tahun_akademik)
+                        ->where('tahun_akademik', $tahun)
                         ->first()['id_mk'];
                     $id_dosen = [ 
                         'id' => (new PengampuModel())->where('id_pengampu', $individu[$i][$j][0])->first()['id_dosen'], 
                         'clash' => 0
                     ];
                     $id_kelas = (new PengampuModel())->where('id_pengampu', $individu[$i][$j][0])
-                        ->where('tahun_akademik', $tahun_akademik)
+                        ->where('tahun_akademik', $tahun)
                         ->first()['id_kelas'];
                     $jumlah_sks = (new MatakuliahModel())->where('id_mk', $id_mk)->first()['sks'];
                     $nama_ruang = [
                         'id' => (new RuangModel())->where('id_ruang', $individu[$i][$j][1])->first()['nama_ruang'], 
                         'clash' => 0
                     ];
-                    $id_hari = (new WaktuModel())->where('id_waktu', $individu[$i][$j][2])->first()['id_hari'];
-                    $id_jam = (new WaktuModel())->where('id_waktu', $individu[$i][$j][2])->first()['id_jam'];
+                    $id_hari = (new WaktuModel())->where('id', $individu[$i][$j][2])->first()['id_hari'];
+                    $id_jam = (new WaktuModel())->where('id', $individu[$i][$j][2])->first()['id_jam'];
 
                     array_push($individuWithDetail[$i], [
                         'id_mk' => $id_mk, 
@@ -380,7 +386,7 @@ class Penjadwalan4 extends Controller
             return $individuWithDetail;
         }
 
-        function codeIntoNameIndividuDetail($individuWithDetail, $tahun_akademik) {
+        function codeIntoNameIndividuDetail($individuWithDetail, $tahun) {
             $codeIntoNameIndividuDetail = [];
 
             for ($i = 0; $i < count($individuWithDetail); $i++) {
@@ -388,11 +394,11 @@ class Penjadwalan4 extends Controller
                     $codeIntoNameIndividuDetail[$i][$j] = [
                         'id_kelas' => $individuWithDetail[$i][$j]['id_kelas'],
                         'matkul' => (new MatakuliahModel())->where('id_mk', $individuWithDetail[$i][$j]['id_mk'])
-                                                  ->where('tahun_akademik', $tahun_akademik)
+                                                  ->where('tahun_akademik', $tahun)
                                                   ->first()['nama_matkul'],
                         'dosen' => (new DosenModel())->where('id_dosen', $individuWithDetail[$i][$j]['id_dosen']['id'])->first()['nama'],
                         'kelas' => (new KelasModel())->where('id_kelas', $individuWithDetail[$i][$j]['id_kelas'])
-                                                   ->where('tahun_akademik', $tahun_akademik)
+                                                   ->where('tahun_akademik', $tahun)
                                                    ->first()['kelas'],
                         'jumlah_sks' => $individuWithDetail[$i][$j]['jumlah_sks'],
                         'nama_ruang' => $individuWithDetail[$i][$j]['nama_ruang']['id'],
@@ -488,7 +494,7 @@ class Penjadwalan4 extends Controller
                                 array_push($individu[$i], [
                                     $pengampu['id_pengampu'], 
                                     random_id_ruang($pengampu['id_prodi']),
-                                    $tea['id_waktu']
+                                    $tea['id']
                                 ]);
                             } else {
                                 array_push($individu[$i], [
@@ -682,7 +688,7 @@ class Penjadwalan4 extends Controller
                                 $mutatedChro = [
                                     $allClashChromosome[$i]['kromosom'][0],
                                     random_id_ruang($id_prodi),
-                                    $tea['id_waktu']
+                                    $tea['id']
                                 ];
                             } else {
                                 $mutatedChro = [
@@ -716,7 +722,7 @@ class Penjadwalan4 extends Controller
             $algoritma_proses = [];
         }
 
-        return view('penjadwalankuliah.generatejadwal', compact(
+        return view('generatejadwal', compact(
             'user_login', 'semesterModel->findAll()', 'algoritma_proses', 'execution_time', 
             'fixJadwal', 'idSemester', 'countRequest', 'tahunAkademik', 
             'allTahunAkademik', 'allDosen', 'allHari', 'countPengampuTabel'
@@ -727,18 +733,18 @@ class Penjadwalan4 extends Controller
     {
         $session = session();
         $allJadwal = $session->get('jadwal');
-        $id_semester = $session->get('idSemester');
-        $tahun_akademik = $session->get('tahunAkademik');
+        $semester = $session->get('idSemester');
+        $tahun = $session->get('tahunAkademik');
 
         $semesterModel = new SemesterModel();
-        $nama_semester = $semesterModel->where('id_semester', $id_semester)->first()['nama_semester'];
+        $nama_semester = $semesterModel->where('semester', $semester)->first()['nama_semester'];
         $jadwalModel = new jadwalModel();
         $jadwalTable = $jadwalModel->where('semester', $nama_semester)->findAll();
 
         $fixJadwal = $allJadwal[$jadwal_index];
 
         if (count($jadwalTable) > 0) {
-            $jadwalModel->where('semester', $nama_semester)->where('tahun_akademik', $tahun_akademik)->delete();
+            $jadwalModel->where('semester', $nama_semester)->where('tahun_akademik', $tahun)->delete();
         }
 
         // Insert data ke tabel jadwal
@@ -765,12 +771,12 @@ class Penjadwalan4 extends Controller
                 'jam_masuk' => (new JamModel())->where('id_jam', $row['id_jam'])->first()['jam'],
                 'jam_keluar' => $jam_keluar,
                 'semester' => $nama_semester,
-                'tahun_akademik' => $tahun_akademik
+                'tahun_akademik' => $tahun
             ]);
 
             // Masukkan tahun akademik ke tabel tahun_akademik jika belum ada
-            if (!(new TahunakademikModel())->where('tahun_akademik', $tahun_akademik)->first()) {
-                (new TahunakademikModel())->insert(['tahun_akademik' => $tahun_akademik]);
+            if (!(new TahunakademikModel())->where('tahun_akademik', $tahun)->first()) {
+                (new TahunakademikModel())->insert(['tahun_akademik' => $tahun]);
             }
         }
 

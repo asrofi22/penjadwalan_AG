@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 23, 2024 at 06:29 AM
+-- Generation Time: Dec 29, 2024 at 07:23 AM
 -- Server version: 10.4.18-MariaDB
 -- PHP Version: 8.1.25
 
@@ -113,7 +113,12 @@ INSERT INTO `auth_logins` (`id`, `ip_address`, `email`, `user_id`, `date`, `succ
 (28, '::1', 'coba@gmail.com', 2, '2024-12-22 18:25:58', 1),
 (29, '::1', 'coba@gmail.com', 2, '2024-12-22 18:33:42', 1),
 (30, '::1', 'coba@gmail.com', 2, '2024-12-22 18:35:09', 1),
-(31, '::1', 'coba@gmail.com', 2, '2024-12-23 04:22:11', 1);
+(31, '::1', 'coba@gmail.com', 2, '2024-12-23 04:22:11', 1),
+(32, '::1', 'coba@gmail.com', 2, '2024-12-24 04:09:58', 1),
+(33, '::1', 'coba@gmail.com', 2, '2024-12-27 19:10:28', 1),
+(34, '::1', 'coba@gmail.com', 2, '2024-12-28 02:44:51', 1),
+(35, '::1', 'coba@gmail.com', NULL, '2024-12-29 05:10:57', 0),
+(36, '::1', 'coba@gmail.com', 2, '2024-12-29 05:11:05', 1);
 
 -- --------------------------------------------------------
 
@@ -253,8 +258,22 @@ CREATE TABLE `jadwalkuliah` (
 
 CREATE TABLE `jam` (
   `id` int(10) NOT NULL,
-  `range_jam` varchar(50) CHARACTER SET latin1 DEFAULT NULL
+  `jam` varchar(50) CHARACTER SET latin1 DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `jam`
+--
+
+INSERT INTO `jam` (`id`, `jam`) VALUES
+(1, '08:00:00'),
+(2, '08:50:00'),
+(3, '09:40:00'),
+(4, '10:30:00'),
+(5, '11:20:00'),
+(6, '14:00:00'),
+(7, '14:50:00'),
+(8, '15:40:00');
 
 -- --------------------------------------------------------
 
@@ -555,7 +574,7 @@ CREATE TABLE `ruang` (
 --
 
 INSERT INTO `ruang` (`id`, `nama`, `kapasitas`, `jenis`, `id_prodi`, `lantai`, `id_ruang`) VALUES
-(0, 'Acak', 0, NULL, 0, 1, 'R00'),
+(0, 'Acak', 0, NULL, 0, 1, '48'),
 (1, 'Ruang 101', 50, 'TEORI', 2, 1, 'R1'),
 (2, 'Ruang 102', 45, 'TEORI', 5, 1, 'R2'),
 (3, 'Ruang 103', 40, 'TEORI', 1, 1, 'R3'),
@@ -725,6 +744,49 @@ INSERT INTO `users` (`id`, `email`, `username`, `fullname`, `user_image`, `passw
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `waktu`
+--
+
+CREATE TABLE `waktu` (
+  `id` int(11) NOT NULL,
+  `id_hari` int(11) NOT NULL,
+  `id_jam` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `waktu`
+--
+
+INSERT INTO `waktu` (`id`, `id_hari`, `id_jam`) VALUES
+(1, 1, 1),
+(2, 1, 2),
+(3, 1, 3),
+(4, 1, 4),
+(5, 1, 5),
+(6, 1, 6),
+(7, 1, 7),
+(8, 1, 8),
+(9, 2, 1),
+(10, 2, 2),
+(11, 2, 3),
+(12, 2, 4),
+(13, 2, 5),
+(14, 2, 6),
+(15, 2, 7),
+(16, 2, 8),
+(17, 3, 1),
+(18, 3, 2),
+(19, 3, 3),
+(20, 3, 4),
+(21, 3, 5),
+(22, 3, 6),
+(23, 3, 7),
+(24, 3, 8),
+(25, 4, 1);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `waktu_tidak_bersedia`
 --
 
@@ -805,11 +867,7 @@ ALTER TABLE `hari`
 -- Indexes for table `jadwalkuliah`
 --
 ALTER TABLE `jadwalkuliah`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `id_pengampu` (`id_pengampu`),
-  ADD KEY `id_jam` (`id_jam`),
-  ADD KEY `id_hari` (`id_hari`),
-  ADD KEY `id_ruang` (`id_ruang`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `jam`
@@ -915,6 +973,12 @@ ALTER TABLE `users`
   ADD UNIQUE KEY `username` (`username`);
 
 --
+-- Indexes for table `waktu`
+--
+ALTER TABLE `waktu`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `waktu_tidak_bersedia`
 --
 ALTER TABLE `waktu_tidak_bersedia`
@@ -938,7 +1002,7 @@ ALTER TABLE `auth_groups`
 -- AUTO_INCREMENT for table `auth_logins`
 --
 ALTER TABLE `auth_logins`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT for table `auth_permissions`
@@ -974,7 +1038,7 @@ ALTER TABLE `jadwalkuliah`
 -- AUTO_INCREMENT for table `jam`
 --
 ALTER TABLE `jam`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `jam2`

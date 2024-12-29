@@ -91,8 +91,8 @@ class PenjadwalanModel extends Model
         $builder->select([
             'e.nama as hari',
             "IF(c.jumlah_jam='4','2',IF(c.jumlah_jam='1','1',IF(c.jumlah_jam='2','2',IF(c.jumlah_jam='3','3','')))) as sks",
-            "CONCAT_WS('-', CONCAT('(', g.id), CONCAT((SELECT id FROM jam WHERE id = (SELECT jm.id FROM jam jm WHERE MID(jm.range_jam, 1, 5) = MID(g.range_jam, 1, 5)) + (sks - 1)), ')')) as sesi",
-            "CONCAT_WS('-', MID(g.range_jam, 1, 5), (SELECT MID(range_jam, 7, 5) FROM jam WHERE id = (SELECT jm.id FROM jam jm WHERE MID(jm.range_jam, 1, 5) = MID(g.range_jam, 1, 5)) + (sks - 1))) as jam_kuliah",
+            "CONCAT_WS('-', CONCAT('(', g.id), CONCAT((SELECT id FROM jam2 WHERE id = (SELECT jm.id FROM jam2 jm WHERE MID(jm.range_jam, 1, 5) = MID(g.range_jam, 1, 5)) + (sks - 1)), ')')) as sesi",
+            "CONCAT_WS('-', MID(g.range_jam, 1, 5), (SELECT MID(range_jam, 7, 5) FROM jam2 WHERE id = (SELECT jm.id FROM jam2 jm WHERE MID(jm.range_jam, 1, 5) = MID(g.range_jam, 1, 5)) + (sks - 1))) as jam_kuliah",
             'a.id_pengampu',
             'b.tahun_akademik',
             'b.id_prodi',
@@ -130,8 +130,8 @@ class PenjadwalanModel extends Model
 
         $rs->select([
             'e.nama as hari',
-            'CONCAT_WS("-", CONCAT("(", g.id), CONCAT((SELECT id FROM jam WHERE id = (SELECT jm.id FROM jam jm WHERE MID(jm.range_jam, 1, 5) = MID(g.range_jam, 1, 5)) + (c.jumlah_jam - 1)), ")")) as sesi',
-            'CONCAT_WS("-", MID(g.range_jam, 1, 5), (SELECT MID(range_jam, 7, 5) FROM jam WHERE id = (SELECT jm.id FROM jam jm WHERE MID(jm.range_jam, 1, 5) = MID(g.range_jam, 1, 5)) + (c.jumlah_jam - 1))) as jam_kuliah',
+            'CONCAT_WS("-", CONCAT("(", g.id), CONCAT((SELECT id FROM jam2 WHERE id = (SELECT jm.id FROM jam2 jm WHERE MID(jm.range_jam, 1, 5) = MID(g.range_jam, 1, 5)) + (c.jumlah_jam - 1)), ")")) as sesi',
+            'CONCAT_WS("-", MID(g.range_jam, 1, 5), (SELECT MID(range_jam, 7, 5) FROM jam2 WHERE id = (SELECT jm.id FROM jam2 jm WHERE MID(jm.range_jam, 1, 5) = MID(g.range_jam, 1, 5)) + (c.jumlah_jam - 1))) as jam_kuliah',
             'c.nama as nama_mk',
             'c.jumlah_jam as jumlah_jam',
             'c.semester as semester',
