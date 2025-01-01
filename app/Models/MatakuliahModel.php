@@ -21,7 +21,7 @@ class MatakuliahModel extends Model
 
     public function getAllData()
     {
-        return $this->select('matakuliah.*, semester.nama_semester, prodi.prodi')
+        return $this->select('matakuliah.*, semester.nama_semester, prodi.nama_prodi')
             ->join('semester', 'matakuliah.semester = semester.id', 'left')
             ->join('prodi', 'matakuliah.id_prodi = prodi.id', 'left')
             ->findAll();

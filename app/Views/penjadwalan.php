@@ -25,7 +25,7 @@
                     <?php if (isset($msg)): ?>                        
                         <div class="alert alert-danger">
                             <button type="button" class="close" data-dismiss="alert">x</button>                
-                            <?= $msg; ?>
+                            <?= print_r($msg); ?>
                         </div>
                     <?php endif; ?>
                     <?php if (isset($waktu)): ?>                        
@@ -69,9 +69,9 @@
                                 <select id="tahun_akademik" name="tahun_akademik" class="form-control" onchange="change_get()">
                                     <?php  
                                     if (isset($tahun_a) && $tahun_a == true) {
-                                        $tahun_awal = $this->TahunakademikModel->tahun_awal($tahun_a);
+                                        // $tahun_awal = $this->TahunakademikModel->tahun_awal($tahun_a);
                                         foreach ($tahun_awal as $a);
-                                        echo '<option value="' . $a['id'] . '">' . $a['tahun'] . '</option>';
+                                        echo '<option value="' . $a->id . '">' . $a->tahun. '</option>';
                                     }
                                     foreach($rs_tahun as $tahun) { 
                                     ?>
@@ -88,7 +88,7 @@
                                     <option value="0">Semua Prodi</option>
                                     <?php if (isset($semua_prodi) && !empty($semua_prodi)) {
                                         foreach($semua_prodi as $sj) { 
-                                            echo '<option value="'.$sj['id'].'">'.$sj['prodi'].'</option>';
+                                            echo '<option value="'.$sj['id'].'">'.$sj['nama_prodi'].'</option>';
                                         } 
                                     } else { 
                                         echo '<option disabled>Tidak ada Prodi yang tersedia</option>';
@@ -116,7 +116,7 @@
                     <?php endif; ?>
 
                     <?php if (isset($rs_jadwal) && count($rs_jadwal) > 0): ?>
-                        <h5>Semester <?= $rs_jadwal->getRow(0)->tipe_semester; ?> Tahun Ajaran <?= $rs_jadwal->getRow(0)->nama_tahun; ?></h5>  
+                        <h5>Semester <?= $rs_jadwal[0]->tipe_semester; ?> Tahun Ajaran <?= $rs_jadwal[0]->nama_tahun; ?></h5>  
                         <table id="example1" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
@@ -138,22 +138,22 @@
                             <tbody>
                                 <?php                 
                                 $i = 1;
-                                foreach ($rs_jadwal->getResult() as $jadwal):      
+                                foreach ($rs_jadwal as $jadwal):      
                                     echo '
-                                    <tr>
+                                    <tr class="A">
                                         <td>' . $i . '</td>
-                                        <td>' . $jadwal->hari . '</td>
-                                        <td>' . $jadwal->sesi . '</td>
-                                        <td>' . $jadwal->jam_kuliah . '</td>
-                                        <td>' . $jadwal->nama_mk . '</td>
-                                        <td>' . $jadwal->dosen . '</td>
-                                        <td>' . $jadwal->jumlah_jam . '</td>
-                                        <td>' . $jadwal->nama_kelas . '</td>
-                                        <td>' . $jadwal->nama_semester . '</td>
-                                        <td>' . $jadwal->prodi . '</td>
-                                        <td>' . $jadwal->kuota . '</td>
-                                        <td>' . $jadwal->ruang . '</td>
-                                        <td>' . $jadwal->kapasitas . '</td>
+                                        <td>' . ($jadwal->hari ?? '') . '</td>
+                                        <td>' . ($jadwal->sesi ?? '') . '</td>
+                                        <td>' . ($jadwal->jam_kuliah ?? '') . '</td>
+                                        <td>' . ($jadwal->nama_mk ?? '') . '</td>
+                                        <td>' . ($jadwal->dosen ?? ''). '</td>
+                                        <td>' . ($jadwal->jumlah_jam ?? '') . '</td>
+                                        <td>' . ($jadwal->nama_kelas ?? '') . '</td>
+                                        <td>' . ($jadwal->nama_semester ?? '') . '</td>
+                                        <td>' . ($jadwal->nama_prodi ?? '') . '</td>
+                                        <td>' . ($jadwal->kuota ?? '') . '</td>
+                                        <td>' . ($jadwal->ruang ?? '') . '</td>
+                                        <td>' . ($jadwal->kapasitas ?? '') . '</td>
                                     </tr>
                                     ';
                                     $i++;
@@ -173,7 +173,7 @@
                                     <th>Semester</th>
                                     <th>Prodi</th>
                                     <th>Kuota</th>
-                                    <th>Jurusan</th>
+                                    <!-- <th>Jurusan</th> -->
                                     <th>Ruang</th>
                                     <th>Kapasitas</th>
                                 </tr>

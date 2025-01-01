@@ -13,12 +13,12 @@ class RuangModel extends Model
     public function getRuang($id = false)
     {
         if ($id === false) {
-            return $this->select('ruang.*, prodi.prodi AS nama_prodi')
+            return $this->select('ruang.*, prodi.nama_prodi AS nama_prodi')
                         ->join('prodi', 'prodi.id = ruang.id_prodi', 'left')
                         ->findAll();
         }
         return $this->where(['id' => $id])
-                    ->select('ruang.*, prodi.prodi AS nama_prodi')
+                    ->select('ruang.*, prodi.nama_prodi AS nama_prodi')
                     ->join('prodi', 'prodi.id = ruang.id_prodi', 'left')
                     ->first();
     }

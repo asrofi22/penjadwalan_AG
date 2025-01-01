@@ -50,7 +50,7 @@
                                 <td><?= $matkul['aktif'] ?></td>
                                 <td><?= $matkul['jenis']; ?></td>
                                 <td><?= $matkul['nama_kode']; ?></td>
-                                <td><?= $matkul['prodi']; ?></td>
+                                <td><?= $matkul['nama_prodi']; ?></td>
                                 <td>
                                     <button class="btn btn-warning btn-sm" 
                                             data-bs-toggle="modal" 
@@ -125,7 +125,7 @@
                                 <label for="id_prodi" class="form-label">Program Studi</label>
                                 <select class="form-control" id="id_prodi" name="id_prodi" required>
                                     <?php foreach ($prodi_list as $prodi): ?>
-                                    <option value="<?= $prodi['id']; ?>"><?= $prodi['prodi']; ?></option>
+                                    <option value="<?= $prodi['id']; ?>"><?= $prodi['nama_prodi']; ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
@@ -186,7 +186,7 @@
                                 <label for="editIdProdi" class="form-label">Program Studi</label>
                                 <select class="form-control" id="editIdProdi" name="id_prodi" required>
                                     <?php foreach ($prodi_list as $prodi): ?>
-                                    <option value="<?= $prodi['id']; ?>"><?= $prodi['prodi']; ?></option>
+                                    <option value="<?= $prodi['id']; ?>"><?= $prodi['nama_prodi']; ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>

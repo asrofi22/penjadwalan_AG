@@ -15,10 +15,10 @@ class PengampuModel extends Model
     // Fungsi untuk mengambil semua data pengampu dengan join ke tabel lain
     public function getPengampuWithDetails()
     {
-        return $this->select('pengampu.*, matakuliah.nama AS matakuliah, dosen.nama AS dosen, kelas.nama_kelas AS kelas, tahun_akademik.tahun, prodi.prodi, semester.nama_semester, ruang.nama')
+        return $this->select('pengampu.*, matakuliah.nama AS matakuliah, dosen.nama AS dosen, kelas.nama_kelas AS kelas, tahun_akademik.tahun, prodi.nama_prodi, semester.nama_semester, ruang.nama')
             ->join('matakuliah', 'pengampu.id_mk = matakuliah.id', 'left')
             ->join('dosen', 'pengampu.id_dosen = dosen.id', 'left')
-            ->join('kelas', 'pengampu.kelas = kelas.id', 'left')
+            ->join('kelas', 'pengampu.id_kelas = kelas.id', 'left')
             ->join('tahun_akademik', 'pengampu.tahun_akademik = tahun_akademik.id', 'left')
             ->join('prodi', 'pengampu.id_prodi = prodi.id', 'left')
             ->join('semester', 'pengampu.semester = semester.id', 'left')
@@ -29,10 +29,10 @@ class PengampuModel extends Model
     // Fungsi untuk mengambil data pengampu berdasarkan id
     public function getPengampu($id)
     {
-        return $this->select('pengampu.*, matakuliah.nama AS matakuliah, dosen.nama AS dosen, kelas.nama_kelas AS kelas, tahun_akademik.tahun, prodi.prodi, semester.nama_semester, ruang.nama')
+        return $this->select('pengampu.*, matakuliah.nama AS matakuliah, dosen.nama AS dosen, kelas.nama_kelas AS kelas, tahun_akademik.tahun, prodi.nama_prodi, semester.nama_semester, ruang.nama')
             ->join('matakuliah', 'pengampu.id_mk = matakuliah.id', 'left')
             ->join('dosen', 'pengampu.id_dosen = dosen.id', 'left')
-            ->join('kelas', 'pengampu.kelas = kelas.id', 'left')
+            ->join('kelas', 'pengampu.id_kelas = kelas.id', 'left')
             ->join('tahun_akademik', 'pengampu.tahun_akademik = tahun_akademik.id', 'left')
             ->join('prodi', 'pengampu.id_prodi = prodi.id', 'left')
             ->join('semester', 'pengampu.semester = semester.id', 'left')

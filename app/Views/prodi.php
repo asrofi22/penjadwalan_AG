@@ -38,14 +38,14 @@
                             <?php foreach ($prodi_list as $prodi): ?>
                             <tr>
                                 <td><?= $no++ ?></td>
-                                <td><?= $prodi['prodi'] ?></td>
+                                <td><?= $prodi['nama_prodi'] ?></td>
                                 <td><?= $prodi['id_prodi'] ?></td>
                                 <td>
                                     <button class="btn btn-datatable btn-icon btn-transparent-dark me-2" 
                                             data-bs-toggle="modal" 
                                             data-bs-target="#modalEdit" 
                                             data-id="<?= $prodi['id'] ?>" 
-                                            data-prodi="<?= $prodi['prodi'] ?>" 
+                                            data-prodi="<?= $prodi['nama_prodi'] ?>" 
                                             data-id-prodi="<?= $prodi['id_prodi'] ?>">
                                         <i data-feather="edit"></i>
                                     </button>

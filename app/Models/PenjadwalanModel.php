@@ -77,9 +77,9 @@ class PenjadwalanModel extends Model
     public function detail_pengampu($id_pengampu)
     {
         return $this->db->table('pengampu')
-            ->select('nama_mk, nama_kelas')
+            ->select('nama as nama_mk, nama_kelas')
             ->join('matakuliah', 'pengampu.id_mk = matakuliah.id')
-            ->join('kelas', 'pengampu.kelas = kelas.id')
+            ->join('kelas', 'pengampu.id_kelas = kelas.id')
             ->where('pengampu.id', $id_pengampu)
             ->get()->getRow();
     }
@@ -90,9 +90,8 @@ class PenjadwalanModel extends Model
 
         $builder->select([
             'e.nama as hari',
-            "IF(c.jumlah_jam='4','2',IF(c.jumlah_jam='1','1',IF(c.jumlah_jam='2','2',IF(c.jumlah_jam='3','3','')))) as sks",
-            "CONCAT_WS('-', CONCAT('(', g.id), CONCAT((SELECT id FROM jam2 WHERE id = (SELECT jm.id FROM jam2 jm WHERE MID(jm.range_jam, 1, 5) = MID(g.range_jam, 1, 5)) + (sks - 1)), ')')) as sesi",
-            "CONCAT_WS('-', MID(g.range_jam, 1, 5), (SELECT MID(range_jam, 7, 5) FROM jam2 WHERE id = (SELECT jm.id FROM jam2 jm WHERE MID(jm.range_jam, 1, 5) = MID(g.range_jam, 1, 5)) + (sks - 1))) as jam_kuliah",
+            'g.sesi',
+            'g.range_jam as jam_kuliah',
             'a.id_pengampu',
             'b.tahun_akademik',
             'b.id_prodi',
@@ -102,7 +101,7 @@ class PenjadwalanModel extends Model
             'd.nama as dosen',
             'f.nama as ruang',
             'h.nama_kelas',
-            'i.prodi as nama_prodi',
+            'i.nama_prodi as nama_prodi',
             'l.nama_semester',
             'j.tipe_semester',
             'k.tahun as nama_tahun'
@@ -113,7 +112,7 @@ class PenjadwalanModel extends Model
         ->join('hari e', 'a.id_hari = e.id', 'left')
         ->join('ruang f', 'a.id_ruang = f.id', 'left')
         ->join('jam2 g', 'a.id_jam = g.id', 'left')
-        ->join('kelas h', 'b.kelas = h.id', 'left')
+        ->join('kelas h', 'b.id_kelas = h.id', 'left')
         ->join('prodi i', 'b.id_prodi = i.id', 'left')
         ->join('semester_tipe j', 'c.semester = j.id', 'left')
         ->join('tahun_akademik k', 'b.tahun_akademik = k.id', 'left')
@@ -135,7 +134,7 @@ class PenjadwalanModel extends Model
             'c.nama as nama_mk',
             'c.jumlah_jam as jumlah_jam',
             'c.semester as semester',
-            'b.kelas as kelas',
+            'b.id_kelas as kelas',
             'd.nama as dosen',
             'f.nama as ruang'
         ])

@@ -276,7 +276,7 @@ class Penjadwalan3 extends BaseController {
         $builder = $this->db->table('pengampu a');
         $builder->select('a.id, b.jumlah_jam, a.id_dosen, a.id_prodi, a.kelas, a.id_ruang,
                           a.kuota, a.semester as id_sem, b.jenis, c.id as id_kelas, c.nama_kelas,
-                          d.id as id_prod, d.prodi as nama_prodi, d.id_prodi, e.id as id_semester,
+                          d.id as id_prod, d.nama_prodi as nama_prodi, d.id_prodi, e.id as id_semester,
                           e.nama_semester, f.status_dosen, g.status')
                 ->join('matakuliah b', 'a.id_mk = b.id', 'left')
                 ->join('kelas c', 'a.kelas = c.id', 'left')

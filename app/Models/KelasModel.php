@@ -13,12 +13,12 @@ class KelasModel extends Model
     public function getKelas($id = false)
     {
         if ($id === false) {
-            return $this->select('kelas.*, prodi.prodi AS nama_prodi')
+            return $this->select('kelas.*, prodi.nama_prodi AS nama_prodi')
                         ->join('prodi', 'prodi.id = kelas.id_prodi', 'left')
                         ->findAll();
         }
         return $this->where(['id' => $id])
-                    ->select('kelas.*, prodi.prodi AS nama_prodi')
+                    ->select('kelas.*, prodi.nama_prodi AS nama_prodi')
                     ->join('prodi', 'prodi.id = kelas.id_prodi', 'left')
                     ->first();
     }

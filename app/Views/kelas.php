@@ -85,7 +85,7 @@
                                 <select name="id_prodi" id="id_prodi" class="form-select" required>
                                     <option value="">Pilih Prodi</option>
                                     <?php foreach ($prodi as $p): ?>
-                                    <option value="<?= $p['id']; ?>"><?= $p['prodi']; ?></option>
+                                    <option value="<?= $p['id']; ?>"><?= $p['nama_prodi']; ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
@@ -123,7 +123,7 @@
                                 <label for="editIdProdi" class="form-label">Prodi</label>
                                 <select name="id_prodi" id="editIdProdi" class="form-select" required>
                                     <?php foreach ($prodi as $p): ?>
-                                    <option value="<?= $p['id']; ?>"><?= $p['prodi']; ?></option>
+                                    <option value="<?= $p['id']; ?>"><?= $p['nama_prodi']; ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>

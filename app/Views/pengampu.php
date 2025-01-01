@@ -49,7 +49,7 @@
                                 <td><?= $pengampu['dosen']; ?></td>
                                 <td><?= $pengampu['kelas']; ?></td>
                                 <td><?= $pengampu['tahun']; ?></td>
-                                <td><?= $pengampu['prodi']; ?></td>
+                                <td><?= $pengampu['nama_prodi']; ?></td>
                                 <td><?= $pengampu['nama_semester']; ?></td>
                                 <td><?= $pengampu['kuota']; ?></td>
                                 <td><?= $pengampu['nama']; ?></td>
@@ -129,7 +129,7 @@
                                 <label for="id_prodi" class="form-label">Program Studi</label>
                                 <select class="form-control" id="id_prodi" name="id_prodi" required>
                                     <?php foreach ($prodi_list as $prodi): ?>
-                                    <option value="<?= $prodi['id']; ?>"><?= $prodi['prodi']; ?></option>
+                                    <option value="<?= $prodi['id']; ?>"><?= $prodi['nama_prodi']; ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
@@ -211,7 +211,7 @@
                                 <label for="editIdProdi" class="form-label">Program Studi</label>
                                 <select class="form-control" id="editIdProdi" name="id_prodi" required>
                                     <?php foreach ($prodi_list as $prodi): ?>
-                                    <option value="<?= $prodi['id']; ?>"><?= $prodi['prodi']; ?></option>
+                                    <option value="<?= $prodi['id']; ?>"><?= $prodi['nama_prodi']; ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
