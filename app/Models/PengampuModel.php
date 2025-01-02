@@ -52,4 +52,14 @@ class PengampuModel extends Model
     {
         return $this->delete($id);
     }
+
+    public function getSKSForAllPengampu()
+    {
+        // Mengambil data pengampu dan jumlah jam (SKS)
+        return $this->db->query("
+            SELECT a.id, b.jumlah_jam 
+            FROM pengampu a 
+            LEFT JOIN matakuliah b ON a.id_mk = b.id
+        ")->getResultArray();
+    }
 }

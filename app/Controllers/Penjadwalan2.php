@@ -151,6 +151,16 @@ class Penjadwalan2 extends BaseController
             'semua_prodi' => $this->ProdiModel->semua_prodi() // Panggil findAll() di sini
         ];
 
+        $sksData = $this->PengampuModel->getSKSForAllPengampu();
+        foreach ($data['pengampu_list'] as &$pengampu) {
+            foreach ($sksData as $sks) {
+                if ($pengampu['id'] == $sks['id']) {
+                    $pengampu['sks'] = $sks['jumlah_jam']; // Menambahkan field SKS
+                    break;
+                }
+            }
+        }
+
         // print_r($data);exit;
 
         return view('penjadwalan', $data);
@@ -183,21 +193,11 @@ class Penjadwalan2 extends BaseController
         $prodi = $this->request->getPost('prodi');
         $tahun_akademik = $this->request->getPost('tahun_akademik');
 
-
-
-
         // print_r($this->request->getMethod());exit;
 
         if ($this->request->getMethod() === 'POST') {
 
             // print_r([
-
-
-
-
-
-
-
 
             //     $this->request->getPost('jumlah_populasi'),
             //     $this->request->getPost('tipe_semester'),
@@ -206,9 +206,6 @@ class Penjadwalan2 extends BaseController
             //     $this->request->getPost('probabilitas_crossover'),
             //     $this->request->getPost('probabilitas_mutasi'),
             //     $this->request->getPost('jumlah_generasi'),
-
-
-
 
             // ]);exit;
 
@@ -262,11 +259,11 @@ class Penjadwalan2 extends BaseController
                 $datas['probabilitas_mutasi'] = $mutasi;
                 $datas['jumlah_generasi'] = $jumlah_generasi;
 
-                // print_r($datas);exit;
+                // print_r($prodi);exit;
 
 
                 // Query untuk mendapatkan data berdasarkan semester dan tahun akademik
-                if ($prodi == true) {
+                if ($prodi != 0) {
                     $rs_data = $this->db->query("SELECT a.id FROM pengampu a 
                     LEFT JOIN semester b ON a.semester = b.id
                     LEFT JOIN tahun_akademik c ON a.tahun_akademik = c.id
@@ -281,11 +278,16 @@ class Penjadwalan2 extends BaseController
                     ]);
                 }
 
-                // print_r($rs_data->getNumRows());exit;
+                // print_r($rs_data->getResult());exit;
                 // Mengecek apakkah data  ditemukan
                 if ($rs_data->getNumRows() == 0) {
                     $data['msg'] = 'Tidak ada data dengan semester dan tahun akademik ini';
-                } else {
+                } 
+                
+                elseif($rs_data->getNumRows() < 3){
+                    $data['msg'] = 'Pengemapu Minimal 3 Data';
+                }
+                else {
 
                     $data_all_query = [];
                     $n = 0;
@@ -330,11 +332,6 @@ class Penjadwalan2 extends BaseController
                         // print_r([$jenis_semester, $tahun_akademik, $jumlah_populasi,$prodi,$query,$e,$mod]);exit;
 
 
-
-
-
-
-
                         $this->Inisialisasi($jumlah_populasi);
 
                         if ($this->kap == false) {
@@ -343,9 +340,6 @@ class Penjadwalan2 extends BaseController
                         }
 
                         $found = false;
-
-
-
 
                         for ($i = 0; $i < $jumlah_generasi; $i++) {
                             $fitness = $this->Hitungfitness($jumlah_populasi, $prodi);
@@ -363,7 +357,6 @@ class Penjadwalan2 extends BaseController
 
                             $fitnessAfterMutation = $this->Mutasi($jumlah_populasi, $mutasi, $prodi);
                             // $data_fitness_all[] =['jumlah_populasi'=>$jumlah_populasi,'prodi'=>$prodi,'fitness'=>$fitness,'fitnessAfterMutation'=>$fitnessAfterMutation];
-
 
 
                             for ($j = 0; $j < count($fitnessAfterMutation); $j++) {
@@ -393,7 +386,6 @@ class Penjadwalan2 extends BaseController
 
                                         $this->db->table('jadwalkuliah')->insert($data);
 
-
                                     }
                                     
 
@@ -404,12 +396,6 @@ class Penjadwalan2 extends BaseController
                                     // $file = fopen($filePath, 'w');
                                     // fwrite($file, json_encode(['individu'=> $this->individu,'data'=>$data]));
                                     // fclose($file);
-
-
-
-
-
-
 
                                     $found = true;
                                     $this->kap = true;
@@ -449,7 +435,7 @@ class Penjadwalan2 extends BaseController
                     } elseif (!$found) {
                         $data['msg'] = 'Tidak ditemukan solusi optimal';
                     } else {
-                        // $this->db->query("DELETE FROM jadwalkuliah WHERE id IN (SELECT id FROM (SELECT id FROM jadwalkuliah GROUP BY id_pengampu HAVING COUNT(*) > 1) AS A)");
+                        // $this->db->query("DELETE FROM jadwalkuliah WHERE id IN (SELECT id FROM (SELECT min(id) FROM jadwalkuliah GROUP BY id_pengampu HAVING COUNT(*) > 1) AS A)");
 
                         $finish = microtime(true);
                         $total_time = $finish - $start;
@@ -483,8 +469,6 @@ class Penjadwalan2 extends BaseController
         $this->jenis_semester = $jenis_semester;
         $this->tahun_akademik = $tahun_akademik;
         $this->populasi = $jumlah_populasi;
-
-
 
         // Penggunaan quoery builder untuk tabel pengampu
         // $builder = $this->db->table('pengampu a');
@@ -548,6 +532,7 @@ class Penjadwalan2 extends BaseController
                     LEFT JOIN status_dosen g ON f.status_dosen = g.id
                     WHERE b.semester = '" . $jenis_semester . "'
                     AND a.tahun_akademik = '" . $tahun_akademik . "'
+                    AND d.id = '" . $prodi . "'
                     ORDER BY a.id
                     LIMIT " . $query[0] . ", " . $query[1]);
 
@@ -581,13 +566,14 @@ class Penjadwalan2 extends BaseController
                     LEFT JOIN semester e ON a.semester = e.id
                     LEFT JOIN dosen f ON a.id_dosen = f.id
                     LEFT JOIN status_dosen g ON f.status_dosen = g.id
-                    WHERE b.semester = '1'
-                    AND a.tahun_akademik = '1'
+                    WHERE b.semester = '" . $jenis_semester . "'
+                    AND a.tahun_akademik = '" . $tahun_akademik . "'
+                    AND d.id = '" . $prodi . "'
                     ORDER BY a.id
                     LIMIT " . $query[0] . ", " . $query[1];
 
         // Menentukan path file
-        $filePath = WRITEPATH . 'uploads/' . uniqid('file_', true) . '.txt';; // WRITEPATH adalah folder yang bisa digunakan untuk menyimpan file
+        $filePath = WRITEPATH . 'uploads/xx' . uniqid('file_', true) . '.txt';; // WRITEPATH adalah folder yang bisa digunakan untuk menyimpan file
 
         //  write_file($filePath, $data);
 
@@ -851,7 +837,7 @@ class Penjadwalan2 extends BaseController
                         if ($rs_RuangReguler->getNumRows() == 0) {
 
                             $this->kap = false;
-                            $this->kode_pengampu = $this->pengampu[$j];
+                            $this->id_pengampu = $this->pengampu[$j];
                             break;
                         }
 
@@ -1349,10 +1335,6 @@ class Penjadwalan2 extends BaseController
         $this->populasi = $jumlah_populasi;
         $this->mutasi = $mutasi;
 
-
-
-
-
         $fitness = [];
         $r = mt_rand(0, mt_getrandmax() - 1) / mt_getrandmax(); //Menghasilkan nilai acak untuk probabilitas mutasi
         $jumlah_pengampu = count($this->pengampu);
@@ -1431,8 +1413,7 @@ class Penjadwalan2 extends BaseController
                         $rs_RuangLaboratorium = $this->db->query("SELECT id, kapasitas "
                             . "FROM ruang "
                             . "WHERE jenis = 'LABORATORIUM' and id_jurusan='$jurusan'  and lantai='1' and kapasitas >='$kuota'  ");
-
-
+                        $k = 0;
                         foreach ($rs_RuangLaboratorium->getResult() as $data) {
                             $this->ruangLaboratorium[$k] = intval($data->id);
                             $k++;
@@ -1440,8 +1421,6 @@ class Penjadwalan2 extends BaseController
                         $jumlah_ruang_lab = count($this->ruangLaboratorium);
                         $this->individu[$i][$krom][3] = intval($this->ruangLaboratorium[mt_rand(0, $jumlah_ruang_lab - 1)]);
                     } else {
-
-
                         // Jika tidak, pilihkan ruang laboratorium untuk praktikum
                         $kuota = intval($this->kuota_pengampu[$krom]);
                         $rs_RuangLaboratorium = $this->db->query("SELECT id, kapasitas FROM ruang WHERE jenis = 'LABORATORIUM' AND id_jurusan='$jurusan' AND  kapasitas >= '$kuota'");

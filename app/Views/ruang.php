@@ -44,9 +44,9 @@
                                 <td><?= $k['nama']; ?></td>
                                 <td><?= $k['kapasitas']; ?></td>
                                 <td><?= $k['jenis']; ?></td>
-                                <td><?= $k['nama_prodi']; ?></td>
+                                <td><?= $k['nama_jurusan']; ?></td>
                                 <td><?= $k['lantai']; ?></td>
-                                <td><?= $k['id_ruang']; ?></td>
+                                <td><?= $k['nama']; ?></td>
                                 <td>
                                     <button class="btn btn-datatable btn-icon btn-transparent-dark me-2" 
                                             data-bs-toggle="modal" 
@@ -57,7 +57,7 @@
                                             data-jenis="<?= $k['jenis']; ?>"
                                             data-id_prodi="<?= $k['id_prodi']; ?>" 
                                             data-lantai="<?= $k['lantai']; ?>"
-                                            data-id_ruang="<?= $k['id_ruang']; ?>">
+                                            data-id_ruang="<?= $k['nama']; ?>">
                                         <i data-feather="edit"></i>
                                     </button>
                                     <a href="/ruang/delete/<?= $k['id']; ?>" 

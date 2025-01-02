@@ -147,10 +147,10 @@
                                         <td>' . ($jadwal->jam_kuliah ?? '') . '</td>
                                         <td>' . ($jadwal->nama_mk ?? '') . '</td>
                                         <td>' . ($jadwal->dosen ?? ''). '</td>
-                                        <td>' . ($jadwal->jumlah_jam ?? '') . '</td>
+                                        <td>' . ($jadwal->sks ?? 0) . '</td>
                                         <td>' . ($jadwal->nama_kelas ?? '') . '</td>
                                         <td>' . ($jadwal->nama_semester ?? '') . '</td>
-                                        <td>' . ($jadwal->nama_prodi ?? '') . '</td>
+                                        <td>' . ($jadwal->nama_jurusan ?? '') . '</td>
                                         <td>' . ($jadwal->kuota ?? '') . '</td>
                                         <td>' . ($jadwal->ruang ?? '') . '</td>
                                         <td>' . ($jadwal->kapasitas ?? '') . '</td>
@@ -186,11 +186,11 @@
                         </div>  
                     <?php endif; ?>
 
-                    <div id="loading-div-background">
+                    <!-- <div id="loading-div-background">
                         <div id="loading-div" class="ui-corner-all">
                             <img style="height:50px;width:50px;margin:20px;" src="<?php echo base_url()?>/assets/loader2.gif" alt="Loading.."/><br>PROCESSING<br>PLEASE WAIT
                         </div>
-                    </div>
+                    </div> -->
                 </div>
                 <!-- /.card-body -->
             </div>

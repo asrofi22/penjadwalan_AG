@@ -125,7 +125,7 @@ class PenjadwalanModel extends Model
 
     public function getPerDosen($id_dosen = null)
     {
-        $rs = $this->db->table('jadwalpelajaran a');
+        $rs = $this->db->table('jadwalkuliah a');
 
         $rs->select([
             'e.nama as hari',
@@ -139,7 +139,7 @@ class PenjadwalanModel extends Model
             'f.nama as ruang'
         ])
         ->join('pengampu b', 'a.id_pengampu = b.id', 'left')
-        ->join('matapelajaran c', 'b.id_mk = c.id', 'left')
+        ->join('matakuliah c', 'b.id_mk = c.id', 'left')
         ->join('dosen d', 'b.id_dosen = d.id', 'left')
         ->join('hari e', 'a.id_hari = e.id', 'left')
         ->join('ruang f', 'a.id_ruang = f.id', 'left')
@@ -199,4 +199,7 @@ class PenjadwalanModel extends Model
             })
             ->delete();
     }
+
+    
+
 }

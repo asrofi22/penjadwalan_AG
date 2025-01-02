@@ -56,7 +56,7 @@
                                 <td><?= $jam['range_jam'] ?></td>
                                 <td><?= $jam['sks'] ?></td>
                                 <td><?= $jam['sesi'] ?></td>
-                                <td><?= $jam['id_jam'] ?></td>
+                                <td><?= $jam['kode_jam'] ?></td>
                                 <td>
                                     <button class="btn btn-datatable btn-icon btn-transparent-dark me-2" 
                                             data-bs-toggle="modal" 
@@ -65,7 +65,7 @@
                                             data-range-jam="<?= $jam['range_jam'] ?>" 
                                             data-sks="<?= $jam['sks'] ?>" 
                                             data-sesi="<?= $jam['sesi'] ?>" 
-                                            data-id-jam="<?= $jam['id_jam'] ?>">
+                                            data-id-jam="<?= $jam['kode_jam'] ?>">
                                         <i data-feather="edit"></i>
                                     </button>
                                     <a href="/jam/delete/<?= $jam['id'] ?>" class="btn btn-datatable btn-icon btn-transparent-dark"><i data-feather="trash-2"></i></a>
