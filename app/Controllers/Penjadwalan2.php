@@ -176,28 +176,16 @@ class Penjadwalan2 extends BaseController
 
         $found = false;
 
-
-
         // print_r("A");exit;
         $jenis_semester = $this->request->getPost('tipe_semester');
         $prodi = $this->request->getPost('prodi');
         $tahun_akademik = $this->request->getPost('tahun_akademik');
-
-
-
 
         // print_r($this->request->getMethod());exit;
 
         if ($this->request->getMethod() === 'POST') {
 
             // print_r([
-
-
-
-
-
-
-
 
             //     $this->request->getPost('jumlah_populasi'),
             //     $this->request->getPost('tipe_semester'),
@@ -206,9 +194,6 @@ class Penjadwalan2 extends BaseController
             //     $this->request->getPost('probabilitas_crossover'),
             //     $this->request->getPost('probabilitas_mutasi'),
             //     $this->request->getPost('jumlah_generasi'),
-
-
-
 
             // ]);exit;
 
@@ -316,7 +301,6 @@ class Penjadwalan2 extends BaseController
                         // $query = 'asc limit ' . $e . ',2';
 
                         $query = [$e, 2];
-
 
                         $mod = intval($rs_data->getNumRows() % 2);
                         $banyak_populasi = intval($rs_data->getNumRows() / 2);
