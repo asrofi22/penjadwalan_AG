@@ -14,8 +14,8 @@
                         <h6 class="dropdown-header d-flex align-items-center">
                             <img class="dropdown-user-img" src="<?= base_url(); ?>/assets/img/illustrations/profiles/profile-2.png" />
                             <div class="dropdown-user-details">
-                                <div class="dropdown-user-details-name">Valerie Luna</div>
-                                <div class="dropdown-user-details-email">vluna@aol.com</div>
+                                <div class="dropdown-user-details-name"><?= user()->username ?></div>
+                                <div class="dropdown-user-details-email"><?= user()->email ?></div>
                             </div>
                         </h6>
                         <div class="dropdown-divider"></div>
@@ -132,7 +132,7 @@
                     <div class="sidenav-footer">
                         <div class="sidenav-footer-content">
                             <div class="sidenav-footer-subtitle">Logged in as:</div>
-                            <div class="sidenav-footer-title">Valerie Luna</div>
+                            <div class="sidenav-footer-title"><?= user()->username ?></div>
                         </div>
                     </div>
                 </nav>

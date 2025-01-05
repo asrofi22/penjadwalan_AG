@@ -64,4 +64,11 @@ class Matakuliah extends BaseController
         $this->matakuliahModel->delete($id);
         return redirect()->to('/matakuliah');
     }
+
+    public function jumlahJam($id)
+    {
+        $mataKuliahModel = new \App\Models\MataKuliahModel();
+        return $mataKuliahModel->find($id);
+    }
+
 }

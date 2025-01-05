@@ -26,4 +26,13 @@ class MatakuliahModel extends Model
             ->join('prodi', 'matakuliah.id_prodi = prodi.id', 'left')
             ->findAll();
     }
+
+    public function jumlahJam($id)
+    {
+        // Menggunakan Query Builder
+        return $this->db->table('matakuliah')
+                        ->where('id', $id)
+                        ->get()
+                        ->getResult();
+    }
 }

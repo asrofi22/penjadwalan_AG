@@ -97,7 +97,7 @@
                                 </select>
                             </div>
 
-                            <input type="hidden" name="jumlah_populasi" value="<?= isset($jumlah_populasi) ? $jumlah_populasi : '50'; ?>">  
+                            <input type="hidden" name="jumlah_populasi" value="<?= isset($jumlah_populasi) ? $jumlah_populasi : '70'; ?>">  
 
                             <div class="mb-3">
                                 <input type="hidden" name="probabilitas_crossover" value="<?= isset($probabilitas_crossover) ? $probabilitas_crossover : '0.70'; ?>">
@@ -117,7 +117,7 @@
 
                     <?php if (isset($rs_jadwal) && count($rs_jadwal) > 0): ?>
                         <h5>Semester <?= $rs_jadwal[0]->tipe_semester; ?> Tahun Ajaran <?= $rs_jadwal[0]->nama_tahun; ?></h5>  
-                        <table id="example1" class="table table-bordered table-striped">
+                        <table id="datatablesSimple" class="table table-bordered table-striped small-font">
                             <thead>
                                 <tr>
                                     <th>No</th>
@@ -127,8 +127,8 @@
                                     <th>Mata Kuliah</th>
                                     <th>Dosen</th>
                                     <th>SKS</th>
-                                    <th>Kelas</th>
                                     <th>Semester</th>
+                                    <th>Kelas</th>
                                     <th>Prodi</th>
                                     <th>Kuota</th>
                                     <th>Ruang</th>
@@ -147,10 +147,10 @@
                                         <td>' . ($jadwal->jam_kuliah ?? '') . '</td>
                                         <td>' . ($jadwal->nama_mk ?? '') . '</td>
                                         <td>' . ($jadwal->dosen ?? ''). '</td>
-                                        <td>' . ($jadwal->sks ?? 0) . '</td>
-                                        <td>' . ($jadwal->nama_kelas ?? '') . '</td>
+                                        <td>' . ($jadwal->jumlah_jam ?? 0) . '</td>
                                         <td>' . ($jadwal->nama_semester ?? '') . '</td>
-                                        <td>' . ($jadwal->nama_jurusan ?? '') . '</td>
+                                        <td>' . ($jadwal->nama_kelas ?? '') . '</td>
+                                        <td>' . ($jadwal->nama_prodi ?? '') . '</td>
                                         <td>' . ($jadwal->kuota ?? '') . '</td>
                                         <td>' . ($jadwal->ruang ?? '') . '</td>
                                         <td>' . ($jadwal->kapasitas ?? '') . '</td>
@@ -169,8 +169,8 @@
                                     <th>Mata Kuliah</th>
                                     <th>Dosen</th>
                                     <th>SKS</th>
-                                    <th>Kelas</th>
                                     <th>Semester</th>
+                                    <th>Kelas</th>
                                     <th>Prodi</th>
                                     <th>Kuota</th>
                                     <!-- <th>Jurusan</th> -->

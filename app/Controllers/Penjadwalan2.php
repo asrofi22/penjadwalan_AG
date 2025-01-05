@@ -151,16 +151,6 @@ class Penjadwalan2 extends BaseController
             'semua_prodi' => $this->ProdiModel->semua_prodi() // Panggil findAll() di sini
         ];
 
-        $sksData = $this->PengampuModel->getSKSForAllPengampu();
-        foreach ($data['pengampu_list'] as &$pengampu) {
-            foreach ($sksData as $sks) {
-                if ($pengampu['id'] == $sks['id']) {
-                    $pengampu['sks'] = $sks['jumlah_jam']; // Menambahkan field SKS
-                    break;
-                }
-            }
-        }
-
         // print_r($data);exit;
 
         return view('penjadwalan', $data);
@@ -193,11 +183,21 @@ class Penjadwalan2 extends BaseController
         $prodi = $this->request->getPost('prodi');
         $tahun_akademik = $this->request->getPost('tahun_akademik');
 
+
+
+
         // print_r($this->request->getMethod());exit;
 
         if ($this->request->getMethod() === 'POST') {
 
             // print_r([
+
+
+
+
+
+
+
 
             //     $this->request->getPost('jumlah_populasi'),
             //     $this->request->getPost('tipe_semester'),
@@ -206,6 +206,9 @@ class Penjadwalan2 extends BaseController
             //     $this->request->getPost('probabilitas_crossover'),
             //     $this->request->getPost('probabilitas_mutasi'),
             //     $this->request->getPost('jumlah_generasi'),
+
+
+
 
             // ]);exit;
 
@@ -332,6 +335,11 @@ class Penjadwalan2 extends BaseController
                         // print_r([$jenis_semester, $tahun_akademik, $jumlah_populasi,$prodi,$query,$e,$mod]);exit;
 
 
+
+
+
+
+
                         $this->Inisialisasi($jumlah_populasi);
 
                         if ($this->kap == false) {
@@ -340,6 +348,9 @@ class Penjadwalan2 extends BaseController
                         }
 
                         $found = false;
+
+
+
 
                         for ($i = 0; $i < $jumlah_generasi; $i++) {
                             $fitness = $this->Hitungfitness($jumlah_populasi, $prodi);
@@ -357,6 +368,7 @@ class Penjadwalan2 extends BaseController
 
                             $fitnessAfterMutation = $this->Mutasi($jumlah_populasi, $mutasi, $prodi);
                             // $data_fitness_all[] =['jumlah_populasi'=>$jumlah_populasi,'prodi'=>$prodi,'fitness'=>$fitness,'fitnessAfterMutation'=>$fitnessAfterMutation];
+
 
 
                             for ($j = 0; $j < count($fitnessAfterMutation); $j++) {
@@ -386,6 +398,7 @@ class Penjadwalan2 extends BaseController
 
                                         $this->db->table('jadwalkuliah')->insert($data);
 
+
                                     }
                                     
 
@@ -396,6 +409,12 @@ class Penjadwalan2 extends BaseController
                                     // $file = fopen($filePath, 'w');
                                     // fwrite($file, json_encode(['individu'=> $this->individu,'data'=>$data]));
                                     // fclose($file);
+
+
+
+
+
+
 
                                     $found = true;
                                     $this->kap = true;
@@ -469,6 +488,8 @@ class Penjadwalan2 extends BaseController
         $this->jenis_semester = $jenis_semester;
         $this->tahun_akademik = $tahun_akademik;
         $this->populasi = $jumlah_populasi;
+
+
 
         // Penggunaan quoery builder untuk tabel pengampu
         // $builder = $this->db->table('pengampu a');
@@ -659,8 +680,9 @@ class Penjadwalan2 extends BaseController
         //exit(0);
 
         // Query untuk waktu dosen
-        $rs_Waktudosen = $this->db->query("SELECT a.id_dosen, CONCAT_WS(':', a.id_hari, b.sesi)
-                                           FROM waktu_tidak_bersedia a LEFT JOIN jam2 b ON a.id_jam = b.id");
+    
+        $rs_Waktudosen = $this->db->query("SELECT a.id_dosen, CONCAT_WS(':', a.id_hari, b.sesi) AS id_hari_jam
+                                        FROM waktu_tidak_bersedia a LEFT JOIN jam2 b ON a.id_jam = b.id");
         $i = 0;
         foreach ($rs_Waktudosen->getResult() as $data) {
             $this->idosen[$i] = (int) $data->id_dosen;
@@ -670,7 +692,7 @@ class Penjadwalan2 extends BaseController
         }
 
         // Query untuk Waktu Tersedia (Jika Prodi Terpilih)
-        if ($prodi == true) {
+        if ($prodi != 0) {
             $rs_Waktutersedia = $this->db->query("SELECT a.id, a.id_pengampu, b.id, b.id_dosen, CONCAT_WS(':', a.id_hari, d.sesi, a.id_ruang, b.id_dosen) 
                                                     as id_hari_ruang, c.id, cc.tipe_semester
                                                   FROM riwayat_penjadwalan a
@@ -692,7 +714,7 @@ class Penjadwalan2 extends BaseController
         }
 
         // Query  untuk waktu tersimpan (Jika Prodi Terpilih)
-        if ($prodi == true) {
+        if ($prodi != 0) {
             $rs_Waktutersimpan = $this->db->query("SELECT a.id, a.id_pengampu, b.id, b.id_dosen, CONCAT_WS(':', a.id_hari, d.sesi, a.id_ruang, b.id_dosen) 
                                                     as id_hari_ruang, c.id, cc.tipe_semester
                                                   FROM jadwalkuliah a
@@ -781,9 +803,10 @@ class Penjadwalan2 extends BaseController
                 // Jika mata kuliah TEORI
                 if ($this->jenis_mk[$j] === $this->TEORI) {
                     if ($this->ruang_pilihan[$j] == true) {
+                        // print_r($this->ruang_pilihan);exit;
                         $this->individu[$i][$j][3] = intval($this->ruang_pilihan[$j]);
                         $data_hasil_generate[] = ["e" => intval($this->ruang_pilihan[$j])];
-                    } elseif ($this->status[$j] != 'NORMAL') {
+                    } elseif ($this->status[$j] != 'Normal') {
                         $this->ruangReguler = false;
                         $kuota = intval($this->kuota_pengampu[$j]);
                         $rs_RuangReguler = $this->db->query("SELECT id, kapasitas, kode "
@@ -794,8 +817,14 @@ class Penjadwalan2 extends BaseController
 
 
                         $data_hasil_generate[] = [
-                            'rs_RuangReguler' => $rs_RuangReguler->getNumRows(),
+                            'rs_RuangReguler' => "SELECT id, kapasitas, kode "
+                            . "FROM ruang "
+                            // . "WHERE jenis = '$this->TEORI' and kapasitas >='$kuota' and lantai='1' and id_jurusan='$jurusan'");
+                            . "WHERE jenis = '$this->TEORI' and id_jurusan='$jurusan' and kapasitas >='$kuota' and lantai='1' ",
+
+
                             'jenis_mk' => $this->jenis_mk[$j],
+                            'status'=>$this->status[$j],
                             'j' => $j,
                         ];
 
@@ -842,8 +871,13 @@ class Penjadwalan2 extends BaseController
                         }
 
                         $data_hasil_generate[] = [
-                            'rs_RuangReguler' => $rs_RuangReguler->getNumRows(),
+                            'rs_RuangReguler' => "SELECT id, kapasitas "
+                            . "FROM ruang "
+                            . "WHERE kapasitas >='$kuota' and jenis = '$this->TEORI' and id_jurusan='$jurusan' ",
+
+
                             'jenis_mk' => $this->jenis_mk[$j],
+                            'status'=>$this->status[$j],
                             'j' => $j,
                         ];
 
@@ -863,9 +897,10 @@ class Penjadwalan2 extends BaseController
                 // Jika mata kuliah PRAKTIKUM
                 else if ($this->jenis_mk[$j] === $this->PRAKTIKUM) {
                     if ($this->ruang_pilihan[$j] == true) {
+                        
                         $this->individu[$i][$j][3] = intval($this->ruang_pilihan[$j]);
                         $data_hasil_generate[] = ["e" => 2];
-                    } else if ($this->status[$j] != 'NORMAL') {
+                    } else if ($this->status[$j] != 'Normal') {
                         $this->ruangLaboratorium = false;
                         $kuota = intval($this->kuota_pengampu[$j]);
                         $rs_RuangLaboratorium = $this->db->query("SELECT id, kapasitas "
@@ -875,8 +910,12 @@ class Penjadwalan2 extends BaseController
                         $k = 0;
 
                         $data_hasil_generate[] = [
-                            'rs_RuangReguler' => $rs_RuangLaboratorium->getNumRows(),
+                            'rs_RuangReguler' => "SELECT id, kapasitas "
+                            . "FROM ruang "
+                            // . "WHERE jenis = 'LABORATORIUM' and id_prodi='$prodi'  and kapasitas >='$kuota' ");
+                            . "WHERE jenis = 'LABORATORIUM' and id_jurusan='$jurusan' and lantai='1' and kapasitas >='$kuota' ",
                             'jenis_mk' => $this->jenis_mk[$j],
+                            'status'=>$this->status[$j],
                             'j' => $j,
                         ];
 
@@ -904,8 +943,12 @@ class Penjadwalan2 extends BaseController
                         $k = 0;
 
                         $data_hasil_generate[] = [
-                            'rs_RuangReguler' => $rs_RuangLaboratorium->getNumRows(),
+                            'rs_RuangReguler' => "SELECT id, kapasitas "
+                            . "FROM ruang "
+                            // . "WHERE kapasitas >='$kuota' and jenis = '$this->LABORATORIUM' and id_prodi='$prodi' ");
+                            . "WHERE kapasitas >='$kuota' and jenis = '$this->LABORATORIUM' and id_jurusan='$jurusan' ",
                             'jenis_mk' => $this->jenis_mk[$j],
+                            'status'=>$this->status[$j],
                             'j' => $j,
                         ];
 
@@ -926,6 +969,16 @@ class Penjadwalan2 extends BaseController
                 } else { }
             }
         }
+
+
+        $filePath = WRITEPATH . 'uploads/TES_' . uniqid('file_', true) . '.txt';; // WRITEPATH adalah folder yang bisa digunakan untuk menyimpan file
+
+        //  write_file($filePath, $data);
+
+        $file = fopen($filePath, 'w');
+        fwrite($file, json_encode(['data_hasil_generate'=>$data_hasil_generate]));
+        fclose($file);
+
 
         // print_r(['data_hasil_generate'=>$data_hasil_generate]);exit;
     }
@@ -1132,7 +1185,7 @@ class Penjadwalan2 extends BaseController
             }
 
             //#region Bentrok dengan Waktu Yang Sudah Terpakai
-            if ($prodi == true) {
+            if ($prodi != 0) {
                 $jumlah_waktu_tersedia = count($this->itersedia);
 
                 for ($j = 0; $j < $jumlah_waktu_tersedia; $j++) {
@@ -1335,6 +1388,10 @@ class Penjadwalan2 extends BaseController
         $this->populasi = $jumlah_populasi;
         $this->mutasi = $mutasi;
 
+
+
+
+
         $fitness = [];
         $r = mt_rand(0, mt_getrandmax() - 1) / mt_getrandmax(); //Menghasilkan nilai acak untuk probabilitas mutasi
         $jumlah_pengampu = count($this->pengampu);
@@ -1413,7 +1470,8 @@ class Penjadwalan2 extends BaseController
                         $rs_RuangLaboratorium = $this->db->query("SELECT id, kapasitas "
                             . "FROM ruang "
                             . "WHERE jenis = 'LABORATORIUM' and id_jurusan='$jurusan'  and lantai='1' and kapasitas >='$kuota'  ");
-                        $k = 0;
+
+                        $k=0;
                         foreach ($rs_RuangLaboratorium->getResult() as $data) {
                             $this->ruangLaboratorium[$k] = intval($data->id);
                             $k++;
@@ -1421,6 +1479,8 @@ class Penjadwalan2 extends BaseController
                         $jumlah_ruang_lab = count($this->ruangLaboratorium);
                         $this->individu[$i][$krom][3] = intval($this->ruangLaboratorium[mt_rand(0, $jumlah_ruang_lab - 1)]);
                     } else {
+
+
                         // Jika tidak, pilihkan ruang laboratorium untuk praktikum
                         $kuota = intval($this->kuota_pengampu[$krom]);
                         $rs_RuangLaboratorium = $this->db->query("SELECT id, kapasitas FROM ruang WHERE jenis = 'LABORATORIUM' AND id_jurusan='$jurusan' AND  kapasitas >= '$kuota'");

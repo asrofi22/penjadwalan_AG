@@ -98,6 +98,7 @@ class PenjadwalanModel extends Model
             'b.kuota',
             'f.kapasitas',
             'c.nama as nama_mk',
+            'c.jumlah_jam as jumlah_jam',
             'd.nama as dosen',
             'f.nama as ruang',
             'h.nama_kelas',

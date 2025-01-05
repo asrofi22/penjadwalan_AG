@@ -12,7 +12,7 @@
                                             <div class="page-header-icon"><i data-feather="activity"></i></div>
                                             Dashboard
                                         </h1>
-                                        <div class="page-header-subtitle">Example dashboard overview and content summary</div>
+                                        <div class="page-header-subtitle">Sistem Cerdas Penjadwalan Mata Kuliah FST</div>
                                     </div>
                                     <div class="col-12 col-xl-auto mt-4">
                                         <div class="input-group input-group-joined border-0" style="width: 16.5rem">
@@ -34,7 +34,7 @@
                                             
                                                 <div class="col-lg-8 text-center text-lg-start mb-4 mb-lg-0">
                                                     <h1 class="text-primary">Selamat Datang di Sistem Cerdas Penjadwalan Mata Kuliah FST!</h1>
-                                                    <p class="text-gray-700 mb-0">Browse our fully designed UI toolkit! Browse our prebuilt app pages, components, and utilites, and be sure to look at our full documentation!</p>
+                                                    <p class="text-gray-700 mb-0">Kelola jadwal mata kuliah dengan mudah, cepat, dan akurat. Sistem ini dirancang untuk membantu mengatur jadwal secara efisien, mengurangi resiko bentrok jadwal, dan mendukung kegiatan akademik di Fakultas Sains dan Teknologi.</p>
                                                 </div>
                                             
                                             <div class="col-lg-4 text-center"><img class="img-fluid" src="<?= base_url(); ?>/assets/img/illustrations/at-work.svg" style="max-width: 20rem" /></div>
