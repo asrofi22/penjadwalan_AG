@@ -1373,9 +1373,6 @@ class Penjadwalan2 extends BaseController
         $this->mutasi = $mutasi;
 
 
-
-
-
         $fitness = [];
         $r = mt_rand(0, mt_getrandmax() - 1) / mt_getrandmax(); //Menghasilkan nilai acak untuk probabilitas mutasi
         $jumlah_pengampu = count($this->pengampu);
