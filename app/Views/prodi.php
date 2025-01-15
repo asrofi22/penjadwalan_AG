@@ -24,12 +24,13 @@
             <div class="card mb-4">
                 <div class="card-header">Data Prodi</div>
                 <div class="card-body">
-                    <table id="datatablesSimple">
+                    <table id="datatablesSimple" style="font-size: 12px;">
                         <thead>
                             <tr>
                                 <th>No</th>
                                 <th>Program Studi</th>
                                 <th>ID Prodi</th>
+                                <th>ID Jurusan</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -40,13 +41,15 @@
                                 <td><?= $no++ ?></td>
                                 <td><?= $prodi['nama_prodi'] ?></td>
                                 <td><?= $prodi['id_prodi'] ?></td>
+                                <td><?= $prodi['id_jurusan'] ?></td>
                                 <td>
                                     <button class="btn btn-datatable btn-icon btn-transparent-dark me-2" 
                                             data-bs-toggle="modal" 
                                             data-bs-target="#modalEdit" 
                                             data-id="<?= $prodi['id'] ?>" 
                                             data-prodi="<?= $prodi['nama_prodi'] ?>" 
-                                            data-id-prodi="<?= $prodi['id_prodi'] ?>">
+                                            data-id-prodi="<?= $prodi['id_prodi'] ?>"
+                                            data-id-jurusan="<?= $prodi['id_jurusan'] ?>">
                                         <i data-feather="edit"></i>
                                     </button>
                                     <a href="/prodi/delete/<?= $prodi['id'] ?>" class="btn btn-datatable btn-icon btn-transparent-dark">
@@ -73,12 +76,16 @@
                         </div>
                         <div class="modal-body">
                             <div class="mb-3">
-                                <label for="prodi" class="form-label">Prodi</label>
-                                <input type="text" class="form-control" id="prodi" name="prodi" required>
+                                <label for="nama_prodi" class="form-label">Nama Prodi</label>
+                                <input type="text" class="form-control" id="nama_prodi" name="nama_prodi" required>
                             </div>
                             <div class="mb-3">
                                 <label for="id_prodi" class="form-label">ID Prodi</label>
                                 <input type="text" class="form-control" id="id_prodi" name="id_prodi" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="id_jurusan" class="form-label">ID Jurusan</label>
+                                <input type="text" class="form-control" id="id_jurusan" name="id_jurusan" required>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -103,12 +110,16 @@
                         </div>
                         <div class="modal-body">
                             <div class="mb-3">
-                                <label for="editProdi" class="form-label">Prodi</label>
-                                <input type="text" class="form-control" id="editProdi" name="prodi" required>
+                                <label for="editNamaProdi" class="form-label">Nama Prodi</label>
+                                <input type="text" class="form-control" id="editNamaProdi" name="nama_prodi" required>
                             </div>
                             <div class="mb-3">
                                 <label for="editIdProdi" class="form-label">ID Prodi</label>
                                 <input type="text" class="form-control" id="editIdProdi" name="id_prodi" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editIdJurusan" class="form-label">ID Jurusan</label>
+                                <input type="text" class="form-control" id="editIdJurusan" name="id_jurusan" required>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -130,13 +141,15 @@
 
         // Ambil data dari atribut tombol
         const id = button.getAttribute('data-id');
-        const prodi = button.getAttribute('data-prodi');
+        const nama_prodi = button.getAttribute('data-prodi');
         const id_prodi = button.getAttribute('data-id-prodi');
+        const id_jurusan = button.getAttribute('data-id-jurusan');
 
         // Isi form modal dengan data
         document.getElementById('editId').value = id;
-        document.getElementById('editProdi').value = prodi;
+        document.getElementById('editNamaProdi').value = nama_prodi;
         document.getElementById('editIdProdi').value = id_prodi;
+        document.getElementById('editIdJurusan').value = id_jurusan;
 
         // Atur action pada form edit
         const formEdit = document.getElementById('formEdit');

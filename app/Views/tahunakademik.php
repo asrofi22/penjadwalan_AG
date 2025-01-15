@@ -25,7 +25,7 @@
             <div class="card mb-4">
                 <div class="card-header">Tabel Data Tahun Akademik</div>
                 <div class="card-body">
-                    <table id="datatablesSimple" class="table table-striped table-bordered">
+                    <table id="datatablesSimple" class="table table-striped table-bordered" style="font-size: 12px;">
                         <thead>
                             <tr>
                                 <th>No</th>

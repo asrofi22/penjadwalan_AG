@@ -22,34 +22,39 @@
             <div class="card mb-4">
                 <div class="card-header">Form Penjadwalan</div>
                 <div class="card-body">
+                    
                     <?php if (isset($msg)): ?>                        
                         <div class="alert alert-danger">
-                            <button type="button" class="close" data-dismiss="alert">x</button>                
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             <?= print_r($msg); ?>
                         </div>
                     <?php endif; ?>
                     <?php if (isset($waktu)): ?>                        
                         <div class="alert alert-success">
-                            <button type="button" class="close" data-dismiss="alert">x</button>                
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             <?= $waktu; ?>
                         </div>  
                     <?php endif; ?>
-                    <?php if (isset($simpan)): ?>                        
-                        <div class="alert alert-success">
-                            <button type="button" class="close" data-dismiss="alert">x</button>                
-                            <?= $simpan; ?>
-                        </div>  
+                    <!-- Notifikasi Sukses -->
+                    <?php if (session()->getFlashdata('success')): ?>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <?= session()->getFlashdata('success') ?>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
                     <?php endif; ?>
-                    <?php if (isset($hapus)): ?>                        
-                        <div class="alert alert-success">
-                            <button type="button" class="close" data-dismiss="alert">x</button>                
-                            <?= $hapus; ?>
-                        </div>  
+
+                    <!-- Notifikasi Error -->
+                    <?php if (session()->getFlashdata('error')): ?>
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <?= session()->getFlashdata('error') ?>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
                     <?php endif; ?>
 
                     <?php if (!isset($ses_id_dosen)): ?>
                         <form method="POST" action="<?= base_url('penjadwalan/store'); ?>">
-                            <div class="mb-3">
+                        <div class="row mb-3">
+                            <div class="col-md-4">
                                 <label class="form-label">Semester</label>
                                 <select id="tipe_semester" name="tipe_semester" class="form-control" onchange="change_get()">            
                                     <?php
@@ -64,7 +69,7 @@
                                 </select>
                             </div>
 
-                            <div class="mb-3">
+                            <div class="col-md-4">
                                 <label class="form-label">Tahun Akademik</label>
                                 <select id="tahun_akademik" name="tahun_akademik" class="form-control" onchange="change_get()">
                                     <?php  
@@ -82,7 +87,7 @@
                                 </select>
                             </div>
 
-                            <div class="mb-3">
+                            <div class="col-md-4">
                                 <label class="form-label">Program Studi</label>
                                 <select id="prodi" name="prodi" class="form-control">
                                     <option value="0">Semua Prodi</option>
@@ -96,8 +101,9 @@
                                     ?>
                                 </select>
                             </div>
+                            </div>
 
-                            <input type="hidden" name="jumlah_populasi" value="<?= isset($jumlah_populasi) ? $jumlah_populasi : '70'; ?>">  
+                            <input type="hidden" name="jumlah_populasi" value="<?= isset($jumlah_populasi) ? $jumlah_populasi : '50'; ?>">  
 
                             <div class="mb-3">
                                 <input type="hidden" name="probabilitas_crossover" value="<?= isset($probabilitas_crossover) ? $probabilitas_crossover : '0.70'; ?>">
@@ -111,75 +117,57 @@
 
                     <?php if (isset($rs_jadwal) && count($rs_jadwal) !== 0): ?>  
                         <a href="<?= base_url(); ?>index.php/penjadwalan2/hapus_jadwal" class="btn btn-danger pull-right" onclick="ShowProgressAnimation();">Hapus Jadwal</a>
-                        <a href="<?= base_url(); ?>index.php/penjadwalan2/simpan_jadwal" class="btn btn-success pull-right" onclick="ShowProgressAnimation();">Simpan Jadwal</a>
+                        <a href="<?= base_url(); ?>penjadwalan/simpan_jadwal" class="btn btn-success pull-right" onclick="ShowProgressAnimation();">Simpan Jadwal</a>
                         <a href="<?= base_url(); ?>index.php/penjadwalan2/excel_report" class="btn btn-primary pull-right">Cetak Excel</a>
                     <?php endif; ?>
 
                     <?php if (isset($rs_jadwal) && count($rs_jadwal) > 0): ?>
-                        <h5>Semester <?= $rs_jadwal[0]->tipe_semester; ?> Tahun Ajaran <?= $rs_jadwal[0]->nama_tahun; ?></h5>  
-                        <table id="datatablesSimple" class="table table-bordered table-striped small-font">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Hari</th>
-                                    <th>Sesi</th>
-                                    <th>Jam</th>
-                                    <th>Mata Kuliah</th>
-                                    <th>Dosen</th>
-                                    <th>SKS</th>
-                                    <th>Semester</th>
-                                    <th>Kelas</th>
-                                    <th>Prodi</th>
-                                    <th>Kuota</th>
-                                    <th>Ruang</th>
-                                    <th>Kapasitas</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php                 
-                                $i = 1;
-                                foreach ($rs_jadwal as $jadwal):      
-                                    echo '
-                                    <tr class="A">
-                                        <td>' . $i . '</td>
-                                        <td>' . ($jadwal->hari ?? '') . '</td>
-                                        <td>' . ($jadwal->sesi ?? '') . '</td>
-                                        <td>' . ($jadwal->jam_kuliah ?? '') . '</td>
-                                        <td>' . ($jadwal->nama_mk ?? '') . '</td>
-                                        <td>' . ($jadwal->dosen ?? ''). '</td>
-                                        <td>' . ($jadwal->jumlah_jam ?? 0) . '</td>
-                                        <td>' . ($jadwal->nama_semester ?? '') . '</td>
-                                        <td>' . ($jadwal->nama_kelas ?? '') . '</td>
-                                        <td>' . ($jadwal->nama_prodi ?? '') . '</td>
-                                        <td>' . ($jadwal->kuota ?? '') . '</td>
-                                        <td>' . ($jadwal->ruang ?? '') . '</td>
-                                        <td>' . ($jadwal->kapasitas ?? '') . '</td>
-                                    </tr>
-                                    ';
-                                    $i++;
-                                endforeach; 
-                                ?>
-                            </tbody>
-                            <tfoot>
-                                <tr>
+                    <h5>Semester <?= $rs_jadwal[0]['tipe_semester']; ?> Tahun Ajaran <?= $rs_jadwal[0]['nama_tahun']; ?></h5>  
+                    <table id="datatablesSimple" class="table table-bordered table-striped" style="font-size: 12px;">
+                        <thead>
+                            <tr>
                                 <th>No</th>
-                                    <th>Hari</th>
-                                    <th>Sesi</th>
-                                    <th>Jam</th>
-                                    <th>Mata Kuliah</th>
-                                    <th>Dosen</th>
-                                    <th>SKS</th>
-                                    <th>Semester</th>
-                                    <th>Kelas</th>
-                                    <th>Prodi</th>
-                                    <th>Kuota</th>
-                                    <!-- <th>Jurusan</th> -->
-                                    <th>Ruang</th>
-                                    <th>Kapasitas</th>
+                                <th>Hari</th>
+                                <th>Sesi</th>
+                                <th>Jam</th>
+                                <th>Mata Kuliah</th>
+                                <th>Dosen</th>
+                                <th>SKS</th>
+                                <th>Semester</th>
+                                <th>Kelas</th>
+                                <th>Prodi</th>
+                                <th>Kuota</th>
+                                <th>Ruang</th>
+                                <th>Kapasitas</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php                 
+                            $i = 1;
+                            foreach ($rs_jadwal as $jadwal):      
+                                echo '
+                                <tr class="A">
+                                    <td>' . $i . '</td>
+                                    <td>' . ($jadwal['hari'] ?? '') . '</td>
+                                    <td>' . ($jadwal['sesi'] ?? '') . '</td>
+                                    <td>' . ($jadwal['jam_kuliah'] ?? '') . '</td>
+                                    <td>' . ($jadwal['nama_mk'] ?? '') . '</td>
+                                    <td>' . ($jadwal['dosen'] ?? ''). '</td>
+                                    <td>' . ($jadwal['jumlah_jam'] ?? 0) . '</td>
+                                    <td>' . ($jadwal['nama_semester'] ?? '') . '</td>
+                                    <td>' . ($jadwal['nama_kelas'] ?? '') . '</td>
+                                    <td>' . ($jadwal['nama_prodi'] ?? '') . '</td>
+                                    <td>' . ($jadwal['kuota'] ?? '') . '</td>
+                                    <td>' . ($jadwal['ruang'] ?? '') . '</td>
+                                    <td>' . ($jadwal['kapasitas'] ?? '') . '</td>
                                 </tr>
-                            </tfoot>
-                        </table>
-                    <?php else: ?>
+                                ';
+                                $i++;
+                            endforeach; 
+                            ?>
+                        </tbody>
+                    </table>
+                <?php else: ?>
                         <div class="alert alert-info">
                             <button type="button" class="close" data-dismiss="alert">×</button>             
                             Tidak ada data jadwal yang ditemukan.
@@ -219,7 +207,7 @@
         
         $('#simpan_jadwa').on("click", function() {
             $.ajax({
-                url: '<?php echo base_url();?>index.php/penjadwalan/simpan_jadwal',
+                url: '<?php echo base_url();?>penjadwalan/simpan_jadwal',
                 dataType: 'json',
                 processData: false,
                 contentType: false, 

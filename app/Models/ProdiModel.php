@@ -9,11 +9,11 @@ class ProdiModel extends Model
     protected $table = 'prodi';  // Tabel yang digunakan
     protected $primaryKey = 'id'; // Kunci utama tabel ini
 
-    protected $allowedFields = ['id_prodi', 'nama_prodi']; // Kolom yang diizinkan untuk diisi
+    protected $allowedFields = ['id_prodi', 'nama_prodi', 'id_jurusan']; // Kolom yang diizinkan untuk diisi
 
     public function per_prodi($id)
     {
-        return $this->where('id', $id)->first(); // Mengambil satu prodi berdasarkan ID
+        return $this->where('id', $id)->first(); // Mengambil satu prodi berdasarkan id
     }
 
     public function semua_prodi()

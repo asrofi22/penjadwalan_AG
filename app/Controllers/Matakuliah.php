@@ -37,7 +37,7 @@ class Matakuliah extends BaseController
             'semester' => $this->request->getPost('semester'),
             'aktif' => $this->request->getPost('aktif'),
             'jenis' => $this->request->getPost('jenis'),
-            'nama_kode' => $this->request->getPost('nama_kode'),
+            'nama_id' => $this->request->getPost('nama_id'),
             'id_prodi' => $this->request->getPost('id_prodi'),
             'id_mk' => $this->request->getPost('id_mk'),
         ]);
@@ -52,7 +52,7 @@ class Matakuliah extends BaseController
             'semester' => $this->request->getPost('semester'),
             'aktif' => $this->request->getPost('aktif'),
             'jenis' => $this->request->getPost('jenis'),
-            'nama_kode' => $this->request->getPost('nama_kode'),
+            'nama_id' => $this->request->getPost('nama_id'),
             'id_prodi' => $this->request->getPost('id_prodi'),
             'id_matkul' => $this->request->getPost('id_matkul'),
         ]);

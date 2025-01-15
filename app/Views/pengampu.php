@@ -25,7 +25,7 @@
             <div class="card mb-4">
                 <div class="card-header">Tabel Data Pengampu</div>
                 <div class="card-body">
-                    <table id="datatablesSimple" class="table table-bordered table-hover">
+                    <table id="datatablesSimple" class="table table-bordered table-hover" style="font-size: 12px;">
                         <thead>
                             <tr>
                                 <th>No</th>
@@ -54,7 +54,7 @@
                                 <td><?= $pengampu['kuota']; ?></td>
                                 <td><?= $pengampu['nama']; ?></td>
                                 <td>
-                                    <button class="btn btn-warning btn-sm" 
+                                    <button class="btn btn-datatable btn-icon btn-transparent-dark me-2" 
                                             data-bs-toggle="modal" 
                                             data-bs-target="#modalEdit" 
                                             data-id="<?= $pengampu['id']; ?>"
@@ -66,13 +66,9 @@
                                             data-semester="<?= $pengampu['semester']; ?>"
                                             data-kuota="<?= $pengampu['kuota']; ?>"
                                             data-id_ruang="<?= $pengampu['id_ruang']; ?>">
-                                        Edit
+                                            <i data-feather="edit"></i>
                                     </button>
-                                    <a href="/pengampu/delete/<?= $pengampu['id']; ?>" 
-                                       class="btn btn-danger btn-sm" 
-                                       onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
-                                        Hapus
-                                    </a>
+                                    <a href="/pengampu/delete/<?= $pengampu['id'] ?>" class="btn btn-datatable btn-icon btn-transparent-dark"><i data-feather="trash-2"></i></a>
                                 </td>
                             </tr>
                             <?php endforeach; ?>

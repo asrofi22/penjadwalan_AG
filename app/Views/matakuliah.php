@@ -25,7 +25,7 @@
             <div class="card mb-4">
                 <div class="card-header">Tabel Data Mata Kuliah</div>
                 <div class="card-body">
-                    <table id="datatablesSimple" class="table table-striped table-bordered">
+                    <table id="datatablesSimple" class="table table-striped table-bordered" style="font-size: 12px;">
                         <thead>
                             <tr>
                                 <th>No</th>
@@ -34,7 +34,7 @@
                                 <th>Semester</th>
                                 <th>Aktif</th>
                                 <th>Jenis</th>
-                                <th>Kode</th>
+                                <th>ID</th>
                                 <th>Program Studi</th>
                                 <th>Aksi</th>
                             </tr>
@@ -49,10 +49,10 @@
                                 <td><?= $matkul['nama_semester']; ?></td>
                                 <td><?= $matkul['aktif'] ?></td>
                                 <td><?= $matkul['jenis']; ?></td>
-                                <td><?= $matkul['nama_kode']; ?></td>
+                                <td><?= $matkul['nama_id']; ?></td>
                                 <td><?= $matkul['nama_prodi']; ?></td>
                                 <td>
-                                    <button class="btn btn-warning btn-sm" 
+                                    <button class="bbtn btn-datatable btn-icon btn-transparent-dark me-2" 
                                             data-bs-toggle="modal" 
                                             data-bs-target="#modalEdit" 
                                             data-id="<?= $matkul['id']; ?>"
@@ -61,15 +61,12 @@
                                             data-semester="<?= $matkul['semester']; ?>"
                                             data-aktif="<?= $matkul['aktif']; ?>"
                                             data-jenis="<?= $matkul['jenis']; ?>"
-                                            data-nama_kode="<?= $matkul['nama_kode']; ?>"
+                                            data-nama_id="<?= $matkul['nama_id']; ?>"
                                             data-id_prodi="<?= $matkul['id_prodi']; ?>">
-                                        Edit
+                                            <i data-feather="edit"></i>
                                     </button>
-                                    <a href="/matakuliah/delete/<?= $matkul['id']; ?>" 
-                                       class="btn btn-danger btn-sm" 
-                                       onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
-                                        Hapus
-                                    </a>
+                                    <a href="/matakuliah/delete/<?= $matkul['id'] ?>" class="btn btn-datatable btn-icon btn-transparent-dark" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?');"><i data-feather="trash-2"></i></a>
+                                    
                                 </td>
                             </tr>
                             <?php endforeach; ?>
@@ -118,8 +115,8 @@
                                 <input type="text" class="form-control" id="jenis" name="jenis">
                             </div>
                             <div class="mb-3">
-                                <label for="nama_kode" class="form-label">Kode Mata Kuliah</label>
-                                <input type="text" class="form-control" id="nama_kode" name="nama_kode">
+                                <label for="nama_id" class="form-label">ID Mata Kuliah</label>
+                                <input type="text" class="form-control" id="nama_id" name="nama_id">
                             </div>
                             <div class="mb-3">
                                 <label for="id_prodi" class="form-label">Program Studi</label>
@@ -179,8 +176,8 @@
                                 <input type="text" class="form-control" id="editJenis" name="jenis">
                             </div>
                             <div class="mb-3">
-                                <label for="editNamaKode" class="form-label">Kode Mata Kuliah</label>
-                                <input type="text" class="form-control" id="editNamaKode" name="nama_kode">
+                                <label for="editNamaid" class="form-label">id Mata Kuliah</label>
+                                <input type="text" class="form-control" id="editNamaid" name="nama_id">
                             </div>
                             <div class="mb-3">
                                 <label for="editIdProdi" class="form-label">Program Studi</label>
@@ -209,27 +206,25 @@
         const button = event.relatedTarget;
 
         const id = button.getAttribute('data-id');
-        const id_mk = button.getAttribute('data-id_mk');
-        const id_dosen = button.getAttribute('data-id_dosen');
-        const id_kelas = button.getAttribute('data-id_kelas');
-        const id_tahun_akademik = button.getAttribute('data-id_tahun_akademik');
-        const id_prodi = button.getAttribute('data-id_prodi');
+        const nama = button.getAttribute('data-nama');
+        const jumlah_jam = button.getAttribute('data-jumlah_jam');
         const semester = button.getAttribute('data-semester');
-        const kuota = button.getAttribute('data-kuota');
-        const id_ruang = button.getAttribute('data-id_ruang');
+        const aktif = button.getAttribute('data-aktif');
+        const jenis = button.getAttribute('data-jenis');
+        const nama_id = button.getAttribute('data-nama_id');
+        const id_prodi = button.getAttribute('data-id_prodi');
 
         document.getElementById('editId').value = id;
-        document.getElementById('editIdMk').value = id_mk;
-        document.getElementById('editIdDosen').value = id_dosen;
-        document.getElementById('editIdKelas').value = id_kelas;
-        document.getElementById('editIdTahunAkademik').value = id_tahun_akademik;
-        document.getElementById('editIdProdi').value = id_prodi;
+        document.getElementById('editNama').value = nama;
+        document.getElementById('editJumlahJam').value = jumlah_jam;
         document.getElementById('editSemester').value = semester;
-        document.getElementById('editKuota').value = kuota;
-        document.getElementById('editIdRuang').value = id_ruang;
+        document.getElementById('editAktif').value = aktif;
+        document.getElementById('editJenis').value = jenis;
+        document.getElementById('editNamaid').value = nama_id;
+        document.getElementById('editIdProdi').value = id_prodi;
 
         const formEdit = document.getElementById('formEdit');
-        formEdit.action = `/pengampu/update/${id}`;
+        formEdit.action = `/matakuliah/update/${id}`;
     });
 </script>
 <?= $this->endSection(); ?>

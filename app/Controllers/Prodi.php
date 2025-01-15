@@ -24,15 +24,16 @@ class Prodi extends BaseController
     }
 
     public function semua_prodi(){
-		$result = $this->prodiModel->findAll();
-		echo json_encode($result);
-	}
+        $result = $this->prodiModel->findAll();
+        echo json_encode($result);
+    }
 
     public function store()
     {
         $this->prodiModel->save([
-            'prodi' => $this->request->getPost('prodi'),
+            'nama_prodi' => $this->request->getPost('nama_prodi'),
             'id_prodi' => $this->request->getPost('id_prodi'),
+            'id_jurusan' => $this->request->getPost('id_jurusan'),
         ]);
 
         return redirect()->to('/prodi');
@@ -51,8 +52,9 @@ class Prodi extends BaseController
     public function update($id)
     {
         $this->prodiModel->update($id, [
-            'prodi' => $this->request->getPost('prodi'),
-            'id_prodi' => $this->request->getPost('id_prodi')
+            'nama_prodi' => $this->request->getPost('nama_prodi'),
+            'id_prodi' => $this->request->getPost('id_prodi'),
+            'id_jurusan' => $this->request->getPost('id_jurusan')
         ]);
 
         return redirect()->to('/prodi');

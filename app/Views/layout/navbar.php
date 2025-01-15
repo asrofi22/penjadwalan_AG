@@ -76,7 +76,7 @@
                                 <div class="nav-link-icon"><i data-feather="rewind"></i></div>
                                 Penjadwalan
                             </a>
-                            <a class="nav-link" href="/riwayat">
+                            <a class="nav-link" href="/riwayatpenjadwalan">
                                 <div class="nav-link-icon"><i data-feather="rewind"></i></div>
                                 Riwayat Penjadwalan
                             </a>

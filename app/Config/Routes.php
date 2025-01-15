@@ -85,12 +85,14 @@ $routes->get('/waktutidakbersedia/delete/(:num)', 'Waktutidakbersedia::delete/$1
 $routes->get('/penjadwalan', 'Penjadwalan2::index'); 
 $routes->post('/penjadwalan/store', 'Penjadwalan2::store'); 
 $routes->get('/penjadwalan/excel_report', 'Penjadwalan2::excel_report'); 
-$routes->post('/penjadwalan/simpan_jadwal', 'Penjadwalan2::simpan_jadwal'); 
+$routes->get('/penjadwalan/simpan_jadwal', 'Penjadwalan2::simpan_jadwal'); 
 $routes->post('/penjadwalan/hapus_jadwal', 'Penjadwalan2::hapus_jadwal'); 
 
-$routes->get('/generatejadwal', 'Penjadwalan4::generatejadwalform');
-$routes->get('/generatejadwal/action', 'Penjadwalan4::generate_action');
-$routes->post('/generatejadwal', 'Penjadwalan4::generatejadwal');
+$routes->get('/riwayatpenjadwalan', 'Riwayatpenjadwalan::index'); 
+// $routes->post('/riwayatpenjadwalan/store', 'Riwayatpenjadwalan::store'); 
+$routes->get('/riwayatpenjadwalan/excel_report', 'Riwayatpenjadwalan::excel_report'); 
+$routes->post('/riwayatpenjadwalan/simpan_jadwal', 'Riwayatpenjadwalan::simpan_jadwal'); 
+$routes->get('/riwayatpenjadwalan/hapus_jadwal', 'Riwayatpenjadwalan::hapus_jadwal'); 
 
 // Hasil jadwal routes
 $routes->get('/hasilgenerate/(:num)', 'Penjadwalan4::hasilgenerate/$1');
