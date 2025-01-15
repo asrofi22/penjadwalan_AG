@@ -86,42 +86,64 @@ class PenjadwalanModel extends Model
 
     public function getAllJadwal()
     {
-        $builder = $this->db->table('jadwalkuliah a');
+        $builder = $this->db->table('jadwalkuliah a')
+            ->select('
+                e.nama as hari,
+                a.id_pengampu,
+                a.id_hari,
+                a.id_jam,
+                a.id_ruang,
+                b.id,
+                b.kuota,
+                f.kapasitas,
+                b.tahun_akademik,
+                b.id_prodi,
+                c.id_mapel,
+                c.jumlah_jam as jumlah_jam,
+                e.id_hari,
+                c.nama as nama_mk,
+                c.semester as semester,
+                d.id_dosen,
+                d.nama as dosen,
+                f.id as id_ruang,
+                f.nama as ruang,
+                g.id as id_jam,
+                g.range_jam as jam_kuliah,
+                g.sesi as sesi,
+                h.id_kelas,
+                h.id as id_kelas,
+                h.nama_kelas as nama_kelas,
+                i.id_prodi,
+                i.id,
+                i.nama_prodi as nama_prodi,
+                j.id as id_semester_tipe,
+                j.tipe_semester as tipe_semester,
+                k.id as id_tahun,
+                k.tahun as nama_tahun,
+                l.id_semester,
+                l.id as id_semester,
+                l.nama_semester as nama_semester,
+                l.semester_tipe as semester_tipe,
+                m.nama_jurusan as nama_jurusan,
+                m.id as id_jurusan
+            ')
+            ->join('pengampu b', 'a.id_pengampu = b.id', 'left')
+            ->join('matakuliah c', 'b.id_mk = c.id', 'left')
+            ->join('dosen d', 'b.id_dosen = d.id', 'left')
+            ->join('hari e', 'a.id_hari = e.id', 'left')
+            ->join('ruang f', 'a.id_ruang = f.id', 'left')
+            ->join('jam2 g', 'a.id_jam = g.id', 'left')
+            ->join('kelas h', 'b.id_kelas = h.id', 'left')
+            ->join('prodi i', 'b.id_prodi = i.id', 'left')
+            ->join('semester_tipe j', 'c.semester = j.id', 'left')
+            ->join('tahun_akademik k', 'b.tahun_akademik = k.id', 'left')
+            ->join('semester l', 'b.semester = l.id', 'left')
+            ->join('jurusan m', 'i.id_jurusan = m.id', 'left')
+            ->orderBy('e.id', 'asc')
+            ->orderBy('g.range_jam', 'asc');
 
-        $builder->select([
-            'e.nama as hari',
-            'g.sesi',
-            'g.range_jam as jam_kuliah',
-            'a.id_pengampu',
-            'b.tahun_akademik',
-            'b.id_prodi',
-            'b.kuota',
-            'f.kapasitas',
-            'c.nama as nama_mk',
-            'c.jumlah_jam as jumlah_jam',
-            'd.nama as dosen',
-            'f.nama as ruang',
-            'h.nama_kelas',
-            'i.nama_prodi as nama_prodi',
-            'l.nama_semester',
-            'j.tipe_semester',
-            'k.tahun as nama_tahun'
-        ])
-        ->join('pengampu b', 'a.id_pengampu = b.id', 'left')
-        ->join('matakuliah c', 'b.id_mk = c.id', 'left')
-        ->join('dosen d', 'b.id_dosen = d.id', 'left')
-        ->join('hari e', 'a.id_hari = e.id', 'left')
-        ->join('ruang f', 'a.id_ruang = f.id', 'left')
-        ->join('jam2 g', 'a.id_jam = g.id', 'left')
-        ->join('kelas h', 'b.id_kelas = h.id', 'left')
-        ->join('prodi i', 'b.id_prodi = i.id', 'left')
-        ->join('semester_tipe j', 'c.semester = j.id', 'left')
-        ->join('tahun_akademik k', 'b.tahun_akademik = k.id', 'left')
-        ->join('semester l', 'b.semester = l.id', 'left')
-        ->orderBy('e.id', 'ASC')
-        ->orderBy('g.range_jam', 'ASC');
-
-        return $builder->get()->getResult(); //  Kembalikan sebagai array object
+        $query = $builder->get();
+        return $query->getResult();
     }
 
     public function getPerDosen($id_dosen = null)
