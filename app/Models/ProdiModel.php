@@ -11,9 +11,13 @@ class ProdiModel extends Model
 
     protected $allowedFields = ['id_prodi', 'nama_prodi', 'id_jurusan']; // Kolom yang diizinkan untuk diisi
 
-    public function per_prodi($id)
+    public function per_prodi($id_prodi)
     {
-        return $this->where('id', $id)->first(); // Mengambil satu prodi berdasarkan id
+        // Pastikan query mengembalikan array atau objek
+        return $this->db->table('prodi')
+                        ->where('id', $id_prodi)
+                        ->get()
+                        ->getResult(); // Mengembalikan array of objects
     }
 
     public function semua_prodi()

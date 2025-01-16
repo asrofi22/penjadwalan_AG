@@ -109,7 +109,7 @@
                             <a href="<?= base_url('riwayatpenjadwalan/hapus_jadwal'); ?>" class="btn btn-danger" onclick="ShowProgressAnimation();">
                                 <i class="fa fa-trash"></i> Hapus Jadwal
                             </a>
-                            <a href="<?= base_url('riwayat_penjadwalan3/excel_report'); ?>" class="btn btn-primary">
+                            <a href="<?= base_url('riwayatpenjadwalan/excel_report'); ?>" class="btn btn-primary">
                                 <i class="fa fa-file-excel"></i> Cetak Excel
                             </a>
                         </div>
@@ -176,7 +176,7 @@
         var tahun_akademik = document.getElementById('tahun_akademik');
         var prodi = document.getElementById('prodi');
 
-        window.location.href = "<?= base_url('riwayat_penjadwalan3/index/'); ?>" + semester_tipe.options[semester_tipe.selectedIndex].value + "/" + tahun_akademik.options[tahun_akademik.selectedIndex].value + "/" + prodi.options[prodi.selectedIndex].value;
+        window.location.href = "<?= base_url('riwayatpenjadwalan'); ?>/" + semester_tipe.options[semester_tipe.selectedIndex].value + "/" + tahun_akademik.options[tahun_akademik.selectedIndex].value + "/" + prodi.options[prodi.selectedIndex].value;
     }
 
     // function ShowProgressAnimation() {

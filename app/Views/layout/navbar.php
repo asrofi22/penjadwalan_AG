@@ -112,10 +112,10 @@
                                 <div class="nav-link-icon"><i data-feather="rewind"></i></div>
                                 Hari
                             </a>
-                            <a class="nav-link" href="/kromosom">
+                            <!-- <a class="nav-link" href="/kromosom">
                                 <div class="nav-link-icon"><i data-feather="rewind"></i></div>
                                 Kromosom
-                            </a>
+                            </a> -->
                             <a class="nav-link" href="/admin">
                                 <div class="nav-link-icon"><i data-feather="rewind"></i></div>
                                 Admin

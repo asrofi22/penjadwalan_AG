@@ -46,7 +46,7 @@
                                 <td><?= $no++; ?></td>
                                 <td><?= $matkul['nama']; ?></td>
                                 <td><?= $matkul['jumlah_jam']; ?></td>
-                                <td><?= $matkul['nama_semester']; ?></td>
+                                <td><?= ($matkul['semester'] == 1) ? 'Ganjil' : 'Genap'; ?></td>
                                 <td><?= $matkul['aktif'] ?></td>
                                 <td><?= $matkul['jenis']; ?></td>
                                 <td><?= $matkul['nama_id']; ?></td>

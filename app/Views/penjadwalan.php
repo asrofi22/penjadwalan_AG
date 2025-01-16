@@ -116,9 +116,9 @@
                     <?php endif; ?>
 
                     <?php if (isset($rs_jadwal) && count($rs_jadwal) !== 0): ?>  
-                        <a href="<?= base_url(); ?>index.php/penjadwalan2/hapus_jadwal" class="btn btn-danger pull-right" onclick="ShowProgressAnimation();">Hapus Jadwal</a>
+                        <a href="<?= base_url(); ?>penjadwalan/hapus_jadwal" class="btn btn-danger pull-right" onclick="ShowProgressAnimation();">Hapus Jadwal</a>
                         <a href="<?= base_url(); ?>penjadwalan/simpan_jadwal" class="btn btn-success pull-right" onclick="ShowProgressAnimation();">Simpan Jadwal</a>
-                        <a href="<?= base_url(); ?>index.php/penjadwalan2/excel_report" class="btn btn-primary pull-right">Cetak Excel</a>
+                        <a href="<?= base_url(); ?>penjadwalan/excel_report" class="btn btn-primary pull-right">Cetak Excel</a>
                     <?php endif; ?>
 
                     <?php if (isset($rs_jadwal) && count($rs_jadwal) > 0): ?>
@@ -194,7 +194,7 @@
         var tahun_akademik = document.getElementById('tahun_akademik');
         var prodi = document.getElementById('prodi');
 		
-        window.location.href = "<?php echo base_url().'index.php/riwayat_penjadwalan/index/' ?>" + semester_tipe.options[semester_tipe.selectedIndex].value + "/" + tahun_akademik.options[tahun_akademik.selectedIndex].value + "/" + prodi.options[prodi.selectedIndex].value;		
+        window.location.href = "<?php echo base_url().'riwayatpenjadwalan/' ?>" + semester_tipe.options[semester_tipe.selectedIndex].value + "/" + tahun_akademik.options[tahun_akademik.selectedIndex].value + "/" + prodi.options[prodi.selectedIndex].value;		
     }
 
     $(document).ready(function () {

@@ -75,7 +75,7 @@ class Filters extends BaseFilters
             // 'honeypot',
             // 'csrf',
             // 'invalidchars',
-            'login'
+            // 'login'
         ],
         'after' => [
             // 'honeypot',
@@ -107,5 +107,24 @@ class Filters extends BaseFilters
      *
      * @var array<string, array<string, list<string>>>
      */
-    public array $filters = [];
+    public array $filters = [
+        'login' => [
+            'before' => [
+                'home/user', // Hanya route yang memerlukan login
+                'jam', 'jam/*',
+                'hari', 'hari/*',
+                'dosen', 'dosen/*',
+                'prodi', 'prodi/*',
+                'kelas', 'kelas/*',
+                'ruang', 'ruang/*',
+                'semester', 'semester/*',
+                'matakuliah', 'matakuliah/*',
+                'tahunakademik', 'tahunakademik/*',
+                'pengampu', 'pengampu/*',
+                'waktutidakbersedia', 'waktutidakbersedia/*',
+                'penjadwalan', 'penjadwalan/*',
+                'riwayatpenjadwalan', 'riwayatpenjadwalan/*',
+            ],
+        ],
+    ];
 }
