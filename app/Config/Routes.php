@@ -100,4 +100,6 @@ $routes->group('', ['filter' => 'login'], function ($routes) {
     $routes->get('/riwayatpenjadwalan/excel_report', 'Riwayatpenjadwalan::excel_report');
     $routes->post('/riwayatpenjadwalan/simpan_jadwal', 'Riwayatpenjadwalan::simpan_jadwal');
     $routes->get('/riwayatpenjadwalan/hapus_jadwal', 'Riwayatpenjadwalan::hapus_jadwal');
+    $routes->get('riwayatpenjadwalan/edit/(:num)', 'Riwayatpenjadwalan::edit/$1');
+$routes->post('riwayatpenjadwalan/update/(:num)', 'Riwayatpenjadwalan::update/$1');
 });

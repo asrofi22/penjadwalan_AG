@@ -18,7 +18,8 @@ class RiwayatpenjadwalanModel extends Model
     // Method untuk mengambil data riwayat penjadwalan
     public function get($semester_tipe, $tahun_akademik)
     {
-        $sql = "SELECT  e.nama as hari,
+        $sql = "SELECT  a.id, 
+                        e.nama as hari,
                         b.kuota,
                         c.nama as nama_mk,
                         c.jumlah_jam as jumlah_jam,
@@ -271,28 +272,13 @@ class RiwayatpenjadwalanModel extends Model
         return $this->db->query($sql)->getResult();
     }
 
-    public function cari_jadwal($keyword)
+    public function getById($id)
     {
-        $sql = "SELECT  e.nama as hari,
-                        c.nama as nama_mk,
-                        d.nama as dosen,
-                        f.nama as ruang,
-                        g.range_jam as jam_kuliah,
-                        h.nama_kelas as nama_kelas,
-                        i.nama_prodi as nama_prodi
-                FROM riwayat_penjadwalan a
-                LEFT JOIN pengampu b ON a.id_pengampu = b.id
-                LEFT JOIN matakuliah c ON b.id_mk = c.id
-                LEFT JOIN dosen d ON b.id_dosen = d.id
-                LEFT JOIN hari e ON a.id_hari = e.id
-                LEFT JOIN ruang f ON a.id_ruang = f.id
-                LEFT JOIN jam2 g ON a.id_jam = g.id
-                LEFT JOIN kelas h ON b.kelas = h.id
-                LEFT JOIN prodi i ON b.id_prodi = i.id
-                WHERE e.nama LIKE ? OR c.nama LIKE ? OR d.nama LIKE ?
-                ORDER BY e.id ASC, Jam_Kuliah ASC";
+        return $this->db->table('riwayat_penjadwalan')->where('id', $id)->get()->getRow();
+    }
 
-        $keyword = "%$keyword%";
-        return $this->db->query($sql, [$keyword, $keyword, $keyword])->getResult();
+    public function update_jadwal($id, $data)
+    {
+        return $this->db->table('riwayat_penjadwalan')->where('id', $id)->update($data);
     }
 }

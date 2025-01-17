@@ -176,4 +176,28 @@ class Riwayatpenjadwalan extends BaseController
 
         return view('riwayatpenjadwalan', $data);
     }
+
+    public function edit($id)
+    {
+        $data['jadwal'] = $this->RiwayatpenjadwalanModel->getById($id);
+        $data['rs_hari'] = $this->HariModel->findAll();
+        $data['rs_jam'] = $this->JamModel->findAll();
+        $data['rs_ruang'] = $this->RuangModel->findAll();
+
+        return view('riwayatpenjadwalan', $data);
+    }
+
+    public function update($id)
+    {
+        $data = [
+            'id_pengampu' => $this->request->getPost('id_pengampu'),
+            'id_jam' => $this->request->getPost('id_jam'),
+            'id_hari' => $this->request->getPost('id_hari'),
+            'id_ruang' => $this->request->getPost('id_ruang')
+        ];
+
+        $this->RiwayatpenjadwalanModel->update_jadwal($id, $data);
+
+        return redirect()->to(base_url('riwayatpenjadwalan'))->with('success', 'Data berhasil diupdate');
+    }
 }
