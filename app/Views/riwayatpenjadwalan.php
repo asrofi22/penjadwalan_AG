@@ -112,6 +112,7 @@
                             <a href="<?= base_url('riwayatpenjadwalan/excel_report'); ?>" class="btn btn-primary">
                                 <i class="fa fa-file-excel"></i> Cetak Excel
                             </a>
+                            
                         </div>
 
                         <table id="datatablesSimple" class="table table-bordered table-striped" style="font-size: 12px;">
@@ -139,23 +140,22 @@
                             ?>
                                 <tr>
                                     <td><?= $i ?></td>
-                                    <td><?= $jadwal->hari ?></td>
-                                    <td><?= $jadwal->sesi ?></td>
-                                    <td><?= $jadwal->jam_kuliah ?></td>
-                                    <td><?= $jadwal->nama_mk ?></td>
-                                    <td><?= $jadwal->dosen ?></td>
-                                    <td><?= $jadwal->jumlah_jam ?></td>
-                                    <td><?= $jadwal->nama_semester ?></td>
-                                    <td><?= $jadwal->nama_kelas ?></td>
-                                    <td><?= $jadwal->nama_prodi ?></td>
-                                    <td><?= $jadwal->kuota ?></td>
-                                    <td><?= $jadwal->ruang ?></td>
-                                    <td><?= $jadwal->kapasitas ?></td>
+                                    <td><?= $jadwal['hari'] ?></td>
+                                    <td><?= $jadwal['sesi'] ?></td>
+                                    <td><?= $jadwal['jam_kuliah'] ?></td>
+                                    <td><?= $jadwal['nama_mk'] ?></td>
+                                    <td><?= $jadwal['dosen'] ?></td>
+                                    <td><?= $jadwal['jumlah_jam'] ?></td>
+                                    <td><?= $jadwal['nama_semester'] ?></td>
+                                    <td><?= $jadwal['nama_kelas'] ?></td>
+                                    <td><?= $jadwal['nama_prodi'] ?></td>
+                                    <td><?= $jadwal['kuota'] ?></td>
+                                    <td><?= $jadwal['ruang'] ?></td>
+                                    <td><?= $jadwal['kapasitas'] ?></td>
                                     <td>
                                         <button class="bbtn btn-datatable btn-icon btn-transparent-dark me-2"
                                             data-bs-toggle="modal" 
                                             data-bs-target="#modalEdit" 
-                                            data-id="<?= $jadwal['id']; ?>"
                                             data-hari="<?= $jadwal['hari']; ?>"
                                             data-sesi="<?= $jadwal['sesi']; ?>"
                                             data-jam_kuliah="<?= $jadwal['jam_kuliah']; ?>"
@@ -185,7 +185,7 @@
             </div>
             <!-- /.card -->
         </div>
-        
+
         <!-- Modal Edit -->
         <div class="modal fade" id="modalEdit" tabindex="-1" aria-labelledby="modalEditLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -193,27 +193,20 @@
                     <form id="formEdit" method="post">
                         <?= csrf_field(); ?>
                         <div class="modal-header">
-                            <h5 class="modal-title">Edit Data Mata Kuliah</h5>
+                            <h5 class="modal-title">Edit Data Jadwal</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                         </div>
                         <div class="modal-body">
                             <input type="hidden" id="editId" name="id">
                             <div class="mb-3">
-                                <label for="editNama" class="form-label">Nama Mata Kuliah</label>
-                                <input type="text" class="form-control" id="editNama" name="nama" required>
+                                <label for="editHari" class="form-label">Hari</label>
+                                <input type="text" class="form-control" id="editHari" name="hari" required>
                             </div>
                             <div class="mb-3">
                                 <label for="editJumlahJam" class="form-label">Jumlah SKS</label>
                                 <input type="number" class="form-control" id="editJumlahJam" name="jumlah_jam" required>
                             </div>
-                            <div class="mb-3">
-                                <label for="editSemester" class="form-label">Semester</label>
-                                <select class="form-control" id="editSemester" name="semester" required>
-                                    <?php foreach ($semester_list as $semester): ?>
-                                    <option value="<?= $semester['id']; ?>"><?= $semester['nama_semester']; ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
+                            <!--  -->
                             <div class="mb-3">
                                 <label for="editAktif" class="form-label">Status Aktif</label>
                                 <select name="aktif" class="form-control" id="editAktif">
@@ -229,14 +222,7 @@
                                 <label for="editNamaid" class="form-label">id Mata Kuliah</label>
                                 <input type="text" class="form-control" id="editNamaid" name="nama_id">
                             </div>
-                            <div class="mb-3">
-                                <label for="editIdProdi" class="form-label">Program Studi</label>
-                                <select class="form-control" id="editIdProdi" name="id_prodi" required>
-                                    <?php foreach ($prodi_list as $prodi): ?>
-                                    <option value="<?= $prodi['id']; ?>"><?= $prodi['nama_prodi']; ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
+                            
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>

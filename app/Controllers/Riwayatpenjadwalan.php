@@ -18,6 +18,7 @@ use App\Models\RiwayatpenjadwalanModel;
 use App\Models\RuangModel;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 
 class Riwayatpenjadwalan extends BaseController
 {
@@ -100,53 +101,91 @@ class Riwayatpenjadwalan extends BaseController
         return view('riwayatpenjadwalan', $data);
     }
 
-    // public function excel_report()
-    // {
-    //     $semester_tipe = $this->session->get('pengampu_semester_tipe');
-    //     $tahun_akademik = $this->session->get('tahun_akademik');
-    //     $prodi = $this->session->get('prodi');
-
-    //     if ($prodi == 0) {
-    //         $query = $this->RiwayatpenjadwalanModel->get($semester_tipe, $tahun_akademik);
-    //     } else {
-    //         $query = $this->RiwayatpenjadwalanModel->get_perprodi($semester_tipe, $tahun_akademik, $prodi);
-    //     }
-
-    //     if (!$query) {
-    //         return false;
-    //     }
-
-    //     $spreadsheet = new Spreadsheet();
-    //     $sheet = $spreadsheet->getActiveSheet();
-
-    //     // Field names in the first row
-    //     $fields = ["hari", "sesi", "jam_kuliah", "nama_mk", "guru", "jumlah_jam", "nama_kelas", "nama_semester", "nama_prodi", "kuota", "nama_jurusan", "ruang", "kapasitas"];
-    //     $col = 1;
-    //     foreach ($fields as $field) {
-    //         $sheet->setCellValueByColumnAndRow($col, 1, $field);
-    //         $col++;
-    //     }
-
-    //     // Fetching the table data
-    //     $row = 2;
-    //     foreach ($query as $data) {
-    //         $col = 1;
-    //         foreach ($fields as $field) {
-    //             $sheet->setCellValueByColumnAndRow($col, $row, $data->$field);
-    //             $col++;
-    //         }
-    //         $row++;
-    //     }
-
-    //     $writer = new Xlsx($spreadsheet);
-
-    //     // Sending headers to force the user to download the file
-    //     header('Content-Type: application/vnd.ms-excel');
-    //     header('Content-Disposition: attachment;filename="Riwayat_Penjadwalan_' . date('dMy') . '.xlsx"');
-    //     header('Cache-Control: max-age=0');
-
-    //     $writer->save('php://output');
-    // }
+    public function excel_report()
+    {
+        $semester_tipe = $this->session->get('pengampu_semester_tipe');
+        $tahun_akademik = $this->session->get('tahun_akademik');
+        $prodi = $this->session->get('prodi');
+    
+        if ($prodi == 0) {
+            $query = $this->RiwayatpenjadwalanModel->get($semester_tipe, $tahun_akademik);
+        } else {
+            $query = $this->RiwayatpenjadwalanModel->get_perprodi($semester_tipe, $tahun_akademik, $prodi);
+        }
+    
+        if (!$query) {
+            return false;
+        }
+    
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+    
+        // Field names in the first row
+        $fields = ["Hari", "Sesi", "Jam", "Mata Kuliah", "SKS", "Lokal", "Semester", "Prodi", "Ruang"];
+        $col = 1;
+        foreach ($fields as $field) {
+            // Konversi kolom angka ke huruf (1 -> A, 2 -> B, dst.)
+            $columnLetter = Coordinate::stringFromColumnIndex($col);
+            // Set nilai ke sel (misalnya, A1, B1, C1, dst.)
+            $sheet->setCellValue($columnLetter . '1', $field);
+            $col++;
+        }
+    
+        // Fetching the table data
+        $row = 2; // Mulai dari baris kedua
+        foreach ($query as $data) {
+            $col = 1;
+            foreach ($fields as $field) {
+                // Konversi kolom angka ke huruf
+                $columnLetter = Coordinate::stringFromColumnIndex($col);
+                // Ubah field yang ditampilkan di Excel
+                switch ($field) {
+                    case 'Hari':
+                        $sheet->setCellValue($columnLetter . $row, $data['hari']);
+                        break;
+                    case 'Sesi':
+                        $sheet->setCellValue($columnLetter . $row, $data['sesi']);
+                        break;
+                    case 'Jam':
+                        $sheet->setCellValue($columnLetter . $row, $data['jam_kuliah']);
+                        break;
+                    case 'Mata Kuliah':
+                        $sheet->setCellValue($columnLetter . $row, $data['nama_mk']);
+                        break;
+                    case 'SKS':
+                        $sheet->setCellValue($columnLetter . $row, $data['jumlah_jam']);
+                        break;
+                    case 'Lokal':
+                        $sheet->setCellValue($columnLetter . $row, $data['nama_kelas']);
+                        break;
+                    case 'Semester':
+                        $sheet->setCellValue($columnLetter . $row, $data['nama_semester']);
+                        break;
+                    case 'Prodi':
+                        $sheet->setCellValue($columnLetter . $row, $data['nama_prodi']);
+                        break;
+                    case 'Ruang':
+                        $sheet->setCellValue($columnLetter . $row, $data['ruang']);
+                        break;
+                    default:
+                        // Jika ada field yang tidak terdaftar, biarkan kosong
+                        $sheet->setCellValue($columnLetter . $row, '');
+                        break;
+                }
+                $col++;
+            }
+            $row++;
+        }
+    
+        $writer = new Xlsx($spreadsheet);
+    
+        // Sending headers to force the user to download the file
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="Riwayat_Penjadwalan_' . date('dMy') . '.xlsx"');
+        header('Cache-Control: max-age=0');
+    
+        $writer->save('php://output');
+    }
 
     public function hapus_jadwal()
     {
@@ -177,27 +216,22 @@ class Riwayatpenjadwalan extends BaseController
         return view('riwayatpenjadwalan', $data);
     }
 
-    public function edit($id)
-    {
-        $data['jadwal'] = $this->RiwayatpenjadwalanModel->getById($id);
-        $data['rs_hari'] = $this->HariModel->findAll();
-        $data['rs_jam'] = $this->JamModel->findAll();
-        $data['rs_ruang'] = $this->RuangModel->findAll();
-
-        return view('riwayatpenjadwalan', $data);
-    }
-
     public function update($id)
     {
-        $data = [
-            'id_pengampu' => $this->request->getPost('id_pengampu'),
-            'id_jam' => $this->request->getPost('id_jam'),
-            'id_hari' => $this->request->getPost('id_hari'),
-            'id_ruang' => $this->request->getPost('id_ruang')
-        ];
-
-        $this->RiwayatpenjadwalanModel->update_jadwal($id, $data);
-
-        return redirect()->to(base_url('riwayatpenjadwalan'))->with('success', 'Data berhasil diupdate');
+        $this->RiwayatpenjadwalanModel->update($id, [
+            'hari' => $this->request->getPost('hari'),
+            'sesi' => $this->request->getPost('sesi'),
+            'jam_kuliah' => $this->request->getPost('jam_kuliah'),
+            'nama_mk' => $this->request->getPost('nama_mk'),
+            'dosen' => $this->request->getPost('dosen'),
+            'jumlah_jam' => $this->request->getPost('jumlah_jam'),
+            'nama_semester' => $this->request->getPost('nama_semester'),
+            'nama_kelas' => $this->request->getPost('nama_kelas'),
+            'nama_prodi' => $this->request->getPost('nama_prodi'),
+            'kuota' => $this->request->getPost('kuota'),
+            'ruang' => $this->request->getPost('ruang'),
+            'kapasitas' => $this->request->getPost('kapasitas'),
+        ]);
+        return redirect()->to('/matakuliah');
     }
 }

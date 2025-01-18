@@ -57,7 +57,7 @@ class RiwayatpenjadwalanModel extends Model
                 WHERE l.semester_tipe = ? AND b.tahun_akademik = ?
                 ORDER BY e.id ASC, Jam_Kuliah ASC";
 
-        return $this->db->query($sql, [$semester_tipe, $tahun_akademik])->getResult();
+        return $this->db->query($sql, [$semester_tipe, $tahun_akademik])->getResultArray();
     }
 
     // Method untuk mengambil data riwayat penjadwalan per prodi
@@ -101,7 +101,7 @@ class RiwayatpenjadwalanModel extends Model
                 WHERE l.semester_tipe = ? AND b.tahun_akademik = ? AND b.id_prodi = ?
                 ORDER BY e.id ASC, Jam_Kuliah ASC";
 
-        return $this->db->query($sql, [$semester_tipe, $tahun_akademik, $jurusan])->getResult();
+        return $this->db->query($sql, [$semester_tipe, $tahun_akademik, $jurusan])->getResultArray();
     }
 
     // Method untuk mencetak semua jadwal jurusan
@@ -272,9 +272,47 @@ class RiwayatpenjadwalanModel extends Model
         return $this->db->query($sql)->getResult();
     }
 
-    public function getById($id)
+    public function getJadwal($id)
     {
-        return $this->db->table('riwayat_penjadwalan')->where('id', $id)->get()->getRow();
+        return $this->select('
+                riwayat_penjadwalan.*, 
+                e.nama as hari,
+                b.kuota,
+                c.nama as nama_mk,
+                c.jumlah_jam as jumlah_jam,
+                c.semester as semester,
+                d.nama as dosen,
+                f.nama as ruang,
+                g.range_jam as jam_kuliah,
+                g.sesi,
+                f.kapasitas,
+                h.id as id_kelas,
+                h.nama_kelas as nama_kelas,
+                i.id as id_prodi,
+                i.nama_prodi as nama_prodi,
+                j.id as id_semester_tipe,
+                j.tipe_semester as semester_tipe,
+                k.id as id_tahun,
+                k.tahun as nama_tahun,
+                l.id as id_semester,
+                l.nama_semester as nama_semester,
+                m.id as id_jurusan,
+                m.nama_jurusan as nama_jurusan
+            ')
+            ->join('pengampu b', 'riwayat_penjadwalan.id_pengampu = b.id', 'left')
+            ->join('matakuliah c', 'b.id_mk = c.id', 'left')
+            ->join('dosen d', 'b.id_dosen = d.id', 'left')
+            ->join('hari e', 'riwayat_penjadwalan.id_hari = e.id', 'left')
+            ->join('ruang f', 'riwayat_penjadwalan.id_ruang = f.id', 'left')
+            ->join('jam2 g', 'riwayat_penjadwalan.id_jam = g.id', 'left')
+            ->join('kelas h', 'b.kelas = h.id', 'left')
+            ->join('prodi i', 'b.id_prodi = i.id', 'left')
+            ->join('semester_tipe j', 'c.semester = j.id', 'left')
+            ->join('tahun_akademik k', 'b.tahun_akademik = k.id', 'left')
+            ->join('semester l', 'b.semester = l.id', 'left')
+            ->join('jurusan m', 'i.id_jurusan = m.id', 'left')
+            ->where('riwayat_penjadwalan.id', $id)
+            ->first();
     }
 
     public function update_jadwal($id, $data)
