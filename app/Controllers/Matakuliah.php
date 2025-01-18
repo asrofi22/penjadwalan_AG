@@ -39,7 +39,7 @@ class Matakuliah extends BaseController
             'jenis' => $this->request->getPost('jenis'),
             'nama_id' => $this->request->getPost('nama_id'),
             'id_prodi' => $this->request->getPost('id_prodi'),
-            'id_mk' => $this->request->getPost('id_mk'),
+            'ket_mk' => $this->request->getPost('ket_mk'),
         ]);
         return redirect()->to('/matakuliah');
     }
@@ -54,7 +54,7 @@ class Matakuliah extends BaseController
             'jenis' => $this->request->getPost('jenis'),
             'nama_id' => $this->request->getPost('nama_id'),
             'id_prodi' => $this->request->getPost('id_prodi'),
-            'id_matkul' => $this->request->getPost('id_matkul'),
+            'ket_mk' => $this->request->getPost('ket_mk'),
         ]);
         return redirect()->to('/matakuliah');
     }

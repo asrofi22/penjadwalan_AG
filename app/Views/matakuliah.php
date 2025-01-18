@@ -29,13 +29,14 @@
                         <thead>
                             <tr>
                                 <th>No</th>
-                                <th>Nama Mata Kuliah</th>
+                                <th>Mata Kuliah</th>
                                 <th>SKS</th>
                                 <th>Semester</th>
                                 <th>Aktif</th>
                                 <th>Jenis</th>
-                                <th>ID</th>
+                                <th>Kode MK</th>
                                 <th>Program Studi</th>
+                                <th>Keterangan MK</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -51,6 +52,7 @@
                                 <td><?= $matkul['jenis']; ?></td>
                                 <td><?= $matkul['nama_id']; ?></td>
                                 <td><?= $matkul['nama_prodi']; ?></td>
+                                <td><?= $matkul['ket_mk']; ?></td>
                                 <td>
                                     <button class="bbtn btn-datatable btn-icon btn-transparent-dark me-2" 
                                             data-bs-toggle="modal" 
@@ -98,9 +100,8 @@
                             <div class="mb-3">
                                 <label for="semester" class="form-label">Semester</label>
                                 <select class="form-control" id="semester" name="semester" required>
-                                    <?php foreach ($semester_list as $semester): ?>
-                                    <option value="<?= $semester['id']; ?>"><?= $semester['nama_semester']; ?></option>
-                                    <?php endforeach; ?>
+                                    <option value=1>Ganjil</option>
+                                    <option value=2>Genap</option>
                                 </select>
                             </div>
                             <div class="mb-3">
@@ -124,6 +125,13 @@
                                     <?php foreach ($prodi_list as $prodi): ?>
                                     <option value="<?= $prodi['id']; ?>"><?= $prodi['nama_prodi']; ?></option>
                                     <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="ket_mk" class="form-label">Keterangan MK</label>
+                                <select name="ket_mk" class="form-control" id="ket_mk">
+                                    <option value="Wajib Prodi">Wajib Prodi</option>
+                                    <option value="Wajib Fakultas">Wajib Universitas</option>
                                 </select>
                             </div>
                         </div>
@@ -185,6 +193,13 @@
                                     <?php foreach ($prodi_list as $prodi): ?>
                                     <option value="<?= $prodi['id']; ?>"><?= $prodi['nama_prodi']; ?></option>
                                     <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="ket_mk" class="form-label">Keterangan MK</label>
+                                <select name="ket_mk" class="form-control" id="ket_mk">
+                                    <option value="Wajib Prodi">Wajib Prodi</option>
+                                    <option value="Wajib Fakultas">Wajib Universitas</option>
                                 </select>
                             </div>
                         </div>

@@ -16,7 +16,7 @@ class MatakuliahModel extends Model
         'jenis',
         'nama_id',
         'id_prodi',
-        'id_matkul'
+        'ket_mk'
     ];
 
     public function getAllData()

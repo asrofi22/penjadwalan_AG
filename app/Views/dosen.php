@@ -45,7 +45,7 @@
                                 <td><?= $dosen['nama'] ?></td>
                                 <td><?= $dosen['alamat'] ?></td>
                                 <td><?= $dosen['telp'] ?></td>
-                                <td><?= $dosen['status_dosen'] == 1 ? 'Aktif' : 'Non-aktif' ?></td>
+                                <td><?= $dosen['status_dosen'] ?></td>
                                 <td>
                                     <button class="btn btn-datatable btn-icon btn-transparent-dark me-2" 
                                             data-bs-toggle="modal" 
