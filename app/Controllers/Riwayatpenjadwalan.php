@@ -91,6 +91,12 @@ class Riwayatpenjadwalan extends BaseController
             $data['rs_riwayat'] = $this->RiwayatpenjadwalanModel->get_perprodi($semester_tipe, $tahun_akademik, $prodi);
         }
 
+        // Ambil data untuk dropdown
+        $data['hari_list'] = $this->HariModel->findAll();
+        $data['sesi_list'] = $this->JamModel->findAll(); // Sesuaikan dengan model yang benar
+        $data['jam_list'] = $this->JamModel->findAll(); // Sesuaikan dengan model yang benar
+        $data['ruang_list'] = $this->RuangModel->findAll();
+
         $data['prodiModel'] = $this->ProdiModel;
 
         $data['semester_a'] = $semester_tipe;
@@ -218,20 +224,33 @@ class Riwayatpenjadwalan extends BaseController
 
     public function update($id)
     {
-        $this->RiwayatpenjadwalanModel->update($id, [
-            'hari' => $this->request->getPost('hari'),
-            'sesi' => $this->request->getPost('sesi'),
-            'jam_kuliah' => $this->request->getPost('jam_kuliah'),
-            'nama_mk' => $this->request->getPost('nama_mk'),
-            'dosen' => $this->request->getPost('dosen'),
-            'jumlah_jam' => $this->request->getPost('jumlah_jam'),
-            'nama_semester' => $this->request->getPost('nama_semester'),
-            'nama_kelas' => $this->request->getPost('nama_kelas'),
-            'nama_prodi' => $this->request->getPost('nama_prodi'),
-            'kuota' => $this->request->getPost('kuota'),
-            'ruang' => $this->request->getPost('ruang'),
-            'kapasitas' => $this->request->getPost('kapasitas'),
-        ]);
-        return redirect()->to('/matakuliah');
+        // Ambil data dari form
+        $data = [
+            'id_hari' => $this->request->getPost('hari') ?? null,
+            'id_jam' => $this->request->getPost('jam_kuliah') ?? null,
+            'id_ruang' => $this->request->getPost('ruang') ?? null
+        ];
+
+        // Hapus field yang tidak diisi (null)
+        $data = array_filter($data, function ($value) {
+            return $value !== null;
+        });
+
+        // Update data
+        $this->RiwayatpenjadwalanModel->update($id, $data);
+
+        return redirect()->to('/riwayatpenjadwalan');
+    }
+
+    public function get_sesi($id_jam)
+    {
+        // Ambil data sesi dari tabel jam2 berdasarkan id_jam
+        $jam = $this->JamModel->find($id_jam);
+
+        if ($jam) {
+            return $this->response->setJSON(['sesi' => $jam['sesi']]);
+        } else {
+            return $this->response->setJSON(['sesi' => null]);
+        }
     }
 }

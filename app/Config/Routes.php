@@ -78,6 +78,7 @@ $routes->group('', ['filter' => 'login'], function ($routes) {
     $routes->get('/tahunakademik/delete/(:num)', 'Tahunakademik::delete/$1');
 
     $routes->get('/pengampu', 'Pengampu::index');
+    $routes->get('pengampu/ajaxList', 'Pengampu::ajaxList');
     $routes->get('/pengampu/create', 'Pengampu::create');
     $routes->post('/pengampu/store', 'Pengampu::store');
     $routes->get('/pengampu/edit/(:num)', 'Pengampu::edit/$1');
@@ -102,4 +103,5 @@ $routes->group('', ['filter' => 'login'], function ($routes) {
     $routes->get('/riwayatpenjadwalan/hapus_jadwal', 'Riwayatpenjadwalan::hapus_jadwal');
     $routes->get('riwayatpenjadwalan/edit/(:num)', 'Riwayatpenjadwalan::edit/$1');
     $routes->post('riwayatpenjadwalan/update/(:num)', 'Riwayatpenjadwalan::update/$1');
+    $routes->get('riwayatpenjadwalan/get_sesi/(:num)', 'Riwayatpenjadwalan::get_sesi/$1');
 });

@@ -156,18 +156,12 @@
                                         <button class="bbtn btn-datatable btn-icon btn-transparent-dark me-2"
                                             data-bs-toggle="modal" 
                                             data-bs-target="#modalEdit" 
+                                            data-id="<?= $jadwal['id']; ?>"
                                             data-hari="<?= $jadwal['hari']; ?>"
                                             data-sesi="<?= $jadwal['sesi']; ?>"
                                             data-jam_kuliah="<?= $jadwal['jam_kuliah']; ?>"
-                                            data-nama_mk="<?= $jadwal['nama_mk']; ?>"
-                                            data-dosen="<?= $jadwal['dosen']; ?>"
                                             data-jumlah_jam="<?= $jadwal['jumlah_jam']; ?>"
-                                            data-nama_semester="<?= $jadwal['nama_semester']; ?>"
-                                            data-nama_kelas="<?= $jadwal['nama_kelas']; ?>"
-                                            data-nama_prodi="<?= $jadwal['nama_prodi']; ?>"
-                                            data-kuota="<?= $jadwal['kuota']; ?>"
-                                            data-ruang="<?= $jadwal['ruang']; ?>"
-                                            data-kapasitas="<?= $jadwal['kapasitas']; ?>">
+                                            data-ruang="<?= $jadwal['ruang']; ?>">
                                             <i data-feather="edit"></i>
                                         </button>
                                     </td>
@@ -187,51 +181,60 @@
         </div>
 
         <!-- Modal Edit -->
-        <div class="modal fade" id="modalEdit" tabindex="-1" aria-labelledby="modalEditLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form id="formEdit" method="post">
-                        <?= csrf_field(); ?>
-                        <div class="modal-header">
-                            <h5 class="modal-title">Edit Data Jadwal</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                        </div>
-                        <div class="modal-body">
-                            <input type="hidden" id="editId" name="id">
-                            <div class="mb-3">
-                                <label for="editHari" class="form-label">Hari</label>
-                                <input type="text" class="form-control" id="editHari" name="hari" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="editJumlahJam" class="form-label">Jumlah SKS</label>
-                                <input type="number" class="form-control" id="editJumlahJam" name="jumlah_jam" required>
-                            </div>
-                            <!--  -->
-                            <div class="mb-3">
-                                <label for="editAktif" class="form-label">Status Aktif</label>
-                                <select name="aktif" class="form-control" id="editAktif">
-                                    <option value="True">True</option>
-                                    <option value="False">False</option>
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="editJenis" class="form-label">Jenis Mata Kuliah</label>
-                                <input type="text" class="form-control" id="editJenis" name="jenis">
-                            </div>
-                            <div class="mb-3">
-                                <label for="editNamaid" class="form-label">id Mata Kuliah</label>
-                                <input type="text" class="form-control" id="editNamaid" name="nama_id">
-                            </div>
-                            
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                            <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
-                        </div>
-                    </form>
+<div class="modal fade" id="modalEdit" tabindex="-1" aria-labelledby="modalEditLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="formEdit" method="post">
+                <?= csrf_field(); ?>
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Waktu dan Ruang</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-            </div>
+                <div class="modal-body">
+                    <!-- Input hidden untuk id -->
+                    <input type="hidden" id="editId" name="id">
+                    
+                    <!-- Dropdown Hari -->
+                    <div class="mb-3">
+                        <label for="editHari" class="form-label">Hari</label>
+                        <select class="form-control" id="editHari" name="hari">
+                            <option value="">Pilih Hari</option>
+                            <?php foreach ($hari_list as $hari) : ?>
+                                <option value="<?= $hari['id']; ?>"><?= $hari['nama']; ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+
+                    <!-- Dropdown Jam Kuliah -->
+                    <div class="mb-3">
+                        <label for="editJamKuliah" class="form-label">Jam Kuliah</label>
+                        <select class="form-control" id="editJamKuliah" name="jam_kuliah">
+                            <option value="">Pilih Jam Kuliah</option>
+                            <?php foreach ($jam_list as $jam) : ?>
+                                <option value="<?= $jam['id']; ?>"><?= $jam['range_jam']; ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+
+                    <!-- Dropdown Ruang -->
+                    <div class="mb-3">
+                        <label for="editRuang" class="form-label">Ruang</label>
+                        <select class="form-control" id="editRuang" name="ruang">
+                            <option value="">Pilih Ruang</option>
+                            <?php foreach ($ruang_list as $ruang) : ?>
+                                <option value="<?= $ruang['id']; ?>"><?= $ruang['nama']; ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                </div>
+            </form>
         </div>
+    </div>
+</div>
     </main>
 </div>
 
@@ -247,6 +250,44 @@
     // function ShowProgressAnimation() {
     //     $("#loading-div-background").show();
     // }
+</script>
+<script>
+    const modalEdit = document.getElementById('modalEdit');
+    modalEdit.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        
+        // Mengambil atribut data yang ada pada tombol Edit
+        const id = button.getAttribute('data-id');
+        const hari = button.getAttribute('data-hari');
+        const jam_kuliah = button.getAttribute('data-jam_kuliah');
+        const ruang = button.getAttribute('data-ruang');
+
+        // Menetapkan nilai ke input hidden dan dropdown di dalam modal edit
+        document.getElementById('editId').value = id;
+        document.getElementById('editHari').value = hari;
+        document.getElementById('editJamKuliah').value = jam_kuliah;
+        document.getElementById('editRuang').value = ruang;
+
+        // Menyusun aksi form edit untuk mengarah ke route yang tepat
+        const formEdit = document.getElementById('formEdit');
+        formEdit.action = `/riwayatpenjadwalan/update/${id}`;
+    });
+
+    // Ambil data sesi berdasarkan jam_kuliah yang dipilih
+    document.getElementById('editJamKuliah').addEventListener('change', function () {
+        const jamKuliahId = this.value;
+
+        // Lakukan AJAX request untuk mengambil data sesi
+        fetch(`/riwayatpenjadwalan/get_sesi/${jamKuliahId}`)
+            .then(response => response.json())
+            .then(data => {
+                // Set nilai sesi ke input hidden atau tampilkan di form
+                console.log('Sesi:', data.sesi);
+                // Jika ada input hidden untuk sesi, isi dengan data.sesi
+                document.getElementById('editSesi').value = data.sesi;
+            })
+            .catch(error => console.error('Error:', error));
+    });
 </script>
 
 <?= $this->endSection(); ?>

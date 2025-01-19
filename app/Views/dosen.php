@@ -45,7 +45,29 @@
                                 <td><?= $dosen['nama'] ?></td>
                                 <td><?= $dosen['alamat'] ?></td>
                                 <td><?= $dosen['telp'] ?></td>
-                                <td><?= $dosen['status_dosen'] ?></td>
+                                <td><?php
+                                    // Konversi nilai status_dosen ke teks
+                                    switch ($dosen['status_dosen']) {
+                                        case 1:
+                                            echo "Dosen Tetap PNS";
+                                            break;
+                                        case 2:
+                                            echo "Dosen PPPK";
+                                            break;
+                                        case 3:
+                                            echo "Dosen Tetap Bukan PNS";
+                                            break;
+                                        case 4:
+                                            echo "Dosen Tetap BLU";
+                                            break;
+                                        case 5:
+                                            echo "Dosen Luar Biasa";
+                                            break;
+                                        default:
+                                            echo "Status Tidak Diketahui";
+                                            break;
+                                    }
+                                    ?></td>
                                 <td>
                                     <button class="btn btn-datatable btn-icon btn-transparent-dark me-2" 
                                             data-bs-toggle="modal" 
@@ -99,9 +121,11 @@
                                 <label for="status_dosen" class="form-label">Status</label>
                                 <select class="form-control" id="status_dosen" name="status_dosen" required>
                                     <option value="">Pilih Status</option>
-                                    <?php foreach ($status_dosen as $status): ?>
-                                    <option value="<?= $status['id'] ?>"><?= $status['status'] ?></option>
-                                    <?php endforeach; ?>
+                                    <option value="1">Dosen Tetap PNS</option>
+                                    <option value="2">Dosen PPPK</option>
+                                    <option value="3">Dosen Tetap Bukan PNS</option>
+                                    <option value="4">Dosen Tetap BLU</option>
+                                    <option value="5">Dosen Luar Biasa</option>
                                 </select>
                             </div>
                         </div>
@@ -146,9 +170,11 @@
                                 <label for="editStatusDosen" class="form-label">Status</label>
                                 <select class="form-control" id="editStatusDosen" name="status_dosen" required>
                                     <option value="">Pilih Status</option>
-                                    <?php foreach ($status_dosen as $status): ?>
-                                    <option value="<?= $status['id'] ?>"><?= $status['status'] ?></option>
-                                    <?php endforeach; ?>
+                                    <option value="1">Dosen Tetap PNS</option>
+                                    <option value="2">Dosen PPPK</option>
+                                    <option value="3">Dosen Tetap Bukan PNS</option>
+                                    <option value="4">Dosen Tetap BLU</option>
+                                    <option value="5">Dosen Luar Biasa</option>
                                 </select>
                             </div>
                         </div>
