@@ -6,14 +6,14 @@ use CodeIgniter\Model;
 
 class PenjadwalanModel extends Model
 {
-    protected $table      = 'jadwalkuliah'; // Sesuaikan dengan nama tabel Anda
-    protected $primaryKey = 'id'; // Sesuaikan dengan primary key tabel Anda
+    protected $table      = 'jadwalkuliah'; 
+    protected $primaryKey = 'id'; 
 
     protected $allowedFields = [
         'id_pengampu', 'id_hari', 'id_jam', 'id_ruang', 'nama', 'id_mk', 'id_dosen', 'id_tahun', 
         'id_kelas', 'id_prodi', 'id_semester', 'nama_ruang', 'nama_mk', 'nama_dosen', 'tahun_akademik', 
         'nama_kelas', 'nama_prodi', 'nama_semester', 'nama_jurusan', 'id_jurusan'
-    ]; // Sesuaikan dengan kolom yang ada di tabel Anda
+    ]; 
 
     public function get()
     {
@@ -27,7 +27,7 @@ class PenjadwalanModel extends Model
                         f.kapasitas,
                         b.tahun_akademik,
                         b.id_prodi,
-                        c.id_matkul,
+                        -- c.id,
                         c.jumlah_jam as jumlah_jam,
                         e.id_hari,
                         c.nama as nama_mk,
@@ -84,7 +84,7 @@ class PenjadwalanModel extends Model
                         f.kapasitas,
                         b.tahun_akademik,
                         b.id_prodi,
-                        c.id_matkul,
+                        -- c.id,
                         c.jumlah_jam as jumlah_jam,
                         e.id_hari,
                         c.nama as nama_mk,
@@ -230,6 +230,41 @@ class PenjadwalanModel extends Model
                 WHERE c.semester_tipe = ? AND b.tahun_akademik = ? AND b.id_prodi = ?";
 
         return $this->db->query($sql, [$semester_tipe, $tahun_akademik, $prodi])->getResultArray();
+    }
+
+    public function detail_pengampu($id)
+    {
+        $sql = "SELECT a.id as id,
+                       a.id_ruang,
+                       a.kuota,
+                       a.kelas,
+                       a.semester,
+                       b.id as id_mk,
+                       b.nama as nama_mk,
+                       b.jenis as jenis_mk,
+                       c.id as id_dosen,
+                       c.nama as nama_dosen,
+                       d.id as id_tahun,
+                       d.tahun as tahun_akademik,
+                       e.id as id_kelas,
+                       e.nama_kelas as nama_kelas,
+                       f.id as id_prodi,
+                       f.nama_prodi as nama_prodi,
+                       g.id as id_semester,
+                       g.nama_semester as nama_semester,
+                       i.nama as nama_ruang
+                FROM pengampu a
+                LEFT JOIN matakuliah b ON a.id_mk = b.id
+                LEFT JOIN dosen c ON a.id_dosen = c.id
+                LEFT JOIN tahun_akademik d ON a.tahun_akademik = d.id
+                LEFT JOIN kelas e ON a.kelas = e.id
+                LEFT JOIN prodi f ON a.id_prodi = f.id
+                LEFT JOIN semester g ON a.semester = g.id
+                LEFT JOIN jurusan h ON f.id_jurusan = h.id
+                LEFT JOIN ruang i ON a.id_ruang = i.id
+                WHERE a.id = ?";
+
+        return $this->db->query($sql, [$id])->getResultArray();
     }
 
     public function cekjadwalkuliah()

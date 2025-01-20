@@ -320,4 +320,14 @@ class RiwayatpenjadwalanModel extends Model
     {
         return $this->db->table('riwayat_penjadwalan')->where('id', $id)->update($data);
     }
+
+    public function getTahunAkademik()
+    {
+        return $this->db->table('tahun_akademik')->get()->getResultArray();
+    }
+
+    public function getProdi()
+    {
+        return $this->db->table('prodi')->get()->getResultArray();
+    }
 }

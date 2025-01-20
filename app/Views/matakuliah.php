@@ -116,7 +116,7 @@
                                 <input type="text" class="form-control" id="jenis" name="jenis">
                             </div>
                             <div class="mb-3">
-                                <label for="nama_id" class="form-label">ID Mata Kuliah</label>
+                                <label for="nama_id" class="form-label">Kode Mata Kuliah</label>
                                 <input type="text" class="form-control" id="nama_id" name="nama_id">
                             </div>
                             <div class="mb-3">
@@ -184,7 +184,7 @@
                                 <input type="text" class="form-control" id="editJenis" name="jenis">
                             </div>
                             <div class="mb-3">
-                                <label for="editNamaid" class="form-label">id Mata Kuliah</label>
+                                <label for="editNamaid" class="form-label">Kode Mata Kuliah</label>
                                 <input type="text" class="form-control" id="editNamaid" name="nama_id">
                             </div>
                             <div class="mb-3">

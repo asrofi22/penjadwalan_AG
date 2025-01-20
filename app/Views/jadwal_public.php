@@ -72,58 +72,98 @@
         </header>
 
         <div class="container-xl px-4 mt-n10">
-            <div class="card mb-4">
-                <div class="card-header">Data Jadwal Kuliah</div>
-                <div class="card-body">
-                    <?php if (empty($rs_riwayat)) : ?>
-                        <div class="alert alert-info">
-                            <button type="button" class="close" data-dismiss="alert">×</button>
-                            Tidak ada data.
-                        </div>
-                    <?php else : ?>
-                        <table id="datatablesSimple" class="table table-bordered table-striped small-font">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Hari</th>
-                                    <th>Sesi</th>
-                                    <th>Jam</th>
-                                    <th>Mata Kuliah</th>
-                                    <th>Dosen</th>
-                                    <th>SKS</th>
-                                    <th>Semester</th>
-                                    <th>Kelas</th>
-                                    <th>Prodi</th>
-                                    <th>Kuota</th>
-                                    <th>Ruang</th>
-                                    <th>Kapasitas</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php $i = 1; ?>
-                                <?php foreach ($rs_riwayat as $jadwal) : ?>
-                                    <tr>
-                                        <td><?= $i++ ?></td>
-                                        <td><?= esc($jadwal->hari) ?></td>
-                                        <td><?= esc($jadwal->sesi) ?></td>
-                                        <td><?= esc($jadwal->jam_kuliah) ?></td>
-                                        <td><?= esc($jadwal->nama_mk) ?></td>
-                                        <td><?= esc($jadwal->dosen) ?></td>
-                                        <td><?= esc($jadwal->jumlah_jam) ?></td>
-                                        <td><?= esc($jadwal->nama_semester) ?></td>
-                                        <td><?= esc($jadwal->nama_kelas) ?></td>
-                                        <td><?= esc($jadwal->nama_prodi) ?></td>
-                                        <td><?= esc($jadwal->kuota) ?></td>
-                                        <td><?= esc($jadwal->ruang) ?></td>
-                                        <td><?= esc($jadwal->kapasitas) ?></td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    <?php endif; ?>
+    <div class="card mb-4">
+        <div class="card-header">Data Jadwal Kuliah</div>
+        <div class="card-body">
+            <!-- Form Filter -->
+            <form method="GET" action="<?= base_url('jadwal'); ?>">
+                <div class="row mb-3">
+                    <!-- Filter Semester -->
+                    <div class="col-md-4">
+                        <label class="form-label">Semester</label>
+                        <select id="semester_tipe" name="semester_tipe" class="form-control" onchange="this.form.submit()">
+                            <option value="1" <?= ($semester_tipe == 1) ? 'selected' : ''; ?>>GANJIL</option>
+                            <option value="2" <?= ($semester_tipe == 2) ? 'selected' : ''; ?>>GENAP</option>
+                        </select>
+                    </div>
+
+                    <!-- Filter Tahun Akademik -->
+                    <div class="col-md-4">
+                        <label class="form-label">Tahun Akademik</label>
+                        <select id="tahun_akademik" name="tahun_akademik" class="form-control" onchange="this.form.submit()">
+                            <?php foreach ($rs_tahun as $tahun) : ?>
+                                <option value="<?= $tahun['id']; ?>" <?= ($tahun_akademik == $tahun['id']) ? 'selected' : ''; ?>>
+                                    <?= $tahun['tahun']; ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+
+                    <!-- Filter Program Studi -->
+                    <div class="col-md-4">
+                        <label class="form-label">Program Studi</label>
+                        <select id="prodi" name="prodi" class="form-control" onchange="this.form.submit()">
+                            <option value="0" <?= ($prodi == 0) ? 'selected' : ''; ?>>Semua Prodi</option>
+                            <?php foreach ($rs_prodi as $prodi_item) : ?>
+                                <option value="<?= $prodi_item['id']; ?>" <?= ($prodi == $prodi_item['id']) ? 'selected' : ''; ?>>
+                                    <?= $prodi_item['nama_prodi']; ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
                 </div>
-            </div>
+            </form>
+
+            <!-- Tabel Jadwal -->
+            <?php if (empty($rs_riwayat)) : ?>
+                <div class="alert alert-info">
+                    <button type="button" class="close" data-dismiss="alert">×</button>
+                    Tidak ada data.
+                </div>
+            <?php else : ?>
+                <table id="datatablesSimple" class="table table-bordered table-striped small-font">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Hari</th>
+                            <th>Sesi</th>
+                            <th>Jam</th>
+                            <th>Mata Kuliah</th>
+                            <th>Dosen</th>
+                            <th>SKS</th>
+                            <th>Semester</th>
+                            <th>Kelas</th>
+                            <th>Prodi</th>
+                            <th>Kuota</th>
+                            <th>Ruang</th>
+                            <th>Kapasitas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php $i = 1; ?>
+                        <?php foreach ($rs_riwayat as $jadwal) : ?>
+                            <tr>
+                                <td><?= $i++ ?></td>
+                                <td><?= esc($jadwal['hari']) ?></td>
+                                <td><?= esc($jadwal['sesi']) ?></td>
+                                <td><?= esc($jadwal['jam_kuliah']) ?></td>
+                                <td><?= esc($jadwal['nama_mk']) ?></td>
+                                <td><?= esc($jadwal['dosen']) ?></td>
+                                <td><?= esc($jadwal['jumlah_jam']) ?></td>
+                                <td><?= esc($jadwal['nama_semester']) ?></td>
+                                <td><?= esc($jadwal['nama_kelas']) ?></td>
+                                <td><?= esc($jadwal['nama_prodi']) ?></td>
+                                <td><?= esc($jadwal['kuota']) ?></td>
+                                <td><?= esc($jadwal['ruang']) ?></td>
+                                <td><?= esc($jadwal['kapasitas']) ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            <?php endif; ?>
         </div>
+    </div>
+</div>
     </main>
 </div>
 

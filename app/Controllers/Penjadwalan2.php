@@ -338,7 +338,7 @@ class Penjadwalan2 extends Controller
 
                     if ($this->kap == false) {
                         $d = $this->PenjadwalanModel->detail_pengampu($this->id_pengampu);
-                        $data['msg'] = 'Tidak ada kapasitas ruangan yang sesuai dengan kuota matakuliah ' . $d->nama_mk . ' kelas ' . $d->nama_kelas;
+                        $data['msg'] = 'Tidak ada kapasitas ruangan yang sesuai dengan kuota matakuliah ' . $d[0]['nama_mk'] . ' kelas ' . $d[0]['nama_kelas'];
                     } elseif (!$found) {
                         $data['msg'] = 'Tidak ditemukan solusi optimal';
                     } else {
@@ -539,9 +539,9 @@ class Penjadwalan2 extends Controller
         for ($i = 0; $i < $this->populasi; $i++) {
             for ($j = 0; $j < $jumlah_pengampu; $j++) {
                 $sks = $this->sks[$j];
-
                 $this->individu[$i][$j][0] = $j;
 
+                // Pilih jam berdasarkan SKS
                 if ($sks == 1) {
                     $jumlah_jam = count($this->jam1);
                     $this->individu[$i][$j][1] = intval($this->jam1[mt_rand(0, $jumlah_jam - 1)]);
@@ -559,86 +559,38 @@ class Penjadwalan2 extends Controller
                 $this->individu[$i][$j][2] = mt_rand(0, $jumlah_hari - 1);
 
                 $jurusan = intval($this->jurusan[$j]);
+                $kuota = intval($this->kuota_pengampu[$j]);
+
                 if ($this->jenis_mk[$j] === $this->TEORI) {
-                    if ($this->ruang_pilihan[$j] == true) {
-                        $this->individu[$i][$j][3] = intval($this->ruang_pilihan[$j]);
-                    } elseif ($this->status[$j] != 'Normal') {
-                        $this->ruangReguler = false;
-                        $kuota = intval($this->kuota_pengampu[$j]);
-                        $rs_RuangReguler = $this->db->query("SELECT id, kapasitas 
-                            FROM ruang 
-                            WHERE jenis = '$this->TEORI' AND id_prodi = '$jurusan' AND kapasitas >= '$kuota' AND lantai = '1'");
-                        $k = 0;
-                        if ($rs_RuangReguler->getNumRows() == 0) {
-                            $this->kap = false;
-                            $this->id_pengampu = $this->pengampu[$j];
-                            break;
-                        }
-                        foreach ($rs_RuangReguler->getResult() as $data) {
-                            $this->ruangReguler[$k] = intval($data->id);
-                            $k++;
-                        }
-                        $jumlah_ruang_reguler = count($this->ruangReguler);
-                        $this->individu[$i][$j][3] = intval($this->ruangReguler[mt_rand(0, $jumlah_ruang_reguler - 1)]);
-                    } else {
-                        $this->ruangReguler = false;
-                        $kuota = intval($this->kuota_pengampu[$j]);
-                        $rs_RuangReguler = $this->db->query("SELECT id, kapasitas 
-                            FROM ruang 
-                            WHERE kapasitas >= '$kuota' AND jenis = '$this->TEORI' AND id_prodi = '$jurusan'");
-                        $k = 0;
-                        if ($rs_RuangReguler->getNumRows() == 0) {
-                            $this->kap = false;
-                            $this->id_pengampu = $this->pengampu[$j];
-                            break;
-                        }
-                        foreach ($rs_RuangReguler->getResult() as $data) {
-                            $this->ruangReguler[$k] = intval($data->id);
-                            $k++;
-                        }
-                        $jumlah_ruang_reguler = count($this->ruangReguler);
-                        $this->individu[$i][$j][3] = intval($this->ruangReguler[mt_rand(0, $jumlah_ruang_reguler - 1)]);
+                    $rs_RuangReguler = $this->db->query("SELECT id, kapasitas 
+                        FROM ruang 
+                        WHERE jenis = '$this->TEORI' AND id_prodi = '$jurusan' AND kapasitas >= '$kuota'");
+                    if ($rs_RuangReguler->getNumRows() == 0) {
+                        log_message('error', 'Tidak ada ruangan teori yang sesuai untuk pengampu ID: ' . $this->pengampu[$j]);
+                        $this->kap = false;
+                        $this->id_pengampu = $this->pengampu[$j];
+                        break;
                     }
+                    $ruangReguler = [];
+                    foreach ($rs_RuangReguler->getResult() as $data) {
+                        $ruangReguler[] = intval($data->id);
+                    }
+                    $this->individu[$i][$j][3] = $ruangReguler[mt_rand(0, count($ruangReguler) - 1)];
                 } elseif ($this->jenis_mk[$j] === $this->PRAKTIKUM) {
-                    if ($this->ruang_pilihan[$j] == true) {
-                        $this->individu[$i][$j][3] = intval($this->ruang_pilihan[$j]);
-                    } elseif ($this->status[$j] != 'Normal') {
-                        $this->ruangLaboratorium = false;
-                        $kuota = intval($this->kuota_pengampu[$j]);
-                        $rs_RuangLaboratorium = $this->db->query("SELECT id, kapasitas 
-                            FROM ruang 
-                            WHERE jenis = 'LABORATORIUM' AND id_prodi = '$jurusan' AND lantai = '1' AND kapasitas >= '$kuota'");
-                        $k = 0;
-                        if ($rs_RuangLaboratorium->getNumRows() == 0) {
-                            $this->kap = false;
-                            $this->id_pengampu = $this->pengampu[$j];
-                            break;
-                        }
-                        foreach ($rs_RuangLaboratorium->getResult() as $data) {
-                            $this->ruangLaboratorium[$k] = intval($data->id);
-                            $k++;
-                        }
-                        $jumlah_ruang_lab = count($this->ruangLaboratorium);
-                        $this->individu[$i][$j][3] = intval($this->ruangLaboratorium[mt_rand(0, $jumlah_ruang_lab - 1)]);
-                    } else {
-                        $this->ruangLaboratorium = false;
-                        $kuota = intval($this->kuota_pengampu[$j]);
-                        $rs_RuangLaboratorium = $this->db->query("SELECT id, kapasitas 
-                            FROM ruang 
-                            WHERE kapasitas >= '$kuota' AND jenis = '$this->LABORATORIUM' AND id_prodi = '$jurusan'");
-                        $k = 0;
-                        if ($rs_RuangLaboratorium->getNumRows() == 0) {
-                            $this->kap = false;
-                            $this->id_pengampu = $this->pengampu[$j];
-                            break;
-                        }
-                        foreach ($rs_RuangLaboratorium->getResult() as $data) {
-                            $this->ruangLaboratorium[$k] = intval($data->id);
-                            $k++;
-                        }
-                        $jumlah_ruang_lab = count($this->ruangLaboratorium);
-                        $this->individu[$i][$j][3] = intval($this->ruangLaboratorium[mt_rand(0, $jumlah_ruang_lab - 1)]);
+                    $rs_RuangLaboratorium = $this->db->query("SELECT id, kapasitas 
+                        FROM ruang 
+                        WHERE jenis = 'LABORATORIUM' AND id_prodi = '$jurusan' AND kapasitas >= '$kuota'");
+                    if ($rs_RuangLaboratorium->getNumRows() == 0) {
+                        log_message('error', 'Tidak ada ruangan laboratorium yang sesuai untuk pengampu ID: ' . $this->pengampu[$j]);
+                        $this->kap = false;
+                        $this->id_pengampu = $this->pengampu[$j];
+                        break;
                     }
+                    $ruangLaboratorium = [];
+                    foreach ($rs_RuangLaboratorium->getResult() as $data) {
+                        $ruangLaboratorium[] = intval($data->id);
+                    }
+                    $this->individu[$i][$j][3] = $ruangLaboratorium[mt_rand(0, count($ruangLaboratorium) - 1)];
                 }
             }
         }
@@ -953,65 +905,43 @@ class Penjadwalan2 extends Controller
                 $this->individu[$i][$krom][2] = mt_rand(0, $jumlah_hari - 1);
 
                 $jurusan = intval($this->jurusan[$krom]);
+                $kuota = intval($this->kuota_pengampu[$krom]);
+
                 if ($this->jenis_mk[$krom] === $this->TEORI) {
-                    if ($this->ruang_pilihan[$krom] == true) {
-                        $this->individu[$i][$krom][3] = intval($this->ruang_pilihan[$krom]);
-                    } elseif ($this->status[$krom] != 'Normal') {
-                        $this->ruangReguler = false;
-                        $kuota = intval($this->kuota_pengampu[$krom]);
-                        $rs_RuangReguler = $this->db->query("SELECT id, kapasitas 
-                            FROM ruang 
-                            WHERE jenis = '$this->TEORI' AND id_prodi = '$jurusan' AND kapasitas >= '$kuota' AND lantai = '1'");
-                        $k = 0;
+                    $this->ruangReguler = []; // Inisialisasi sebagai array kosong
+                    $rs_RuangReguler = $this->db->query("SELECT id, kapasitas 
+                        FROM ruang 
+                        WHERE jenis = '$this->TEORI' AND id_prodi = '$jurusan' AND kapasitas >= '$kuota' AND lantai = '1'");
+                    if ($rs_RuangReguler->getNumRows() > 0) {
                         foreach ($rs_RuangReguler->getResult() as $data) {
-                            $this->ruangReguler[$k] = intval($data->id);
-                            $k++;
+                            $this->ruangReguler[] = intval($data->id);
                         }
+                    }
+                    if (!empty($this->ruangReguler)) {
                         $jumlah_ruang_reguler = count($this->ruangReguler);
                         $this->individu[$i][$krom][3] = intval($this->ruangReguler[mt_rand(0, $jumlah_ruang_reguler - 1)]);
                     } else {
-                        $this->ruangReguler = false;
-                        $kuota = intval($this->kuota_pengampu[$krom]);
-                        $rs_RuangReguler = $this->db->query("SELECT id, kapasitas 
-                            FROM ruang 
-                            WHERE kapasitas >= '$kuota' AND jenis = '$this->TEORI' AND id_prodi = '$jurusan'");
-                        $k = 0;
-                        foreach ($rs_RuangReguler->getResult() as $data) {
-                            $this->ruangReguler[$k] = intval($data->id);
-                            $k++;
-                        }
-                        $jumlah_ruang_reguler = count($this->ruangReguler);
-                        $this->individu[$i][$krom][3] = intval($this->ruangReguler[mt_rand(0, $jumlah_ruang_reguler - 1)]);
+                        $this->kap = false;
+                        $this->id_pengampu = $this->pengampu[$krom];
+                        break;
                     }
                 } elseif ($this->jenis_mk[$krom] === $this->PRAKTIKUM) {
-                    if ($this->ruang_pilihan[$krom] == true) {
-                        $this->individu[$i][$krom][3] = intval($this->ruang_pilihan[$krom]);
-                    } elseif ($this->status[$krom] != 'Normal') {
-                        $this->ruangLaboratorium = false;
-                        $kuota = intval($this->kuota_pengampu[$krom]);
-                        $rs_RuangLaboratorium = $this->db->query("SELECT id, kapasitas 
-                            FROM ruang 
-                            WHERE jenis = 'LABORATORIUM' AND id_prodi = '$jurusan' AND lantai = '1' AND kapasitas >= '$kuota'");
-                        $k = 0;
+                    $this->ruangLaboratorium = []; // Inisialisasi sebagai array kosong
+                    $rs_RuangLaboratorium = $this->db->query("SELECT id, kapasitas 
+                        FROM ruang 
+                        WHERE jenis = 'LABORATORIUM' AND id_prodi = '$jurusan' AND kapasitas >= '$kuota'");
+                    if ($rs_RuangLaboratorium->getNumRows() > 0) {
                         foreach ($rs_RuangLaboratorium->getResult() as $data) {
-                            $this->ruangLaboratorium[$k] = intval($data->id);
-                            $k++;
+                            $this->ruangLaboratorium[] = intval($data->id);
                         }
+                    }
+                    if (!empty($this->ruangLaboratorium)) {
                         $jumlah_ruang_lab = count($this->ruangLaboratorium);
                         $this->individu[$i][$krom][3] = intval($this->ruangLaboratorium[mt_rand(0, $jumlah_ruang_lab - 1)]);
                     } else {
-                        $this->ruangLaboratorium = false;
-                        $kuota = intval($this->kuota_pengampu[$krom]);
-                        $rs_RuangLaboratorium = $this->db->query("SELECT id, kapasitas 
-                            FROM ruang 
-                            WHERE kapasitas >= '$kuota' AND jenis = '$this->LABORATORIUM' AND id_prodi = '$jurusan'");
-                        $k = 0;
-                        foreach ($rs_RuangLaboratorium->getResult() as $data) {
-                            $this->ruangLaboratorium[$k] = intval($data->id);
-                            $k++;
-                        }
-                        $jumlah_ruang_lab = count($this->ruangLaboratorium);
-                        $this->individu[$i][$krom][3] = intval($this->ruangLaboratorium[mt_rand(0, $jumlah_ruang_lab - 1)]);
+                        $this->kap = false;
+                        $this->id_pengampu = $this->pengampu[$krom];
+                        break;
                     }
                 }
             }

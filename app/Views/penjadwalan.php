@@ -70,22 +70,22 @@
                             </div>
 
                             <div class="col-md-4">
-                                <label class="form-label">Tahun Akademik</label>
-                                <select id="tahun_akademik" name="tahun_akademik" class="form-control" onchange="change_get()">
-                                    <?php  
-                                    if (isset($tahun_a) && $tahun_a == true) {
-                                        // $tahun_awal = $this->TahunakademikModel->tahun_awal($tahun_a);
-                                        foreach ($tahun_awal as $a);
-                                        echo '<option value="' . $a->id . '">' . $a->tahun. '</option>';
-                                    }
-                                    foreach($rs_tahun as $tahun) { 
-                                    ?>
-                                        <option value="<?php echo $tahun['id'];?>" <?php echo session('pengampu_tahun_akademik') === $tahun['tahun'] ? 'selected':''; ?>> <?php echo $tahun['tahun']; ?></option>
-                                    <?php  
-                                    } 
-                                    ?>
-                                </select>
-                            </div>
+    <label class="form-label">Tahun Akademik</label>
+    <select id="tahun_akademik" name="tahun_akademik" class="form-control" onchange="change_get()">
+        <?php  
+        if (isset($tahun_a) && $tahun_a == true && isset($tahun_awal) && !empty($tahun_awal)) {
+            foreach ($tahun_awal as $a) {
+                echo '<option value="' . $a->id . '">' . $a->tahun. '</option>';
+            }
+        }
+        foreach($rs_tahun as $tahun) { 
+        ?>
+            <option value="<?php echo $tahun['id'];?>" <?php echo session('pengampu_tahun_akademik') === $tahun['tahun'] ? 'selected':''; ?>> <?php echo $tahun['tahun']; ?></option>
+        <?php  
+        } 
+        ?>
+    </select>
+</div>
 
                             <div class="col-md-4">
                                 <label class="form-label">Program Studi</label>

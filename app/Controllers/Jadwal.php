@@ -15,23 +15,29 @@ class Jadwal extends BaseController
     }
 
     public function index()
-    {
-        // Ambil keyword pencarian dari query string (jika ada)
-        $keyword = $this->request->getGet('keyword');
+{
+    // Ambil parameter filter dari query string
+    $semester_tipe = $this->request->getGet('semester_tipe') ?? 1; // Default: GANJIL
+    $tahun_akademik = $this->request->getGet('tahun_akademik') ?? 7; // Default: Tahun Akademik tertentu
+    $prodi = $this->request->getGet('prodi') ?? 0; // Default: Semua Prodi
 
-        // Ambil data jadwal dari model
-        if (!empty($keyword)) {
-            // Jika ada keyword, lakukan pencarian
-            $data['rs_riwayat'] = $this->riwayatpenjadwalanModel->cari_jadwal($keyword);
-        } else {
-            // Jika tidak ada keyword, ambil semua data jadwal
-            $data['rs_riwayat'] = $this->riwayatpenjadwalanModel->get_all_jadwal();
-        }
-
-        // Kirim keyword ke view (untuk menampilkan kembali di form pencarian)
-        $data['keyword'] = $keyword;
-
-        // Tampilkan view jadwal_public
-        return view('jadwal_public', $data);
+    // Ambil data jadwal berdasarkan filter
+    if ($prodi == 0) {
+        $data['rs_riwayat'] = $this->riwayatpenjadwalanModel->get($semester_tipe, $tahun_akademik);
+    } else {
+        $data['rs_riwayat'] = $this->riwayatpenjadwalanModel->get_perprodi($semester_tipe, $tahun_akademik, $prodi);
     }
+
+    // Ambil data untuk dropdown filter
+    $data['rs_tahun'] = $this->riwayatpenjadwalanModel->getTahunAkademik();
+    $data['rs_prodi'] = $this->riwayatpenjadwalanModel->getProdi();
+
+    // Kirim data filter ke view
+    $data['semester_tipe'] = $semester_tipe;
+    $data['tahun_akademik'] = $tahun_akademik;
+    $data['prodi'] = $prodi;
+
+    // Tampilkan view jadwal_public
+    return view('jadwal_public', $data);
+}
 }
