@@ -15,42 +15,49 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.28.0/feather.min.js" crossorigin="anonymous"></script>
 
     <style>
-        .small-font {
-            font-size: 14px; /* Ubah ukuran sesuai kebutuhan */
-        }
+    /* Tabel Responsive */
+    .table-responsive {
+        overflow-x: auto; /* Aktifkan scroll horizontal jika tabel terlalu lebar */
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling untuk perangkat mobile */
+    }
 
-        .small-font th, .small-font td {
-            font-size: 13.5px; /* Terapkan ukuran font pada sel header dan isi tabel */
-        }
+    /* Ukuran font untuk tabel */
+    .small-font {
+        font-size: 14px; /* Ubah ukuran sesuai kebutuhan */
+    }
 
-        /* Sembunyikan elemen pencarian bawaan DataTables */
-        .dataTables_filter {
-            display: none;
-        }
+    .small-font th, .small-font td {
+        font-size: 13.5px; /* Terapkan ukuran font pada sel header dan isi tabel */
+    }
 
-        /* Tata letak untuk input pencarian dan entries per page */
-        .datatable-top {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 1rem;
-        }
+    /* Sembunyikan elemen pencarian bawaan DataTables */
+    .dataTables_filter {
+        display: none;
+    }
 
-        .datatable-top .datatable-dropdown {
-            margin-right: 1rem;
-        }
+    /* Tata letak untuk input pencarian dan entries per page */
+    .datatable-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+    }
 
-        .datatable-top .custom-search {
-            display: flex;
-            align-items: center;
-            flex-grow: 1; /* Input pencarian akan mengisi sisa ruang yang tersedia */
-            margin-left: 1rem; /* Jarak antara entries per page dan input pencarian */
-        }
+    .datatable-top .datatable-dropdown {
+        margin-right: 1rem;
+    }
 
-        .datatable-top .custom-search input {
-            margin-left: 1rem;
-        }
-    </style>
+    .datatable-top .custom-search {
+        display: flex;
+        align-items: center;
+        flex-grow: 1; /* Input pencarian akan mengisi sisa ruang yang tersedia */
+        margin-left: 1rem; /* Jarak antara entries per page dan input pencarian */
+    }
+
+    .datatable-top .custom-search input {
+        margin-left: 1rem;
+    }
+</style>
 </head>
 <body class="nav-fixed">
 
@@ -111,6 +118,19 @@
                             <?php endforeach; ?>
                         </select>
                     </div>
+
+                    <!-- Filter Dosen -->
+                    <div class="col-md-3">
+                        <label class="form-label">Dosen</label>
+                        <select id="dosen" name="dosen" class="form-control" onchange="this.form.submit()">
+                            <option value="0" <?= ($dosen == 0) ? 'selected' : ''; ?>>Semua Dosen</option>
+                            <?php foreach ($rs_dosen as $dosen_item) : ?>
+                                <option value="<?= $dosen_item['id']; ?>" <?= ($dosen == $dosen_item['id']) ? 'selected' : ''; ?>>
+                                    <?= $dosen_item['nama']; ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
                 </div>
             </form>
 
@@ -121,6 +141,7 @@
                     Tidak ada data.
                 </div>
             <?php else : ?>
+                <div class="table-responsive">
                 <table id="datatablesSimple" class="table table-bordered table-striped small-font">
                     <thead>
                         <tr>
@@ -160,6 +181,7 @@
                         <?php endforeach; ?>
                     </tbody>
                 </table>
+                </div>
             <?php endif; ?>
         </div>
     </div>
@@ -187,7 +209,8 @@ document.addEventListener('DOMContentLoaded', function() {
         layout: {
             top: '', // Tidak ada elemen di bagian atas
             bottom: 'info paging' // Info dan pagination di bagian bawah
-        }
+        },
+        responsive: true
     });
 
     // Tambahkan input pencarian custom ke dalam div yang sama dengan entries per page

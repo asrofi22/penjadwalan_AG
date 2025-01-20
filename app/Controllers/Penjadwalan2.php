@@ -195,7 +195,7 @@ class Penjadwalan2 extends Controller
             if (true) {
                 $start = microtime(true);
 
-                // Bismillahhhhhh
+                // Bismillahhhhhh, Asrofi soon to be S.Kom
                 $jumlah_populasi = $this->request->getPost('jumlah_populasi');
                 $jenis_semester = $this->request->getPost('tipe_semester');
                 $prodi = $this->request->getPost('prodi');
@@ -250,48 +250,55 @@ class Penjadwalan2 extends Controller
                     $n = 0;
                     $found = false;
 
-                    if ($rs_data->getNumRows() % 2 == 0) {
-                        $jumlah_populasi = $rs_data->getNumRows();
+                    if ($rs_data->getNumRows() % 2 == 0) { //Mengecek apakah jumlah pengampu genap atau ganjil menggunakan operator modulus (%).
+                        $jumlah_populasi = $rs_data->getNumRows(); // Jika genap, jumlah populasi = jumlah pengampu    (untuk crossover)
                     } else {
-                        $jumlah_populasi = $rs_data->getNumRows() + 1;
+                        $jumlah_populasi = $rs_data->getNumRows() + 1; // Jika ganjil, tambah 1
                     }
 
-                    $banyak_populasi = intval($rs_data->getNumRows() / 2);
+                    $banyak_populasi = intval($rs_data->getNumRows() / 2); //Membagi jumlah pengampu dengan 2 dalam proses crossover
 
                     $e = 0;
                     $c = 0;
-                    $this->db->query("TRUNCATE TABLE jadwalkuliah");
+                    $this->db->query("TRUNCATE TABLE jadwalkuliah"); // Menghapus data jadwal di database  jika ada
 
-                    $data_fitness_all = [];
+                    $data_fitness_all = []; // Inisialisasi array untuk menyimpan data fitness dan jadwal yang dihasilkan
+                    
+                    // Loop untuk setiap pasangan populasi
                     for ($f = 0; $f <= $banyak_populasi; $f++) {
 
-                        $query = [$e, 2];
+                        $query = [$e, 2]; //menentukan query untuk mengambil data pengampu (mengambil 2 data pengampu per iterasi)
 
-                        $mod = intval($rs_data->getNumRows() % 2);
+                        $mod = intval($rs_data->getNumRows() % 2); // Hitung sisa pembagian jumlah pengampu dengan 2
                         $banyak_populasi = intval($rs_data->getNumRows() / 2);
 
+                        // Jika iterasi terakhir, ambil sisa data pengampu
                         if ($f == $banyak_populasi) {
                             $query = [$e, $mod];
                         }
 
+                        // Simpan query ke dalam array
                         $data_all_query[] = $query;
 
                         $this->AmbilData($jenis_semester, $tahun_akademik, $jumlah_populasi, $prodi, $query, $e, $mod);
                         $this->Inisialisasi($jumlah_populasi);
 
+                        // Cek kapasitas ruang, jika tidak mencukupi, hentikan proses
                         if ($this->kap == false) {
                             $this->db->table('jadwalkuliah')->truncate();
                             break;
                         }
 
-                        $found = false;
+                        $found = false; // Flag untuk menandai apakah solusi optimal ditemukan
 
+                        //Proses Algoritma Genetika
                         for ($i = 0; $i < $jumlah_generasi; $i++) {
                             $fitness = $this->Hitungfitness($jumlah_populasi, $prodi);
 
                             $this->Seleksi($fitness, $jumlah_populasi);
                             $this->StartCrossOver($jumlah_populasi, $crossOver);
 
+                            // Mengecek apakah ada individu dengan fitness = 1 (solusi optimal)
                             $fitnessAfterMutation = $this->Mutasi($jumlah_populasi, $mutasi, $prodi);
                             for ($j = 0; $j < count($fitnessAfterMutation); $j++) {
                                 if ($fitnessAfterMutation[$j] == 1) {
@@ -300,12 +307,14 @@ class Penjadwalan2 extends Controller
 
                                     foreach ($jadwal_kuliah as $row) {
 
+                                        // Simpan jadwal ke database
                                         $data = [
                                             'id_pengampu' => intval($row[0]),
                                             'id_jam' => intval($row[1]),
                                             'id_hari' => intval($row[2]),
                                             'id_ruang' => intval($row[3])
                                         ];
+                                        // Simpan data fitness dan jadwal ke array
                                         $data_fitness_all[] = ['j' => $j, 'data' => [
                                             'id_pengampu' => intval($row[0]),
                                             'id_jam' => intval($row[1]),
@@ -317,7 +326,7 @@ class Penjadwalan2 extends Controller
 
 
                                     }
-                                    
+                                    // Menandai
                                     $found = true;
                                     $this->kap = true;
                                 }
@@ -332,8 +341,9 @@ class Penjadwalan2 extends Controller
                             }
                         }
 
-                        $e += 2;
-                        $c++;
+                        // Update nilai offset(posisi awal) untuk mengambil data pengampu berikutnya pada iterasi (Tanpa update offset, sistem akan terus mengambil data yang sama (dari offset yang sama))
+                        $e += 2; //$e += 2 artinya: menambah 2 ke nilai $e
+                        $c++; // Hitung jumlah iterasi
                     }
 
                     if ($this->kap == false) {
