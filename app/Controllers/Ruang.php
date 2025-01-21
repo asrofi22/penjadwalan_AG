@@ -29,7 +29,7 @@ class Ruang extends BaseController
     {
         $this->ruangModel->save([
             'nama' => $this->request->getPost('nama'),
-            'kapasitas' => $this->request->getPost('kapasitas'),
+            // 'kapasitas' => $this->request->getPost('kapasitas'),
             'jenis' => $this->request->getPost('jenis'),
             'id_prodi' => $this->request->getPost('id_prodi'),
             'lantai' => $this->request->getPost('lantai'),
@@ -42,7 +42,7 @@ class Ruang extends BaseController
     {
         $this->ruangModel->update($id, [
             'nama' => $this->request->getPost('nama'),
-            'kapasitas' => $this->request->getPost('kapasitas'),
+            // 'kapasitas' => $this->request->getPost('kapasitas'),
             'jenis' => $this->request->getPost('jenis'),
             'id_prodi' => $this->request->getPost('id_prodi'),
             'lantai' => $this->request->getPost('lantai'),

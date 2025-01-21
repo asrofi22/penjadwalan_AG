@@ -29,7 +29,7 @@
                             <tr>
                                 <th>No</th>
                                 <th>Nama Ruang</th>
-                                <th>Kapasitas</th>
+                                <!-- <th>Kapasitas</th> -->
                                 <th>Jenis</th>
                                 <th>Prodi</th>
                                 <th>Lantai</th>
@@ -42,7 +42,6 @@
                             <tr>
                                 <td><?= $no++; ?></td>
                                 <td><?= $k['nama']; ?></td>
-                                <td><?= $k['kapasitas']; ?></td>
                                 <td><?= $k['jenis']; ?></td>
                                 <td><?= $k['nama_jurusan']; ?></td>
                                 <td><?= $k['lantai']; ?></td>
@@ -53,7 +52,6 @@
                                             data-bs-target="#modalEdit" 
                                             data-id="<?= $k['id']; ?>" 
                                             data-nama="<?= $k['nama']; ?>" 
-                                            data-kapasitas="<?= $k['kapasitas']; ?>" 
                                             data-jenis="<?= $k['jenis']; ?>"
                                             data-id_prodi="<?= $k['id_prodi']; ?>" 
                                             data-lantai="<?= $k['lantai']; ?>"
@@ -89,10 +87,10 @@
                                 <label for="nama" class="form-label">Nama Ruang</label>
                                 <input type="text" name="nama" id="nama" class="form-control" required>
                             </div>
-                            <div class="mb-3">
+                            <!-- <div class="mb-3">
                                 <label for="kapasitas" class="form-label">Kapasitas</label>
                                 <input type="number" name="kapasitas" id="kapasitas" class="form-control" required>
-                            </div>
+                            </div> -->
                             <div class="mb-3">
                                 <label for="jenis" class="form-label">Jenis</label>
                                 <select class="form-select" id="jenis" name="jenis" required>
@@ -143,10 +141,10 @@
                                 <label for="editNama" class="form-label">Nama Ruang</label>
                                 <input type="text" name="nama" id="editNama" class="form-control" required>
                             </div>
-                            <div class="mb-3">
+                            <!-- <div class="mb-3">
                                 <label for="editKapasitas" class="form-label">Kapasitas</label>
                                 <input type="number" name="kapasitas" id="editKapasitas" class="form-control" required>
-                            </div>
+                            </div> -->
                             <div class="mb-3">
                                 <label for="editJenis" class="form-label">Jenis</label>
                                 <select class="form-select" id="editJenis" name="jenis" required>
@@ -189,7 +187,7 @@
         const button = event.relatedTarget;
         const id = button.getAttribute('data-id');
         const nama = button.getAttribute('data-nama');
-        const kapasitas = button.getAttribute('data-kapasitas');
+        // const kapasitas = button.getAttribute('data-kapasitas');
         const jenis = button.getAttribute('data-jenis');
         const idProdi = button.getAttribute('data-id_prodi');
         const lantai = button.getAttribute('data-lantai');

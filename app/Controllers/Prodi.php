@@ -33,7 +33,7 @@ class Prodi extends BaseController
         $this->prodiModel->save([
             'nama_prodi' => $this->request->getPost('nama_prodi'),
             'id_prodi' => $this->request->getPost('id_prodi'),
-            'id_jurusan' => $this->request->getPost('id_jurusan'),
+            // 'id_jurusan' => $this->request->getPost('id_jurusan'),
         ]);
 
         return redirect()->to('/prodi');
@@ -54,7 +54,7 @@ class Prodi extends BaseController
         $this->prodiModel->update($id, [
             'nama_prodi' => $this->request->getPost('nama_prodi'),
             'id_prodi' => $this->request->getPost('id_prodi'),
-            'id_jurusan' => $this->request->getPost('id_jurusan')
+            // 'id_jurusan' => $this->request->getPost('id_jurusan')
         ]);
 
         return redirect()->to('/prodi');

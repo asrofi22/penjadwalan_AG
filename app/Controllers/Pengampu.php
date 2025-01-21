@@ -54,22 +54,69 @@ class Pengampu extends BaseController
     // Menyimpan data pengampu baru
     public function store()
     {
+        // Ambil data dari form
+        $id_mk = $this->request->getPost('id_mk');
+        $id_dosen = $this->request->getPost('id_dosen');
+        $kelas = $this->request->getPost('kelas');
+        $tahun_akademik = $this->request->getPost('tahun_akademik');
+        $semester = $this->request->getPost('semester');
+
+        // Cek apakah data sudah ada
+        $existingData = $this->pengampuModel
+            ->where('id_mk', $id_mk)
+            ->where('id_dosen', $id_dosen)
+            ->where('kelas', $kelas)
+            ->where('tahun_akademik', $tahun_akademik)
+            ->where('semester', $semester)
+            ->first();
+
+        if ($existingData) {
+            // Jika data sudah ada, tampilkan notifikasi error
+            session()->setFlashdata('error', 'Data pengampu sudah ada!');
+            return redirect()->to('/pengampu');
+        }
+
+        // Jika data belum ada, simpan data baru
         $this->pengampuModel->save([
-            'id_mk' => $this->request->getPost('id_mk'),
-            'id_dosen' => $this->request->getPost('id_dosen'),
-            'kelas' => $this->request->getPost('kelas'),
-            'tahun_akademik' => $this->request->getPost('tahun_akademik'),
+            'id_mk' => $id_mk,
+            'id_dosen' => $id_dosen,
+            'kelas' => $kelas,
+            'tahun_akademik' => $tahun_akademik,
             'id_prodi' => $this->request->getPost('id_prodi'),
-            'semester' => $this->request->getPost('semester'),
+            'semester' => $semester,
             'kuota' => $this->request->getPost('kuota'),
             'id_ruang' => $this->request->getPost('id_ruang'),
         ]);
+
+        // Tampilkan notifikasi sukses
+        session()->setFlashdata('success', 'Data pengampu berhasil ditambahkan!');
         return redirect()->to('/pengampu');
     }
 
     // Mengupdate data pengampu
     public function update($id)
     {
+        // Ambil data dari form
+        $id_mk = $this->request->getPost('id_mk');
+        $id_dosen = $this->request->getPost('id_dosen');
+        $kelas = $this->request->getPost('kelas');
+        $tahun_akademik = $this->request->getPost('tahun_akademik');
+        $semester = $this->request->getPost('semester');
+
+        // Cek apakah data sudah ada
+        $existingData = $this->pengampuModel
+            ->where('id_mk', $id_mk)
+            ->where('id_dosen', $id_dosen)
+            ->where('kelas', $kelas)
+            ->where('tahun_akademik', $tahun_akademik)
+            ->where('semester', $semester)
+            ->first();
+
+        if ($existingData) {
+            // Jika data sudah ada, tampilkan notifikasi error
+            session()->setFlashdata('error', 'Data pengampu sudah ada!');
+            return redirect()->to('/pengampu');
+        }
         $this->pengampuModel->update($id, [
             'id_mk' => $this->request->getPost('id_mk'),
             'id_dosen' => $this->request->getPost('id_dosen'),

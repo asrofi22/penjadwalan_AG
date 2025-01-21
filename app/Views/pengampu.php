@@ -22,9 +22,24 @@
         </header>
 
         <div class="container-xl px-4 mt-n10">
+            
             <div class="card mb-4">
                 <div class="card-header">Tabel Data Pengampu</div>
                 <div class="card-body">
+                    <!-- Notifikasi -->
+                    <?php if (session()->getFlashdata('success')) : ?>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <?= session()->getFlashdata('success'); ?>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if (session()->getFlashdata('error')) : ?>
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <?= session()->getFlashdata('error'); ?>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    <?php endif; ?>
                     <table id="datatablesSimple" class="table table-bordered table-hover" style="font-size: 12px;">
                         <thead>
                             <tr>
@@ -35,7 +50,7 @@
                                 <th>Tahun Akademik</th>
                                 <th>Program Studi</th>
                                 <th>Semester</th>
-                                <th>Kuota</th>
+                                <!-- <th>Kuota</th> -->
                                 <th>Ruang</th>
                                 <th>Aksi</th>
                             </tr>
@@ -51,7 +66,6 @@
                                 <td><?= $pengampu['tahun']; ?></td>
                                 <td><?= $pengampu['nama_prodi']; ?></td>
                                 <td><?= $pengampu['nama_semester']; ?></td>
-                                <td><?= $pengampu['kuota']; ?></td>
                                 <td><?= $pengampu['nama']; ?></td>
                                 <td>
                                     <button class="btn btn-datatable btn-icon btn-transparent-dark me-2" 
@@ -64,7 +78,6 @@
                                             data-tahun_akademik="<?= $pengampu['tahun_akademik']; ?>"
                                             data-id_prodi="<?= $pengampu['id_prodi']; ?>"
                                             data-semester="<?= $pengampu['semester']; ?>"
-                                            data-kuota="<?= $pengampu['kuota']; ?>"
                                             data-id_ruang="<?= $pengampu['id_ruang']; ?>">
                                             <i data-feather="edit"></i>
                                     </button>
@@ -137,10 +150,10 @@
                                     <?php endforeach; ?>
                                 </select>
                             </div>
-                            <div class="mb-3">
+                            <!-- <div class="mb-3">
                                 <label for="kuota" class="form-label">Kuota</label>
                                 <input type="number" class="form-control" id="kuota" name="kuota" required>
-                            </div>
+                            </div> -->
                             <div class="mb-3">
                                 <label for="id_ruang" class="form-label">Ruang</label>
                                 <select class="form-control" id="id_ruang" name="id_ruang" required>
@@ -163,7 +176,7 @@
         <div class="modal fade" id="modalEdit" tabindex="-1" aria-labelledby="modalEditLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <form id="formEdit" method="post">
+                    <form id="formEdit" action="/pengampu/update/<?= $pengampu['id']; ?>" method="post">
                         <?= csrf_field(); ?>
                         <div class="modal-header">
                             <h5 class="modal-title">Edit Data Pengampu</h5>
@@ -219,10 +232,10 @@
                                     <?php endforeach; ?>
                                 </select>
                             </div>
-                            <div class="mb-3">
+                            <!-- <div class="mb-3">
                                 <label for="editKuota" class="form-label">Kuota</label>
                                 <input type="number" class="form-control" id="editKuota" name="kuota" required>
-                            </div>
+                            </div> -->
                             <div class="mb-3">
                                 <label for="editIdRuang" class="form-label">Ruang</label>
                                 <select class="form-control" id="editIdRuang" name="id_ruang" required>
@@ -256,7 +269,6 @@
         const tahun_akademik = button.getAttribute('data-tahun_akademik');
         const id_prodi = button.getAttribute('data-id_prodi');
         const semester = button.getAttribute('data-semester');
-        const kuota = button.getAttribute('data-kuota');
         const id_ruang = button.getAttribute('data-id_ruang');
 
         // Menetapkan nilai ke input di dalam modal edit
@@ -267,7 +279,6 @@
         document.getElementById('editTahunAkademik').value = tahun_akademik;
         document.getElementById('editIdProdi').value = id_prodi;
         document.getElementById('editSemester').value = semester;
-        document.getElementById('editKuota').value = kuota;
         document.getElementById('editIdRuang').value = id_ruang;
 
         // Menyusun aksi form edit untuk mengarah ke route yang tepat

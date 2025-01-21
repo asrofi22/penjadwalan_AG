@@ -36,6 +36,7 @@
                         </div>
                     <?php endif; ?>
 
+
                     <form method="POST" action="<?= base_url('pengampu/pengampu_search'); ?>">
                         <div class="row mb-3">
                             <div class="col-md-4">
@@ -128,9 +129,7 @@
                                 <th>Semester</th>
                                 <th>Kelas</th>
                                 <th>Prodi</th>
-                                <th>Kuota</th>
                                 <th>Ruang</th>
-                                <th>Kapasitas</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -149,9 +148,7 @@
                                     <td><?= $jadwal['nama_semester'] ?></td>
                                     <td><?= $jadwal['nama_kelas'] ?></td>
                                     <td><?= $jadwal['nama_prodi'] ?></td>
-                                    <td><?= $jadwal['kuota'] ?></td>
                                     <td><?= $jadwal['ruang'] ?></td>
-                                    <td><?= $jadwal['kapasitas'] ?></td>
                                     <td>
                                         <button class="bbtn btn-datatable btn-icon btn-transparent-dark me-2"
                                             data-bs-toggle="modal" 
@@ -175,66 +172,64 @@
                     <?php endif; ?>
 
                 </div>
-                <!-- /.card-body -->
             </div>
-            <!-- /.card -->
         </div>
 
         <!-- Modal Edit -->
-<div class="modal fade" id="modalEdit" tabindex="-1" aria-labelledby="modalEditLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form id="formEdit" method="post">
-                <?= csrf_field(); ?>
-                <div class="modal-header">
-                    <h5 class="modal-title">Edit Waktu dan Ruang</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <!-- Input hidden untuk id -->
-                    <input type="hidden" id="editId" name="id">
-                    
-                    <!-- Dropdown Hari -->
-                    <div class="mb-3">
-                        <label for="editHari" class="form-label">Hari</label>
-                        <select class="form-control" id="editHari" name="hari">
-                            <option value="">Pilih Hari</option>
-                            <?php foreach ($hari_list as $hari) : ?>
-                                <option value="<?= $hari['id']; ?>"><?= $hari['nama']; ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
+        <div class="modal fade" id="modalEdit" tabindex="-1" aria-labelledby="modalEditLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form id="formEdit" method="post" action="<?= base_url('riwayatpenjadwalan/update'); ?>">
+                        <?= csrf_field(); ?>
+                        <div class="modal-header">
+                            <h5 class="modal-title">Edit Waktu dan Ruang</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- Input hidden untuk id -->
+                            <input type="hidden" id="editId" name="id">
 
-                    <!-- Dropdown Jam Kuliah -->
-                    <div class="mb-3">
-                        <label for="editJamKuliah" class="form-label">Jam Kuliah</label>
-                        <select class="form-control" id="editJamKuliah" name="jam_kuliah">
-                            <option value="">Pilih Jam Kuliah</option>
-                            <?php foreach ($jam_list as $jam) : ?>
-                                <option value="<?= $jam['id']; ?>"><?= $jam['range_jam']; ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
+                            <!-- Dropdown untuk Hari -->
+                            <div class="mb-3">
+                                <label for="editHari" class="form-label">Hari</label>
+                                <select class="form-control" id="editHari" name="id_hari" required>
+                                    <?php foreach ($hari_list as $hari) : ?>
+                                        <option value="<?= $hari['id'] ?>"><?= $hari['nama'] ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
 
-                    <!-- Dropdown Ruang -->
-                    <div class="mb-3">
-                        <label for="editRuang" class="form-label">Ruang</label>
-                        <select class="form-control" id="editRuang" name="ruang">
-                            <option value="">Pilih Ruang</option>
-                            <?php foreach ($ruang_list as $ruang) : ?>
-                                <option value="<?= $ruang['id']; ?>"><?= $ruang['nama']; ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
+                            <!-- Dropdown untuk Jam Kuliah -->
+                            <div class="mb-3">
+                                <label for="editJamKuliah" class="form-label">Jam Kuliah</label>
+                                <select class="form-control" id="editJamKuliah" name="id_jam" required>
+                                    <?php foreach ($jam_list as $jam) : ?>
+                                        <option value="<?= $jam['id'] ?>"><?= $jam['range_jam'] ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+
+                            <!-- Input hidden untuk Sesi -->
+                            <input type="hidden" id="editSesi" name="sesi">
+
+                            <!-- Dropdown untuk Ruang -->
+                            <div class="mb-3">
+                                <label for="editRuang" class="form-label" required>Ruang</label>
+                                <select class="form-control" id="editRuang" name="id_ruang">
+                                    <?php foreach ($ruang_list as $ruang) : ?>
+                                        <option value="<?= $ruang['id'] ?>"><?= $ruang['nama'] ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                        </div>
+                    </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
-                </div>
-            </form>
+            </div>
         </div>
-    </div>
-</div>
     </main>
 </div>
 
@@ -246,10 +241,6 @@
 
         window.location.href = "<?= base_url('riwayatpenjadwalan'); ?>/" + semester_tipe.options[semester_tipe.selectedIndex].value + "/" + tahun_akademik.options[tahun_akademik.selectedIndex].value + "/" + prodi.options[prodi.selectedIndex].value;
     }
-
-    // function ShowProgressAnimation() {
-    //     $("#loading-div-background").show();
-    // }
 </script>
 <script>
     const modalEdit = document.getElementById('modalEdit');

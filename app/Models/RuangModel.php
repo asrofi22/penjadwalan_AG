@@ -8,7 +8,7 @@ class RuangModel extends Model
 {
     protected $table = 'ruang';
     protected $primaryKey = 'id';
-    protected $allowedFields = ['nama', 'kapasitas', 'jenis', 'id_prodi', 'lantai', 'id_ruang'];
+    protected $allowedFields = ['nama', 'jenis', 'id_prodi', 'lantai', 'id_ruang'];
 
     public function getRuang($id = false)
     {

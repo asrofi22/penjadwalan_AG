@@ -9,7 +9,9 @@ class ProdiModel extends Model
     protected $table = 'prodi';  // Tabel yang digunakan
     protected $primaryKey = 'id'; // Kunci utama tabel ini
 
-    protected $allowedFields = ['id_prodi', 'nama_prodi', 'id_jurusan']; // Kolom yang diizinkan untuk diisi
+    protected $allowedFields = ['id_prodi', 'nama_prodi', 
+    // 'id_jurusan'
+    ]; 
 
     public function per_prodi($id_prodi)
     {

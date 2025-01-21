@@ -91,6 +91,12 @@ class Riwayatpenjadwalan extends BaseController
             $data['rs_riwayat'] = $this->RiwayatpenjadwalanModel->get_perprodi($semester_tipe, $tahun_akademik, $prodi);
         }
 
+        // Load model yang diperlukan
+        $hariModel = new HariModel();
+        $jamModel = new JamModel();
+        $ruangModel = new RuangModel();
+        $riwayatModel = new RiwayatpenjadwalanModel();
+
         // Ambil data untuk dropdown
         $data['hari_list'] = $this->HariModel->findAll();
         $data['sesi_list'] = $this->JamModel->findAll(); // Sesuaikan dengan model yang benar
@@ -226,20 +232,31 @@ class Riwayatpenjadwalan extends BaseController
     {
         // Ambil data dari form
         $data = [
-            'id_hari' => $this->request->getPost('hari') ?? null,
-            'id_jam' => $this->request->getPost('jam_kuliah') ?? null,
-            'id_ruang' => $this->request->getPost('ruang') ?? null
+            'id_hari' => $this->request->getPost('id_hari') ?? null,
+            'id_jam' => $this->request->getPost('id_jam') ?? null,
+            'id_ruang' => $this->request->getPost('id_ruang') ?? null
         ];
 
-        // Hapus field yang tidak diisi (null)
-        $data = array_filter($data, function ($value) {
-            return $value !== null;
-        });
+        // Debug data yang dikirim
+        log_message('debug', 'Data yang dikirim: ' . print_r($data, true));
 
-        // Update data
-        $this->RiwayatpenjadwalanModel->update($id, $data);
+        // Validasi apakah id_jam ada di tabel jam2
+        $jamExists = $this->JamModel->find($data['id_jam']);
+        if (!$jamExists) {
+            return redirect()->to('/riwayatpenjadwalan')->with('msg', 'ID Jam tidak valid.');
+        }
 
-        return redirect()->to('/riwayatpenjadwalan');
+        // Cek apakah ada bentrok
+        $bentrok = $this->RiwayatpenjadwalanModel->cek_bentrok($data['id_hari'], $data['id_jam'], $data['id_ruang'], $id);
+
+        if ($bentrok) {
+            // Jika ada bentrok, kembalikan pesan error
+            return redirect()->to('/riwayatpenjadwalan')->with('msg', 'Tidak bisa edit data jadwal karena bentrok dengan jadwal lain.');
+        } else {
+            // Jika tidak ada bentrok, update data
+            $this->RiwayatpenjadwalanModel->update_jadwal($id, $data);
+            return redirect()->to('/riwayatpenjadwalan')->with('msg', 'Jadwal berhasil diupdate.');
+        }
     }
 
     public function get_sesi($id_jam)

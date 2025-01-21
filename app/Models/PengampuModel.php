@@ -10,7 +10,7 @@ class PengampuModel extends Model
     protected $primaryKey = 'id'; // Kolom primary key
 
     protected $useAutoIncrement = true;
-    protected $allowedFields = ['id_mk', 'id_dosen', 'kelas', 'tahun_akademik', 'id_prodi', 'semester', 'kuota', 'id_ruang'];
+    protected $allowedFields = ['id_mk', 'id_dosen', 'kelas', 'tahun_akademik', 'id_prodi', 'semester', 'id_ruang'];
 
     // Fungsi untuk mengambil semua data pengampu dengan join ke tabel lain
     public function getPengampuWithDetails()

@@ -30,7 +30,7 @@
                                 <th>No</th>
                                 <th>Program Studi</th>
                                 <th>ID Prodi</th>
-                                <th>ID Jurusan</th>
+                                <!-- <th>ID Jurusan</th> -->
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -41,15 +41,13 @@
                                 <td><?= $no++ ?></td>
                                 <td><?= $prodi['nama_prodi'] ?></td>
                                 <td><?= $prodi['id_prodi'] ?></td>
-                                <td><?= $prodi['id_jurusan'] ?></td>
                                 <td>
                                     <button class="btn btn-datatable btn-icon btn-transparent-dark me-2" 
                                             data-bs-toggle="modal" 
                                             data-bs-target="#modalEdit" 
                                             data-id="<?= $prodi['id'] ?>" 
                                             data-prodi="<?= $prodi['nama_prodi'] ?>" 
-                                            data-id-prodi="<?= $prodi['id_prodi'] ?>"
-                                            data-id-jurusan="<?= $prodi['id_jurusan'] ?>">
+                                            data-id-prodi="<?= $prodi['id_prodi'] ?>">
                                         <i data-feather="edit"></i>
                                     </button>
                                     <a href="/prodi/delete/<?= $prodi['id'] ?>" class="btn btn-datatable btn-icon btn-transparent-dark">
@@ -83,10 +81,10 @@
                                 <label for="id_prodi" class="form-label">ID Prodi</label>
                                 <input type="text" class="form-control" id="id_prodi" name="id_prodi" required>
                             </div>
-                            <div class="mb-3">
+                            <!-- <div class="mb-3">
                                 <label for="id_jurusan" class="form-label">ID Jurusan</label>
                                 <input type="text" class="form-control" id="id_jurusan" name="id_jurusan" required>
-                            </div>
+                            </div> -->
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
@@ -117,10 +115,10 @@
                                 <label for="editIdProdi" class="form-label">ID Prodi</label>
                                 <input type="text" class="form-control" id="editIdProdi" name="id_prodi" required>
                             </div>
-                            <div class="mb-3">
+                            <!-- <div class="mb-3">
                                 <label for="editIdJurusan" class="form-label">ID Jurusan</label>
                                 <input type="text" class="form-control" id="editIdJurusan" name="id_jurusan" required>
-                            </div>
+                            </div> -->
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
@@ -143,13 +141,13 @@
         const id = button.getAttribute('data-id');
         const nama_prodi = button.getAttribute('data-prodi');
         const id_prodi = button.getAttribute('data-id-prodi');
-        const id_jurusan = button.getAttribute('data-id-jurusan');
+        // const id_jurusan = button.getAttribute('data-id-jurusan');
 
         // Isi form modal dengan data
         document.getElementById('editId').value = id;
         document.getElementById('editNamaProdi').value = nama_prodi;
         document.getElementById('editIdProdi').value = id_prodi;
-        document.getElementById('editIdJurusan').value = id_jurusan;
+        // document.getElementById('editIdJurusan').value = id_jurusan;
 
         // Atur action pada form edit
         const formEdit = document.getElementById('formEdit');

@@ -70,22 +70,22 @@
                             </div>
 
                             <div class="col-md-4">
-    <label class="form-label">Tahun Akademik</label>
-    <select id="tahun_akademik" name="tahun_akademik" class="form-control" onchange="change_get()">
-        <?php  
-        if (isset($tahun_a) && $tahun_a == true && isset($tahun_awal) && !empty($tahun_awal)) {
-            foreach ($tahun_awal as $a) {
-                echo '<option value="' . $a->id . '">' . $a->tahun. '</option>';
-            }
-        }
-        foreach($rs_tahun as $tahun) { 
-        ?>
-            <option value="<?php echo $tahun['id'];?>" <?php echo session('pengampu_tahun_akademik') === $tahun['tahun'] ? 'selected':''; ?>> <?php echo $tahun['tahun']; ?></option>
-        <?php  
-        } 
-        ?>
-    </select>
-</div>
+                                <label class="form-label">Tahun Akademik</label>
+                                <select id="tahun_akademik" name="tahun_akademik" class="form-control" onchange="change_get()">
+                                    <?php  
+                                    if (isset($tahun_a) && $tahun_a == true && isset($tahun_awal) && !empty($tahun_awal)) {
+                                        foreach ($tahun_awal as $a) {
+                                            echo '<option value="' . $a->id . '">' . $a->tahun. '</option>';
+                                        }
+                                    }
+                                    foreach($rs_tahun as $tahun) { 
+                                    ?>
+                                        <option value="<?php echo $tahun['id'];?>" <?php echo session('pengampu_tahun_akademik') === $tahun['tahun'] ? 'selected':''; ?>> <?php echo $tahun['tahun']; ?></option>
+                                    <?php  
+                                    } 
+                                    ?>
+                                </select>
+                            </div>
 
                             <div class="col-md-4">
                                 <label class="form-label">Program Studi</label>
@@ -111,14 +111,14 @@
                                 <input type="hidden" name="jumlah_generasi" value="<?= isset($jumlah_generasi) ? $jumlah_generasi : '800'; ?>">
                             </div>
 
-                            <button type="submit" class="btn btn-primary" onclick="ShowProgressAnimation();"><i class="fa fa-plus"></i> Proses</button> 
+                            <button type="submit" class="btn btn-primary mb-2" onclick="ShowProgressAnimation();"><i class="fa fa-plus"></i> Proses</button> 
                         </form>
                     <?php endif; ?>
 
                     <?php if (isset($rs_jadwal) && count($rs_jadwal) !== 0): ?>  
                         <a href="<?= base_url(); ?>penjadwalan/hapus_jadwal" class="btn btn-danger pull-right" onclick="ShowProgressAnimation();">Hapus Jadwal</a>
                         <a href="<?= base_url(); ?>penjadwalan/simpan_jadwal" class="btn btn-success pull-right" onclick="ShowProgressAnimation();">Simpan Jadwal</a>
-                        <a href="<?= base_url(); ?>penjadwalan/excel_report" class="btn btn-primary pull-right">Cetak Excel</a>
+                        <!-- <a href="<?= base_url(); ?>penjadwalan/excel_report" class="btn btn-primary pull-right">Cetak Excel</a> -->
                     <?php endif; ?>
 
                     <?php if (isset($rs_jadwal) && count($rs_jadwal) > 0): ?>
@@ -136,9 +136,9 @@
                                 <th>Semester</th>
                                 <th>Kelas</th>
                                 <th>Prodi</th>
-                                <th>Kuota</th>
+                                <!-- <th>Kuota</th> -->
                                 <th>Ruang</th>
-                                <th>Kapasitas</th>
+                                <!-- <th>Kapasitas</th> -->
                             </tr>
                         </thead>
                         <tbody>
@@ -157,9 +157,7 @@
                                     <td>' . ($jadwal['nama_semester'] ?? '') . '</td>
                                     <td>' . ($jadwal['nama_kelas'] ?? '') . '</td>
                                     <td>' . ($jadwal['nama_prodi'] ?? '') . '</td>
-                                    <td>' . ($jadwal['kuota'] ?? '') . '</td>
                                     <td>' . ($jadwal['ruang'] ?? '') . '</td>
-                                    <td>' . ($jadwal['kapasitas'] ?? '') . '</td>
                                 </tr>
                                 ';
                                 $i++;

@@ -12,7 +12,7 @@ class PenjadwalanModel extends Model
     protected $allowedFields = [
         'id_pengampu', 'id_hari', 'id_jam', 'id_ruang', 'nama', 'id_mk', 'id_dosen', 'id_tahun', 
         'id_kelas', 'id_prodi', 'id_semester', 'nama_ruang', 'nama_mk', 'nama_dosen', 'tahun_akademik', 
-        'nama_kelas', 'nama_prodi', 'nama_semester', 'nama_jurusan', 'id_jurusan'
+        'nama_kelas', 'nama_prodi', 'nama_semester',
     ]; 
 
     public function get()
@@ -23,11 +23,8 @@ class PenjadwalanModel extends Model
                         a.id_jam,
                         a.id_ruang,
                         b.id,
-                        b.kuota,
-                        f.kapasitas,
                         b.tahun_akademik,
                         b.id_prodi,
-                        -- c.id,
                         c.jumlah_jam as jumlah_jam,
                         e.id_hari,
                         c.nama as nama_mk,
@@ -52,9 +49,8 @@ class PenjadwalanModel extends Model
                         l.id_semester,
                         l.id as id_semester,
                         l.nama_semester as nama_semester,
-                        l.semester_tipe as semester_tipe,
-                        m.nama_jurusan as nama_jurusan,
-                        m.id as id_jurusan
+                        l.semester_tipe as semester_tipe
+                        
                 FROM jadwalkuliah a
                 LEFT JOIN pengampu b ON a.id_pengampu = b.id
                 LEFT JOIN matakuliah c ON b.id_mk = c.id
@@ -67,7 +63,6 @@ class PenjadwalanModel extends Model
                 LEFT JOIN semester_tipe j ON c.semester = j.id
                 LEFT JOIN tahun_akademik k ON b.tahun_akademik = k.id
                 LEFT JOIN semester l ON b.semester = l.id
-                LEFT JOIN jurusan m ON i.id_jurusan = m.id
                 ORDER BY e.id ASC, Jam_Kuliah ASC";
 
         return $this->db->query($sql)->getResultArray();
@@ -80,11 +75,8 @@ class PenjadwalanModel extends Model
                         a.id_jam,
                         a.id_ruang,
                         b.id,
-                        b.kuota,
-                        f.kapasitas,
                         b.tahun_akademik,
                         b.id_prodi,
-                        -- c.id,
                         c.jumlah_jam as jumlah_jam,
                         e.id_hari,
                         c.nama as nama_mk,
@@ -109,9 +101,8 @@ class PenjadwalanModel extends Model
                         l.id_semester,
                         l.id as id_semester,
                         l.nama_semester as nama_semester,
-                        l.semester_tipe as semester_tipe,
-                        m.nama_jurusan as nama_jurusan,
-                        m.id as id_jurusan
+                        l.semester_tipe as semester_tipe
+                        
                 FROM jadwalkuliah a
                 LEFT JOIN pengampu b ON a.id_pengampu = b.id
                 LEFT JOIN matakuliah c ON b.id_mk = c.id
@@ -124,7 +115,6 @@ class PenjadwalanModel extends Model
                 LEFT JOIN semester_tipe j ON c.semester = j.id
                 LEFT JOIN tahun_akademik k ON b.tahun_akademik = k.id
                 LEFT JOIN semester l ON b.semester = l.id
-                LEFT JOIN jurusan m ON i.id_jurusan = m.id
                 ORDER BY e.id ASC, Jam_Kuliah ASC";
 
         return $this->db->query($sql)->getResultArray();
@@ -188,7 +178,6 @@ class PenjadwalanModel extends Model
     {
         $sql = "SELECT a.id as id,
                        a.id_ruang,
-                       a.kuota,
                        a.kelas,
                        a.semester,
                        b.id as id_mk,
@@ -212,7 +201,6 @@ class PenjadwalanModel extends Model
                 LEFT JOIN kelas e ON a.kelas = e.id
                 LEFT JOIN prodi f ON a.id_prodi = f.id
                 LEFT JOIN semester g ON a.semester = g.id
-                LEFT JOIN jurusan h ON f.id_jurusan = h.id
                 LEFT JOIN ruang i ON a.id_ruang = i.id
                 WHERE a.id = ?";
 
@@ -236,7 +224,6 @@ class PenjadwalanModel extends Model
     {
         $sql = "SELECT a.id as id,
                        a.id_ruang,
-                       a.kuota,
                        a.kelas,
                        a.semester,
                        b.id as id_mk,
@@ -260,7 +247,6 @@ class PenjadwalanModel extends Model
                 LEFT JOIN kelas e ON a.kelas = e.id
                 LEFT JOIN prodi f ON a.id_prodi = f.id
                 LEFT JOIN semester g ON a.semester = g.id
-                LEFT JOIN jurusan h ON f.id_jurusan = h.id
                 LEFT JOIN ruang i ON a.id_ruang = i.id
                 WHERE a.id = ?";
 

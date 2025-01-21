@@ -78,7 +78,7 @@ $routes->group('', ['filter' => 'login'], function ($routes) {
     $routes->get('/tahunakademik/delete/(:num)', 'Tahunakademik::delete/$1');
 
     $routes->get('/pengampu', 'Pengampu::index');
-    $routes->get('pengampu/ajaxList', 'Pengampu::ajaxList');
+    // $routes->get('pengampu/ajaxList', 'Pengampu::ajaxList');
     $routes->get('/pengampu/create', 'Pengampu::create');
     $routes->post('/pengampu/store', 'Pengampu::store');
     $routes->get('/pengampu/edit/(:num)', 'Pengampu::edit/$1');

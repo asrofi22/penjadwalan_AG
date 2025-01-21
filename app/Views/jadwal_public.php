@@ -86,7 +86,7 @@
             <form method="GET" action="<?= base_url('jadwal'); ?>">
                 <div class="row mb-3">
                     <!-- Filter Semester -->
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label class="form-label">Semester</label>
                         <select id="semester_tipe" name="semester_tipe" class="form-control" onchange="this.form.submit()">
                             <option value="1" <?= ($semester_tipe == 1) ? 'selected' : ''; ?>>GANJIL</option>
@@ -95,7 +95,7 @@
                     </div>
 
                     <!-- Filter Tahun Akademik -->
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label class="form-label">Tahun Akademik</label>
                         <select id="tahun_akademik" name="tahun_akademik" class="form-control" onchange="this.form.submit()">
                             <?php foreach ($rs_tahun as $tahun) : ?>
@@ -107,7 +107,7 @@
                     </div>
 
                     <!-- Filter Program Studi -->
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label class="form-label">Program Studi</label>
                         <select id="prodi" name="prodi" class="form-control" onchange="this.form.submit()">
                             <option value="0" <?= ($prodi == 0) ? 'selected' : ''; ?>>Semua Prodi</option>
@@ -155,9 +155,9 @@
                             <th>Semester</th>
                             <th>Kelas</th>
                             <th>Prodi</th>
-                            <th>Kuota</th>
+                            <!-- <th>Kuota</th> -->
                             <th>Ruang</th>
-                            <th>Kapasitas</th>
+                            <!-- <th>Kapasitas</th> -->
                         </tr>
                     </thead>
                     <tbody>
@@ -174,9 +174,7 @@
                                 <td><?= esc($jadwal['nama_semester']) ?></td>
                                 <td><?= esc($jadwal['nama_kelas']) ?></td>
                                 <td><?= esc($jadwal['nama_prodi']) ?></td>
-                                <td><?= esc($jadwal['kuota']) ?></td>
                                 <td><?= esc($jadwal['ruang']) ?></td>
-                                <td><?= esc($jadwal['kapasitas']) ?></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>

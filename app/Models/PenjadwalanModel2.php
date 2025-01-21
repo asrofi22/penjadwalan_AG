@@ -119,6 +119,13 @@ class PenjadwalanModel2 extends Model
         ")->getResult();
     }
 
+    public function cek_bentrok($id_hari, $id_jam, $id_ruang, $id)
+    {
+        $sql = "SELECT * FROM riwayat_penjadwalan 
+                WHERE id_hari = ? AND id_jam = ? AND id_ruang = ? AND id != ?";
+        return $this->db->query($sql, [$id_hari, $id_jam, $id_ruang, $id])->getRow();
+    }
+
     // Menghapus riwayat jadwal berdasarkan kode
     public function hapusRiwayatJadwal($kode) {
         return $this->db->table('riwayat_penjadwalan')->where('kode', $kode)->delete();
