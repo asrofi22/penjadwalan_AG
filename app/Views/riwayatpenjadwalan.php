@@ -22,17 +22,17 @@
             <div class="card mb-4">
                 <div class="card-header">Data Riwayat Penjadwalan</div>
                 <div class="card-body">
-                    <?php if (isset($hapus)) : ?>
-                        <div class="alert alert-success">
-                            <button type="button" class="close" data-dismiss="alert">×</button>
-                            <?= $hapus; ?>
+                <?php if (session()->getFlashdata('success')) : ?>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <?= session()->getFlashdata('success'); ?>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     <?php endif; ?>
 
-                    <?php if (session()->getFlashdata('msg')) : ?>
-                        <div class="alert alert-danger">
-                            <button type="button" class="close" data-dismiss="alert">×</button>
-                            <?= session()->getFlashdata('msg'); ?>
+                    <?php if (session()->getFlashdata('error')) : ?>
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <?= session()->getFlashdata('error'); ?>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     <?php endif; ?>
 
@@ -107,7 +107,7 @@
                         </div>
                     <?php else : ?>
                         <div class="d-flex justify-content-between mb-3">
-                            <a href="<?= base_url('riwayatpenjadwalan/hapus_jadwal'); ?>" class="btn btn-danger" onclick="ShowProgressAnimation();">
+                            <a href="<?= base_url('riwayatpenjadwalan/hapus_jadwal'); ?>" class="btn btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus data jadwal ini?');">
                                 <i class="fa fa-trash"></i> Hapus Jadwal
                             </a>
                             <a href="<?= base_url('riwayatpenjadwalan/excel_report'); ?>" class="btn btn-primary">
@@ -130,6 +130,7 @@
                                 <th>Kelas</th>
                                 <th>Prodi</th>
                                 <th>Ruang</th>
+                                <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -151,13 +152,18 @@
                                     <td><?= $jadwal['ruang'] ?></td>
                                     <td>
                                         <button class="bbtn btn-datatable btn-icon btn-transparent-dark me-2"
-                                            data-bs-toggle="modal" 
+                                        data-bs-toggle="modal" 
                                             data-bs-target="#modalEdit" 
                                             data-id="<?= $jadwal['id']; ?>"
                                             data-hari="<?= $jadwal['hari']; ?>"
                                             data-sesi="<?= $jadwal['sesi']; ?>"
                                             data-jam_kuliah="<?= $jadwal['jam_kuliah']; ?>"
+                                            data-mata_kuliah="<?= $jadwal['nama_mk']; ?>"
+                                            data-dosen="<?= $jadwal['dosen']; ?>"
                                             data-jumlah_jam="<?= $jadwal['jumlah_jam']; ?>"
+                                            data-semester="<?= $jadwal['nama_semester']; ?>"
+                                            data-kelas="<?= $jadwal['nama_kelas']; ?>"
+                                            data-prodi="<?= $jadwal['nama_prodi']; ?>"
                                             data-ruang="<?= $jadwal['ruang']; ?>">
                                             <i data-feather="edit"></i>
                                         </button>
@@ -212,6 +218,36 @@
                             <!-- Input hidden untuk Sesi -->
                             <input type="hidden" id="editSesi" name="sesi">
 
+                            <!-- Tampilan data yang tidak bisa diedit -->
+                            <div class="mb-3">
+                                <label class="form-label">Mata Kuliah</label>
+                                <input type="text" class="form-control" id="editMatakuliah" readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Dosen</label>
+                                <input type="text" class="form-control" id="editDosen" readonly>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">SKS</label>
+                                <input type="text" class="form-control" id="editJumlahjam" readonly>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Semester</label>
+                                <input type="text" class="form-control" id="editSemester" readonly>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Kelas</label>
+                                <input type="text" class="form-control" id="editKelas" readonly>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Prodi</label>
+                                <input type="text" class="form-control" id="editProdi" readonly>
+                            </div>
+
                             <!-- Dropdown untuk Ruang -->
                             <div class="mb-3">
                                 <label for="editRuang" class="form-label" required>Ruang</label>
@@ -244,25 +280,37 @@
 </script>
 <script>
     const modalEdit = document.getElementById('modalEdit');
-    modalEdit.addEventListener('show.bs.modal', function (event) {
-        const button = event.relatedTarget;
-        
-        // Mengambil atribut data yang ada pada tombol Edit
-        const id = button.getAttribute('data-id');
-        const hari = button.getAttribute('data-hari');
-        const jam_kuliah = button.getAttribute('data-jam_kuliah');
-        const ruang = button.getAttribute('data-ruang');
+modalEdit.addEventListener('show.bs.modal', function (event) {
+    const button = event.relatedTarget; // Tombol yang memicu modal
+    
+    // Ambil data dari atribut data-*
+    const id = button.getAttribute('data-id');
+    const hari = button.getAttribute('data-hari');
+    const jamKuliah = button.getAttribute('data-jam_kuliah');
+    const matakuliah = button.getAttribute('data-mata_kuliah');
+    const dosen = button.getAttribute('data-dosen');
+    const jumlahJam = button.getAttribute('data-jumlah_jam');
+    const semester = button.getAttribute('data-semester');
+    const kelas = button.getAttribute('data-kelas');
+    const prodi = button.getAttribute('data-prodi');
+    const ruang = button.getAttribute('data-ruang');
 
-        // Menetapkan nilai ke input hidden dan dropdown di dalam modal edit
-        document.getElementById('editId').value = id;
-        document.getElementById('editHari').value = hari;
-        document.getElementById('editJamKuliah').value = jam_kuliah;
-        document.getElementById('editRuang').value = ruang;
+    // Masukkan data ke dalam form modal
+    document.getElementById('editId').value = id;
+    document.getElementById('editHari').value = hari;
+    document.getElementById('editJamKuliah').value = jamKuliah;
+    document.getElementById('editMatakuliah').value = matakuliah; // Pastikan ID ini sesuai
+    document.getElementById('editDosen').value = dosen; // Pastikan ID ini sesuai
+    document.getElementById('editJumlahjam').value = jumlahJam; // Pastikan ID ini sesuai
+    document.getElementById('editSemester').value = semester; // Pastikan ID ini sesuai
+    document.getElementById('editKelas').value = kelas; // Pastikan ID ini sesuai
+    document.getElementById('editProdi').value = prodi; // Pastikan ID ini sesuai
+    document.getElementById('editRuang').value = ruang;
 
-        // Menyusun aksi form edit untuk mengarah ke route yang tepat
-        const formEdit = document.getElementById('formEdit');
-        formEdit.action = `/riwayatpenjadwalan/update/${id}`;
-    });
+    // Menyusun aksi form edit untuk mengarah ke route yang tepat
+    const formEdit = document.getElementById('formEdit');
+    formEdit.action = `/riwayatpenjadwalan/update/${id}`;
+});
 
     // Ambil data sesi berdasarkan jam_kuliah yang dipilih
     document.getElementById('editJamKuliah').addEventListener('change', function () {

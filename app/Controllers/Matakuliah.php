@@ -37,8 +37,8 @@ class Matakuliah extends BaseController
 
         // Cek apakah data sudah ada
         $existingData = $this->matakuliahModel
-            ->where('nama', $nama)
-            ->orWhere('nama_id', $nama_id)
+            // ->where('nama', $nama)
+            ->Where('nama_id', $nama_id)
             ->first();
 
         if ($existingData) {

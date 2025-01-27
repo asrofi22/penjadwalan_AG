@@ -130,7 +130,10 @@
                             </div>
                             <div class="mb-3">
                                 <label for="jenis" class="form-label">Jenis Mata Kuliah</label>
-                                <input type="text" class="form-control" id="jenis" name="jenis">
+                                <select name="jenis" class="form-control" id="jenis">
+                                    <option value="TEORI">TEORI</option>
+                                    <option value="PRAKTIKUM">PRAKTIKUM</option>
+                                </select>                            
                             </div>
                             <div class="mb-3">
                                 <label for="nama_id" class="form-label">Kode Mata Kuliah</label>
@@ -148,7 +151,7 @@
                                 <label for="ket_mk" class="form-label">Keterangan MK</label>
                                 <select name="ket_mk" class="form-control" id="ket_mk">
                                     <option value="Wajib Prodi">Wajib Prodi</option>
-                                    <option value="Wajib Fakultas">Wajib Universitas</option>
+                                    <option value="Wajib Universitas">Wajib Universitas</option>
                                 </select>
                             </div>
                         </div>
@@ -183,10 +186,9 @@
                             </div>
                             <div class="mb-3">
                                 <label for="editSemester" class="form-label">Semester</label>
-                                <select class="form-control" id="editSemester" name="semester" required>
-                                    <?php foreach ($semester_list as $semester): ?>
-                                    <option value="<?= $semester['id']; ?>"><?= $semester['nama_semester']; ?></option>
-                                    <?php endforeach; ?>
+                                <select class="form-control" id="editSemester" name="editSemester" required>
+                                    <option value=1>Ganjil</option>
+                                    <option value=2>Genap</option>
                                 </select>
                             </div>
                             <div class="mb-3">
@@ -216,7 +218,7 @@
                                 <label for="ket_mk" class="form-label">Keterangan MK</label>
                                 <select name="ket_mk" class="form-control" id="ket_mk">
                                     <option value="Wajib Prodi">Wajib Prodi</option>
-                                    <option value="Wajib Fakultas">Wajib Universitas</option>
+                                    <option value="Wajib Universitas">Wajib Universitas</option>
                                 </select>
                             </div>
                         </div>

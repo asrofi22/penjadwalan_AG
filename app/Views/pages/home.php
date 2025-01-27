@@ -46,52 +46,18 @@
                         <!-- Example Colored Cards for Dashboard Demo-->
                         <div class="row">
                             <div class="col-lg-6 col-xl-3 mb-4">
-                                <div class="card bg-primary text-white h-100">
+                                <div class="card bg-success text-white h-100">
                                     <div class="card-body">
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div class="me-3">
-                                                <div class="text-white-75 small">Earnings (Monthly)</div>
-                                                <div class="text-lg fw-bold">$40,000</div>
+                                                <div class="text-white-75 small">Total Jadwal</div>
+                                                <div class="text-lg fw-bold"><?= $totalJadwal; ?></div>
                                             </div>
                                             <i class="feather-xl text-white-50" data-feather="calendar"></i>
                                         </div>
                                     </div>
                                     <div class="card-footer d-flex align-items-center justify-content-between small">
-                                        <a class="text-white stretched-link" href="#!">View Report</a>
-                                        <div class="text-white"><i class="fas fa-angle-right"></i></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-xl-3 mb-4">
-                                <div class="card bg-warning text-white h-100">
-                                    <div class="card-body">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div class="me-3">
-                                                <div class="text-white-75 small">Earnings (Annual)</div>
-                                                <div class="text-lg fw-bold">$215,000</div>
-                                            </div>
-                                            <i class="feather-xl text-white-50" data-feather="dollar-sign"></i>
-                                        </div>
-                                    </div>
-                                    <div class="card-footer d-flex align-items-center justify-content-between small">
-                                        <a class="text-white stretched-link" href="#!">View Report</a>
-                                        <div class="text-white"><i class="fas fa-angle-right"></i></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-xl-3 mb-4">
-                                <div class="card bg-success text-white h-100">
-                                    <div class="card-body">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div class="me-3">
-                                                <div class="text-white-75 small">Task Completion</div>
-                                                <div class="text-lg fw-bold">24</div>
-                                            </div>
-                                            <i class="feather-xl text-white-50" data-feather="check-square"></i>
-                                        </div>
-                                    </div>
-                                    <div class="card-footer d-flex align-items-center justify-content-between small">
-                                        <a class="text-white stretched-link" href="#!">View Tasks</a>
+                                        <a class="text-white stretched-link" href="<?= base_url('riwayatpenjadwalan'); ?>">Lihat Detail</a>
                                         <div class="text-white"><i class="fas fa-angle-right"></i></div>
                                     </div>
                                 </div>
@@ -101,21 +67,53 @@
                                     <div class="card-body">
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div class="me-3">
-                                                <div class="text-white-75 small">Pending Requests</div>
-                                                <div class="text-lg fw-bold">17</div>
+                                                <div class="text-white-75 small">Total Pengampu</div>
+                                                <div class="text-lg fw-bold"><?= $totalPengampu; ?></div>
                                             </div>
-                                            <i class="feather-xl text-white-50" data-feather="message-circle"></i>
+                                            <i class="feather-xl text-white-50" data-feather="user-check"></i>
                                         </div>
                                     </div>
                                     <div class="card-footer d-flex align-items-center justify-content-between small">
-                                        <a class="text-white stretched-link" href="#!">View Requests</a>
+                                        <a class="text-white stretched-link" href="<?= base_url('pengampu'); ?>">Lihat Detail</a>
                                         <div class="text-white"><i class="fas fa-angle-right"></i></div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        
-                        
+                            <div class="col-lg-6 col-xl-3 mb-4">
+                                <div class="card bg-primary text-white h-100">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="me-3">
+                                                <div class="text-white-75 small">Total Mata Kuliah</div>
+                                                <div class="text-lg fw-bold"><?= $totalMatakuliah; ?></div>
+                                            </div>
+                                            <i class="feather-xl text-white-50" data-feather="book"></i>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer d-flex align-items-center justify-content-between small">
+                                        <a class="text-white stretched-link" href="<?= base_url('matakuliah'); ?>">Lihat Detail</a>
+                                        <div class="text-white"><i class="fas fa-angle-right"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-xl-3 mb-4">
+                                <div class="card bg-warning text-white h-100">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="me-3">
+                                                <div class="text-white-75 small">Total Dosen</div>
+                                                <div class="text-lg fw-bold"><?= $totalDosen; ?></div>
+                                            </div>
+                                            <i class="feather-xl text-white-50" data-feather="users"></i>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer d-flex align-items-center justify-content-between small">
+                                        <a class="text-white stretched-link" href="<?= base_url('dosen'); ?>">Lihat Detail</a>
+                                        <div class="text-white"><i class="fas fa-angle-right"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>  
                     </div>
                 </main>
                 <footer class="footer-admin mt-auto footer-light">
