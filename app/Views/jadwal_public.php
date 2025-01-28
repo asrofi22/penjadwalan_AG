@@ -57,6 +57,11 @@
     .datatable-top .custom-search input {
         margin-left: 1rem;
     }
+
+    /* Tombol Print */
+    .print-button {
+        margin-bottom: 1rem;
+    }
 </style>
 </head>
 <body class="nav-fixed">
@@ -133,6 +138,11 @@
                     </div>
                 </div>
             </form>
+
+            <!-- Tombol Print -->
+            <button class="btn btn-primary print-button" onclick="printTable()">
+                <i class="fas fa-print"></i> Print Jadwal
+            </button>
 
             <!-- Tabel Jadwal -->
             <?php if (empty($rs_riwayat)) : ?>
@@ -256,6 +266,18 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+// Fungsi untuk mencetak tabel
+function printTable() {
+    const printContents = document.getElementById('datatablesSimple').outerHTML;
+    const originalContents = document.body.innerHTML;
+
+    document.body.innerHTML = printContents;
+    window.print();
+
+    document.body.innerHTML = originalContents;
+    window.location.reload(); // Reload halaman untuk mengembalikan konten asli
+}
 </script>
 </body>
 </html>
