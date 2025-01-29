@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jadwal Kuliah PDF</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Jadwal Kuliah</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Hari</th>
+                <th>Sesi</th>
+                <th>Jam</th>
+                <th>Mata Kuliah</th>
+                <th>Dosen</th>
+                <th>SKS</th>
+                <th>Semester</th>
+                <th>Kelas</th>
+                <th>Prodi</th>
+                <th>Ruang</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php $i = 1; ?>
+            <?php foreach ($rs_riwayat as $jadwal) : ?>
+                <tr>
+                    <td><?= $i++ ?></td>
+                    <td><?= esc($jadwal['hari']) ?></td>
+                    <td><?= esc($jadwal['sesi']) ?></td>
+                    <td><?= esc($jadwal['jam_kuliah']) ?></td>
+                    <td><?= esc($jadwal['nama_mk']) ?></td>
+                    <td><?= esc($jadwal['dosen']) ?></td>
+                    <td><?= esc($jadwal['jumlah_jam']) ?></td>
+                    <td><?= esc($jadwal['nama_semester']) ?></td>
+                    <td><?= esc($jadwal['nama_kelas']) ?></td>
+                    <td><?= esc($jadwal['nama_prodi']) ?></td>
+                    <td><?= esc($jadwal['ruang']) ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</body>
+</html>

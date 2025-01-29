@@ -57,11 +57,6 @@
     .datatable-top .custom-search input {
         margin-left: 1rem;
     }
-
-    /* Tombol Print */
-    .print-button {
-        margin-bottom: 1rem;
-    }
 </style>
 </head>
 <body class="nav-fixed">
@@ -89,6 +84,12 @@
         <div class="card-body">
             <!-- Form Filter -->
             <form method="GET" action="<?= base_url('jadwal'); ?>">
+                <!-- Tombol Cetak PDF -->
+                <div class="mb-3">
+                    <a href="<?= base_url('jadwal/cetak_pdf') . '?' . http_build_query($_GET); ?>" class="btn btn-primary">
+                        <i class="fas fa-file-pdf"></i> Cetak PDF
+                    </a>
+                </div>
                 <div class="row mb-3">
                     <!-- Filter Semester -->
                     <div class="col-md-3">
@@ -138,11 +139,6 @@
                     </div>
                 </div>
             </form>
-
-            <!-- Tombol Print -->
-            <button class="btn btn-primary print-button" onclick="printTable()">
-                <i class="fas fa-print"></i> Print Jadwal
-            </button>
 
             <!-- Tabel Jadwal -->
             <?php if (empty($rs_riwayat)) : ?>
@@ -266,18 +262,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
-
-// Fungsi untuk mencetak tabel
-function printTable() {
-    const printContents = document.getElementById('datatablesSimple').outerHTML;
-    const originalContents = document.body.innerHTML;
-
-    document.body.innerHTML = printContents;
-    window.print();
-
-    document.body.innerHTML = originalContents;
-    window.location.reload(); // Reload halaman untuk mengembalikan konten asli
-}
 </script>
 </body>
 </html>

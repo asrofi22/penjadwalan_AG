@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use App\Models\RiwayatpenjadwalanModel;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 class Jadwal extends BaseController
 {
@@ -44,5 +46,39 @@ class Jadwal extends BaseController
 
         // Tampilkan view jadwal_public
         return view('jadwal_public', $data);
+    }
+
+    public function cetak_pdf()
+    {
+        // Ambil parameter filter dari query string
+        $semester_tipe = $this->request->getGet('semester_tipe') ?? 1;
+        $tahun_akademik = $this->request->getGet('tahun_akademik') ?? 7;
+        $prodi = $this->request->getGet('prodi') ?? 0;
+        $dosen = $this->request->getGet('dosen') ?? 0;
+
+        // Ambil data jadwal berdasarkan filter
+        if ($prodi == 0 && $dosen == 0) {
+            $data['rs_riwayat'] = $this->riwayatpenjadwalanModel->get($semester_tipe, $tahun_akademik);
+        } elseif ($prodi != 0 && $dosen == 0) {
+            $data['rs_riwayat'] = $this->riwayatpenjadwalanModel->get_perprodi($semester_tipe, $tahun_akademik, $prodi);
+        } elseif ($dosen != 0) {
+            $data['rs_riwayat'] = $this->riwayatpenjadwalanModel->getPerDosen($dosen);
+        }
+
+        // Load view untuk PDF
+        $html = view('jadwal_pdf', $data);
+
+        // Setup dompdf
+        $options = new Options();
+        $options->set('isHtml5ParserEnabled', true);
+        $options->set('isRemoteEnabled', true);
+
+        $dompdf = new Dompdf($options);
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'landscape'); // Ukuran kertas dan orientasi
+        $dompdf->render();
+
+        // Output PDF ke browser
+        $dompdf->stream("jadwal_kuliah.pdf", array("Attachment" => false));
     }
 }
