@@ -29,9 +29,9 @@ class Dosen extends BaseController
         $this->dosenModel->save([
             'nip' => $this->request->getPost('nip'),
             'nama' => $this->request->getPost('nama'),
-            'alamat' => $this->request->getPost('alamat'),
+            'pangkat' => $this->request->getPost('pangkat'),
             'telp' => $this->request->getPost('telp'),
-            'password' => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
+            // 'password' => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
             'status_dosen' => $this->request->getPost('status_dosen'),
             'id_dosen' => $this->request->getPost('id_dosen'),
         ]);
@@ -55,9 +55,9 @@ class Dosen extends BaseController
         $this->dosenModel->update($id, [
             'nip' => $this->request->getPost('nip'),
             'nama' => $this->request->getPost('nama'),
-            'alamat' => $this->request->getPost('alamat'),
+            'pangkat' => $this->request->getPost('pangkat'),
             'telp' => $this->request->getPost('telp'),
-            'password' => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
+            // 'password' => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
             'status_dosen' => $this->request->getPost('status_dosen'),
             'id_dosen' => $this->request->getPost('id_dosen'),
         ]);

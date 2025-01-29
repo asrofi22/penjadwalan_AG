@@ -84,12 +84,6 @@
         <div class="card-body">
             <!-- Form Filter -->
             <form method="GET" action="<?= base_url('jadwal'); ?>">
-                <!-- Tombol Cetak PDF -->
-                <div class="mb-3">
-                    <a href="<?= base_url('jadwal/cetak_pdf') . '?' . http_build_query($_GET); ?>" class="btn btn-primary">
-                        <i class="fas fa-file-pdf"></i> Cetak PDF
-                    </a>
-                </div>
                 <div class="row mb-3">
                     <!-- Filter Semester -->
                     <div class="col-md-3">
@@ -137,6 +131,13 @@
                             <?php endforeach; ?>
                         </select>
                     </div>
+                </div>
+                
+                <!-- Tombol Cetak PDF -->
+                <div class="mb-3">
+                    <a href="<?= base_url('jadwal/cetak_pdf') . '?' . http_build_query($_GET); ?>" class="btn btn-primary">
+                        <i class="fas fa-file-pdf"></i> Cetak PDF
+                    </a>
                 </div>
             </form>
 

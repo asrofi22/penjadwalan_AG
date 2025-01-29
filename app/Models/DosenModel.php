@@ -9,7 +9,7 @@ class DosenModel extends Model
     // Konfigurasi untuk tabel dosen
     protected $table = 'dosen';
     protected $primaryKey = 'id';
-    protected $allowedFields = ['nip', 'nama', 'alamat', 'telp', 'password', 'status_dosen', 'id_dosen'];
+    protected $allowedFields = ['nip', 'nama', 'pangkat', 'telp', 'status_dosen', 'id_dosen'];
 
     // Tambahkan metode untuk mendapatkan data status dosen
     public function getStatusDosen()

@@ -30,7 +30,7 @@
                                 <th>No</th>
                                 <th>NIP</th>
                                 <th>Nama</th>
-                                <th>Alamat</th>
+                                <th>Pangkat</th>
                                 <th>Telepon</th>
                                 <th>Status</th>
                                 <th>Aksi</th>
@@ -43,7 +43,7 @@
                                 <td><?= $no++; ?></td>
                                 <td><?= $dosen['nip'] ?></td>
                                 <td><?= $dosen['nama'] ?></td>
-                                <td><?= $dosen['alamat'] ?></td>
+                                <td><?= $dosen['pangkat'] ?></td>
                                 <td><?= $dosen['telp'] ?></td>
                                 <td><?php
                                     // Konversi nilai status_dosen ke teks
@@ -75,7 +75,7 @@
                                             data-id="<?= $dosen['id'] ?>" 
                                             data-nip="<?= $dosen['nip'] ?>" 
                                             data-nama="<?= $dosen['nama'] ?>" 
-                                            data-alamat="<?= $dosen['alamat'] ?>" 
+                                            data-pangkat="<?= $dosen['pangkat'] ?>" 
                                             data-telp="<?= $dosen['telp'] ?>" 
                                             data-status="<?= $dosen['status_dosen'] ?>">
                                         <i data-feather="edit"></i>
@@ -110,8 +110,8 @@
                                 <input type="text" class="form-control" id="nama" name="nama" required>
                             </div>
                             <div class="mb-3">
-                                <label for="alamat" class="form-label">Alamat</label>
-                                <input type="text" class="form-control" id="alamat" name="alamat" required>
+                                <label for="pangkat" class="form-label">Pangkat</label>
+                                <input type="text" class="form-control" id="pangkat" name="pangkat" required>
                             </div>
                             <div class="mb-3">
                                 <label for="telp" class="form-label">Telepon</label>
@@ -159,8 +159,8 @@
                                 <input type="text" class="form-control" id="editNama" name="nama" required>
                             </div>
                             <div class="mb-3">
-                                <label for="editAlamat" class="form-label">Alamat</label>
-                                <input type="text" class="form-control" id="editAlamat" name="alamat" required>
+                                <label for="editPangkat" class="form-label">Pangkat</label>
+                                <input type="text" class="form-control" id="editPangkat" name="pangkat" required>
                             </div>
                             <div class="mb-3">
                                 <label for="editTelp" class="form-label">Telepon</label>
@@ -197,7 +197,7 @@
         const id = button.getAttribute('data-id');
         const nip = button.getAttribute('data-nip');
         const nama = button.getAttribute('data-nama');
-        const alamat = button.getAttribute('data-alamat');
+        const pangkat = button.getAttribute('data-pangkat');
         const telp = button.getAttribute('data-telp');
         const status = button.getAttribute('data-status');
 
@@ -205,7 +205,7 @@
         document.getElementById('editId').value = id;
         document.getElementById('editNip').value = nip;
         document.getElementById('editNama').value = nama;
-        document.getElementById('editAlamat').value = alamat;
+        document.getElementById('editPangkat').value = pangkat;
         document.getElementById('editTelp').value = telp;
         document.getElementById('editStatusDosen').value = status;
 
