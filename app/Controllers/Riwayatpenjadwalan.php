@@ -132,69 +132,79 @@ class Riwayatpenjadwalan extends BaseController
     $spreadsheet = new Spreadsheet();
     $sheet = $spreadsheet->getActiveSheet();
 
-    // Header sesuai dengan format BLANKO ROSTER.xlsx
-    $sheet->setCellValue('A1', 'DRAF ROSTER KULIAH FAKULTAS SAINS DAN TEKNOLOGI UIN SULTHAN THAHA SAIFUDDIN JAMBI');
-    $sheet->mergeCells('A1:P1'); // Merge cells untuk judul utama
-    $sheet->setCellValue('A2', 'SEMESTER GENAP TAHUN AKADEMIK 2024/2025');
-    $sheet->mergeCells('A2:P2'); // Merge cells untuk subjudul
+    // Header Judul
+    $sheet->setCellValue('A1', 'DRAF ROSTER KULIAH FAKULTAS SAINS DAN TEKNOLOGI UIN SULTHAN THAHA SAIFUDDIN JAMBI')
+          ->mergeCells('A1:P1');
+    $sheet->setCellValue('A2', 'SEMESTER GENAP TAHUN AKADEMIK 2024/2025')
+          ->mergeCells('A2:P2');
 
-    // Header tabel
-    $header = [
-        'NO', 'PRODI', 'NAMA DOSEN', 'NIP', 'PANGKAT/GOL', 'STATUS DOSEN (DOSEN TETAP PNS, DOSEN PPPK, DTBPNS, DTBLU & DLB)',
-        'KODE MK', 'MATA KULIAH', 'KETERANGAN MK (WAJIB / PILIHAN)', 'SEMESTER', 'PRODI', 'SKS', 'HARI', 'JAM', 'RUANG KULIAH', 'KET'
+    // Styling Judul
+    $sheet->getStyle('A1:A2')->applyFromArray([
+        'alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER],
+        'font' => ['bold' => true]
+    ]);
+
+    // Header Tabel
+    $header = ['NO', 'PRODI', 'NAMA DOSEN', 'NIP', 'PANGKAT/GOL', 'STATUS DOSEN', 'KODE MK', 'MATA KULIAH', 'KETERANGAN MK', 'SEMESTER', 'PRODI', 'SKS', 'HARI', 'JAM', 'RUANG KULIAH', 'KET'];
+    $sheet->fromArray($header, null, 'A4');
+
+    // Styling Header
+    $sheet->getStyle('A4:P4')->applyFromArray([
+        'alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER],
+        'font' => ['bold' => true],
+        'borders' => ['allBorders' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN]]
+    ]);
+
+    // Mapping status dosen
+    $statusMapping = [
+        1 => 'Dosen Tetap PNS',
+        2 => 'Dosen PPPK',
+        3 => 'Dosen Tetap Bukan PNS',
+        4 => 'Dosen Tetap BLU',
+        5 => 'Dosen Luar Biasa'
     ];
 
-    // Menulis header ke Excel
-    $sheet->fromArray($header, null, 'A4'); // Mulai dari baris 4
-
-    // Fetching the table data
-    $row = 5; // Mulai dari baris 5
-    $no = 1; // Nomor urut
+    $row = 5;
+    $no = 1;
     foreach ($query as $data) {
-        $sheet->setCellValue('A' . $row, $no); // NO
-        $sheet->setCellValue('B' . $row, $data['nama_prodi']); // PRODI
-        $sheet->setCellValue('C' . $row, $data['dosen']); // NAMA DOSEN
-        $sheet->setCellValue('D' . $row, ''); // NIP (kosong, karena tidak ada di data)
-        $sheet->setCellValue('E' . $row, ''); // PANGKAT/GOL (kosong, karena tidak ada di data)
-        $sheet->setCellValue('F' . $row, ''); // STATUS DOSEN (kosong, karena tidak ada di data)
-        $sheet->setCellValue('G' . $row, $data['kode_mk'] ?? ''); // KODE MK (kosong jika tidak ada)
-        $sheet->setCellValue('H' . $row, $data['nama_mk']); // MATA KULIAH
-        $sheet->setCellValue('I' . $row, ''); // KETERANGAN MK (kosong, karena tidak ada di data)
-        $sheet->setCellValue('J' . $row, $data['nama_semester']); // SEMESTER
-        $sheet->setCellValue('K' . $row, $data['nama_prodi']); // PRODI
-        $sheet->setCellValue('L' . $row, $data['jumlah_jam']); // SKS
-        $sheet->setCellValue('M' . $row, $data['hari']); // HARI
-        $sheet->setCellValue('N' . $row, $data['jam_kuliah']); // JAM
-        $sheet->setCellValue('O' . $row, $data['ruang']); // RUANG KULIAH
-        $sheet->setCellValue('P' . $row, ''); // KET (kosong, karena tidak ada di data)
-
+        $sheet->setCellValue('A' . $row, $no);
+        $sheet->setCellValue('B' . $row, $data['nama_prodi']);
+        $sheet->setCellValue('C' . $row, $data['dosen']);
+        $sheet->setCellValue('D' . $row, $data['nip'] ?? '');
+        $sheet->setCellValue('E' . $row, $data['pangkat'] ?? '');
+        $sheet->setCellValue('F' . $row, $statusMapping[$data['status_dosen']] ?? '-');
+        $sheet->setCellValue('G' . $row, $data['kode_mk'] ?? '');
+        $sheet->setCellValue('H' . $row, $data['nama_mk']);
+        $sheet->setCellValue('I' . $row, $data['ket_mk'] ?? '');
+        $sheet->setCellValue('J' . $row, $data['nama_semester']);
+        $sheet->setCellValue('K' . $row, $data['nama_prodi']);
+        $sheet->setCellValue('L' . $row, $data['jumlah_jam']);
+        $sheet->setCellValue('M' . $row, $data['hari']);
+        $sheet->setCellValue('N' . $row, $data['jam_kuliah']);
+        $sheet->setCellValue('O' . $row, $data['ruang']);
+        $sheet->setCellValue('P' . $row, '');
         $row++;
         $no++;
     }
 
-    // Menambahkan filter dan sorting di Excel
-    $sheet->setAutoFilter('A4:P4'); // Menambahkan filter di header
+    // Styling No agar lebih kecil
+    $sheet->getColumnDimension('A')->setWidth(5);
 
-    // Mengatur lebar kolom otomatis
-    foreach (range('A', 'P') as $columnID) {
+    // Auto-width untuk kolom lainnya
+    foreach (range('B', 'P') as $columnID) {
         $sheet->getColumnDimension($columnID)->setAutoSize(true);
     }
 
     // Menambahkan border ke seluruh tabel
-    $styleArray = [
-        'borders' => [
-            'allBorders' => [
-                'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
-            ],
-        ],
-    ];
-    $sheet->getStyle('A4:P' . ($row - 1))->applyFromArray($styleArray);
+    $sheet->getStyle('A4:P' . ($row - 1))->applyFromArray([
+        'borders' => ['allBorders' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN]]
+    ]);
 
     // Menambahkan tanda tangan di bagian bawah
     $sheet->setCellValue('A' . ($row + 2), 'BLANKO INI DIBUAT BERDASARKAN FORMAT UNTUK USULAN SK REKTOR.');
-    $sheet->setCellValue('F' . ($row + 4), 'Jambi,');
-    $sheet->setCellValue('F' . ($row + 5), 'Ketua Prodi,');
-    $sheet->setCellValue('F' . ($row + 7), '..........................');
+    $sheet->setCellValue('O' . ($row + 4), 'Jambi,');
+    $sheet->setCellValue('O' . ($row + 5), 'Ketua Prodi,');
+    $sheet->setCellValue('O' . ($row + 7), '..........................');
 
     $writer = new Xlsx($spreadsheet);
 
