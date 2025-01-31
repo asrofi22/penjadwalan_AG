@@ -18,9 +18,22 @@
         th, td {
             padding: 8px;
             text-align: left;
+            font-size: 12px; /* Mengecilkan ukuran font agar muat di format potret */
         }
         th {
             background-color: #f2f2f2;
+        }
+
+        /* Menetapkan format kertas ke A4 dalam mode potret */
+        @page {
+            size: A4 portrait;
+            margin: 15mm;
+        }
+
+        /* Menyesuaikan margin untuk cetakan */
+        body {
+            margin: 0;
+            padding: 0;
         }
     </style>
 </head>
