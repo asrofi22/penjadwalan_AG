@@ -32,6 +32,7 @@ $routes->group('', ['filter' => 'login'], function ($routes) {
 
     $routes->get('/dosen', 'Dosen::index');
     $routes->post('/dosen/store', 'Dosen::store');
+    $routes->get('/dosen/cetak', 'Dosen::cetak');
     $routes->get('/dosen/edit/(:segment)', 'Dosen::edit/$1');
     $routes->post('/dosen/update/(:segment)', 'Dosen::update/$1');
     $routes->get('/dosen/delete/(:segment)', 'Dosen::delete/$1');

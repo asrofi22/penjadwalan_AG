@@ -24,15 +24,22 @@
             <div class="card mb-4">
                 <div class="card-header">Data Dosen</div>
                 <div class="card-body">
+                <div class="col-auto">
+                    <a href="/dosen/cetak" class="btn btn-primary" target="_blank">Cetak Data</a>
+                </div>
                     <table id="datatablesSimple" style="font-size: 12px;">
                         <thead>
                             <tr>
                                 <th>No</th>
                                 <th>NIP</th>
                                 <th>Nama</th>
-                                <th>Pangkat</th>
+                                <th>Pangkat/Gol</th>
                                 <th>Telepon</th>
+                                <th>Email</th>
+                                <th>Tgl Lahir</th>
                                 <th>Status</th>
+                                <th>Homebase</th>
+                                <th>Id Scopus</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -45,6 +52,8 @@
                                 <td><?= $dosen['nama'] ?></td>
                                 <td><?= $dosen['pangkat'] ?></td>
                                 <td><?= $dosen['telp'] ?></td>
+                                <td><?= $dosen['email'] ?></td>
+                                <td><?= $dosen['tgl_lahir'] ?></td>
                                 <td><?php
                                     // Konversi nilai status_dosen ke teks
                                     switch ($dosen['status_dosen']) {
@@ -67,7 +76,10 @@
                                             echo "Status Tidak Diketahui";
                                             break;
                                     }
-                                    ?></td>
+                                    ?>
+                                </td>
+                                <td><?= $dosen['nama_prodi'] ?></td>
+                                <td><?= $dosen['id_scopus'] ?></td>
                                 <td>
                                     <button class="btn btn-datatable btn-icon btn-transparent-dark me-2" 
                                             data-bs-toggle="modal" 
@@ -77,7 +89,12 @@
                                             data-nama="<?= $dosen['nama'] ?>" 
                                             data-pangkat="<?= $dosen['pangkat'] ?>" 
                                             data-telp="<?= $dosen['telp'] ?>" 
-                                            data-status="<?= $dosen['status_dosen'] ?>">
+                                            data-email="<?= $dosen['email'] ?>" 
+                                            data-tgl_lahir="<?= $dosen['tgl_lahir'] ?>" 
+                                            data-status="<?= $dosen['status_dosen'] ?>"
+                                            data-id_prodi="<?= $dosen['id_prodi'] ?>" 
+                                            data-id_scopus="<?= $dosen['id_scopus'] ?>" 
+                                            >
                                         <i data-feather="edit"></i>
                                     </button>
                                     <a href="/dosen/delete/<?= $dosen['id'] ?>" class="btn btn-datatable btn-icon btn-transparent-dark"><i data-feather="trash-2"></i></a>
@@ -103,23 +120,31 @@
                         <div class="modal-body">
                             <div class="mb-3">
                                 <label for="nip" class="form-label">NIP</label>
-                                <input type="text" class="form-control" id="nip" name="nip" required>
+                                <input type="text" class="form-control" id="nip" name="nip" >
                             </div>
                             <div class="mb-3">
                                 <label for="nama" class="form-label">Nama</label>
-                                <input type="text" class="form-control" id="nama" name="nama" required>
+                                <input type="text" class="form-control" id="nama" name="nama" >
                             </div>
                             <div class="mb-3">
-                                <label for="pangkat" class="form-label">Pangkat</label>
-                                <input type="text" class="form-control" id="pangkat" name="pangkat" required>
+                                <label for="pangkat" class="form-label">Pangkat/Gol</label>
+                                <input type="text" class="form-control" id="pangkat" name="pangkat" >
                             </div>
                             <div class="mb-3">
                                 <label for="telp" class="form-label">Telepon</label>
-                                <input type="text" class="form-control" id="telp" name="telp" required>
+                                <input type="text" class="form-control" id="telp" name="telp" >
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" name="email" >
+                            </div>
+                            <div class="mb-3">
+                                <label for="tgl_lahir" class="form-label">Tgl Lahir</label>
+                                <input type="date" class="form-control" id="tgl_lahir" name="tgl_lahir" >
                             </div>
                             <div class="mb-3">
                                 <label for="status_dosen" class="form-label">Status</label>
-                                <select class="form-control" id="status_dosen" name="status_dosen" required>
+                                <select class="form-control" id="status_dosen" name="status_dosen" >
                                     <option value="">Pilih Status</option>
                                     <option value="1">Dosen Tetap PNS</option>
                                     <option value="2">Dosen PPPK</option>
@@ -127,6 +152,18 @@
                                     <option value="4">Dosen Tetap BLU</option>
                                     <option value="5">Dosen Luar Biasa</option>
                                 </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="id_prodi" class="form-label">Homebase</label>
+                                <select class="form-control" id="id_prodi" name="id_prodi" >
+                                    <?php foreach ($prodi_list as $prodi): ?>
+                                    <option value="<?= $prodi['id']; ?>"><?= $prodi['nama_prodi']; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="id_scopus" class="form-label">Id Scopus</label>
+                                <input type="text" class="form-control" id="id_scopus" name="id_scopus" >
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -159,12 +196,20 @@
                                 <input type="text" class="form-control" id="editNama" name="nama" required>
                             </div>
                             <div class="mb-3">
-                                <label for="editPangkat" class="form-label">Pangkat</label>
+                                <label for="editPangkat" class="form-label">Pangkat/Gol</label>
                                 <input type="text" class="form-control" id="editPangkat" name="pangkat" required>
                             </div>
                             <div class="mb-3">
                                 <label for="editTelp" class="form-label">Telepon</label>
                                 <input type="text" class="form-control" id="editTelp" name="telp" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editEmail" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="editEmail" name="email" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editTgl_lahir" class="form-label">Tgl Lahir</label>
+                                <input type="date" class="form-control" id="editTgl_lahir" name="tgl_lahir" required>
                             </div>
                             <div class="mb-3">
                                 <label for="editStatusDosen" class="form-label">Status</label>
@@ -176,6 +221,18 @@
                                     <option value="4">Dosen Tetap BLU</option>
                                     <option value="5">Dosen Luar Biasa</option>
                                 </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editId_prodi" class="form-label">Homebase</label>
+                                <select class="form-control" id="editId_prodi" name="id_prodi" required>
+                                    <?php foreach ($prodi_list as $prodi): ?>
+                                    <option value="<?= $prodi['id']; ?>"><?= $prodi['nama_prodi']; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editId_scopus" class="form-label">Id Scopus</label>
+                                <input type="text" class="form-control" id="editId_scopus" name="id_scopus" required>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -199,7 +256,12 @@
         const nama = button.getAttribute('data-nama');
         const pangkat = button.getAttribute('data-pangkat');
         const telp = button.getAttribute('data-telp');
+        const email = button.getAttribute('data-email');
+        const tgl_lahir = button.getAttribute('data-tgl_lahir');
         const status = button.getAttribute('data-status');
+        const id_prodi = button.getAttribute('data-id_prodi');
+        const id_scopus = button.getAttribute('data-id_scopus');
+
 
         // Isi form edit
         document.getElementById('editId').value = id;
@@ -207,7 +269,11 @@
         document.getElementById('editNama').value = nama;
         document.getElementById('editPangkat').value = pangkat;
         document.getElementById('editTelp').value = telp;
+        document.getElementById('editEmail').value = email;
+        document.getElementById('editTgl_lahir').value = tgl_lahir;
         document.getElementById('editStatusDosen').value = status;
+        document.getElementById('editId_prodi').value = id_prodi;
+        document.getElementById('editId_scopus').value = id_scopus;
 
         // Atur URL form
         const formEdit = document.getElementById('formEdit');
