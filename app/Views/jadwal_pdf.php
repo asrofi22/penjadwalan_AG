@@ -35,10 +35,20 @@
             margin: 0;
             padding: 0;
         }
+        /* Style untuk label di atas tabel */
+        .label {
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
     <h1>Jadwal Kuliah</h1>
+    <div class="label">
+        1. Fakultas : Sains dan Teknologi<br>
+        2. Tahun Akademik : <?= esc($tahun_akademik_label) ?><br>
+        3. Dosen : <?= esc($dosen_label) ?>
+    </div>
     <table>
         <thead>
             <tr>

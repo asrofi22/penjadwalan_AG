@@ -754,15 +754,9 @@ class Penjadwalan2 extends Controller
                 }
             }
 
-            $batchSize = 100;
-            $totalData = count($this->itersimpan);
-
-            for ($batch = 0; $batch < ceil($totalData / $batchSize); $batch++) {
-                $start = $batch * $batchSize;
-                $end = min(($batch + 1) * $batchSize, $totalData);
-
-                for ($j = $start; $j < $end; $j++) {
-                    $hari_ruang = explode(':', $this->waktu_tersimpan[$j][1]);
+            $jumlah_waktu_tersimpan = count($this->itersimpan);
+            for ($j = 0; $j < $jumlah_waktu_tersimpan; $j++) {
+                $hari_ruang = explode(':', $this->waktu_tersimpan[$j][1]);
 
                 if ($dosen_a == $hari_ruang[5] && $this->hari[$hari_a] == $hari_ruang[0] && $sesiJam_a == $hari_ruang[1]) {
                     $penalty += 1;
@@ -783,7 +777,6 @@ class Penjadwalan2 extends Controller
                 }
             }
         }
-    }
 
         $fitness = floatval(1 / (1 + $penalty));
         return $fitness;

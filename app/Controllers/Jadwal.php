@@ -65,6 +65,16 @@ class Jadwal extends BaseController
             $data['rs_riwayat'] = $this->riwayatpenjadwalanModel->getPerDosen($dosen);
         }
 
+        // Ambil label tahun akademik
+        $tahun_akademik_label = $this->riwayatpenjadwalanModel->getTahunAkademik();
+        $tahun_akademik_label = array_column($tahun_akademik_label, 'tahun', 'id')[$tahun_akademik];
+        $data['tahun_akademik_label'] = $tahun_akademik_label;
+
+        // Ambil label dosen
+        $dosen_label = $this->riwayatpenjadwalanModel->getDosen();
+        $dosen_label = array_column($dosen_label, 'nama', 'id')[$dosen] ?? 'Semua Dosen';
+        $data['dosen_label'] = $dosen_label;
+
         // Load view untuk PDF
         $html = view('jadwal_pdf', $data);
 
