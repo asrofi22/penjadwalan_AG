@@ -157,8 +157,6 @@ class Penjadwalan2 extends Controller
 
     public function store()
     {
-        ini_set('memory_limit', '2048M'); // Meningkatkan batas memori menjadi 1 GB
-        ini_set('max_execution_time', 1200); // 600 detik = 10 menit
 
         $data = [
             'prodi_list' => $this->ProdiModel->findAll(),
