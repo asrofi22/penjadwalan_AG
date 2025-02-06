@@ -168,7 +168,6 @@ class Penjadwalan2 extends Controller
             'semester_list' => $this->SemesterModel->findAll(),
             'ruang_list' => $this->RuangModel->findAll(),
             'rs_jadwal' => $this->PenjadwalanModel->get(), // Ambil data jadwal di sini
-            // 'rs_tahun' => $this->TahunakademikModel->semua_tahun() 
             'rs_tahun' => $this->TahunakademikModel->findAll(),
             'semua_prodi' => $this->ProdiModel->semua_prodi() // Panggil findAll() di sini
         ];
