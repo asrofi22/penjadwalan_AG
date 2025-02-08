@@ -275,7 +275,7 @@
         document.getElementById('editId').value = id;
         document.getElementById('editIdMk').value = id_mk;
         document.getElementById('editIdDosen').value = id_dosen;
-        document.getElementById('editKelas').value = kelas;
+        document.getElementById('editIdKelas').value = kelas;
         document.getElementById('editTahunAkademik').value = tahun_akademik;
         document.getElementById('editIdProdi').value = id_prodi;
         document.getElementById('editSemester').value = semester;

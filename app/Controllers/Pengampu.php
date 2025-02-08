@@ -60,6 +60,7 @@ class Pengampu extends BaseController
         $kelas = $this->request->getPost('kelas');
         $tahun_akademik = $this->request->getPost('tahun_akademik');
         $semester = $this->request->getPost('semester');
+        $id_ruang = $this->request->getPost('id_ruang');
 
         // Cek apakah data sudah ada
         $existingData = $this->pengampuModel
@@ -68,6 +69,7 @@ class Pengampu extends BaseController
             ->where('kelas', $kelas)
             ->where('tahun_akademik', $tahun_akademik)
             ->where('semester', $semester)
+            ->where('id_ruang', $id_ruang)
             ->first();
 
         if ($existingData) {
@@ -84,7 +86,6 @@ class Pengampu extends BaseController
             'tahun_akademik' => $tahun_akademik,
             'id_prodi' => $this->request->getPost('id_prodi'),
             'semester' => $semester,
-            'kuota' => $this->request->getPost('kuota'),
             'id_ruang' => $this->request->getPost('id_ruang'),
         ]);
 
@@ -102,14 +103,17 @@ class Pengampu extends BaseController
         $kelas = $this->request->getPost('kelas');
         $tahun_akademik = $this->request->getPost('tahun_akademik');
         $semester = $this->request->getPost('semester');
+        $id_ruang = $this->request->getPost('id_ruang');
 
-        // Cek apakah data sudah ada
+        // Cek apakah data sudah ada (kecuali data yang sedang diupdate)
         $existingData = $this->pengampuModel
             ->where('id_mk', $id_mk)
             ->where('id_dosen', $id_dosen)
             ->where('kelas', $kelas)
             ->where('tahun_akademik', $tahun_akademik)
             ->where('semester', $semester)
+            ->where('id_ruang', $id_ruang)
+            ->where('id !=', $id) // Exclude the current record being updated
             ->first();
 
         if ($existingData) {
@@ -117,16 +121,20 @@ class Pengampu extends BaseController
             session()->setFlashdata('error', 'Data pengampu sudah ada!');
             return redirect()->to('/pengampu');
         }
+
+        // Jika data belum ada, update data
         $this->pengampuModel->update($id, [
-            'id_mk' => $this->request->getPost('id_mk'),
-            'id_dosen' => $this->request->getPost('id_dosen'),
-            'id_kelas' => $this->request->getPost('id_kelas'),
-            'id_tahun_akademik' => $this->request->getPost('id_tahun_akademik'),
+            'id_mk' => $id_mk,
+            'id_dosen' => $id_dosen,
+            'kelas' => $kelas,
+            'tahun_akademik' => $tahun_akademik,
             'id_prodi' => $this->request->getPost('id_prodi'),
-            'id_semester' => $this->request->getPost('id_semester'),
-            'kuota' => $this->request->getPost('kuota'),
-            'id_ruang' => $this->request->getPost('id_ruang'),
+            'semester' => $semester,
+            'id_ruang' => $id_ruang,
         ]);
+
+        // Tampilkan notifikasi sukses
+        session()->setFlashdata('success', 'Data pengampu berhasil diupdate!');
         return redirect()->to('/pengampu');
     }
 
