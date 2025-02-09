@@ -56,7 +56,7 @@
                             <!-- Sidenav Menu Heading (Core)-->
                             <div class="sidenav-menu-heading">Main Navigation</div>
                             
-                            <a class="nav-link" href="/">
+                            <a class="nav-link" href="/dashboard">
                                 <div class="nav-link-icon"><i data-feather="activity"></i></div>
                                 Dashboard
                             </a>
