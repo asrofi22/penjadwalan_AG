@@ -24,7 +24,7 @@
             <div class="card mb-4">
                 <div class="card-header">Data Prodi</div>
                 <div class="card-body">
-                    <table id="datatablesSimple" style="font-size: 12px;">
+                    <table id="datatablesSimple" class="table table-striped table-bordered" style="font-size: 12px;">
                         <thead>
                             <tr>
                                 <th>No</th>

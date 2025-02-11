@@ -19,10 +19,10 @@
                             </div>
                         </h6>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#!">
+                        <!-- <a class="dropdown-item" href="#!">
                             <div class="dropdown-item-icon"><i data-feather="settings"></i></div>
                             Account
-                        </a>
+                        </a> -->
                         <a class="dropdown-item" href="/logout">
                             <div class="dropdown-item-icon"><i data-feather="log-out"></i></div>
                             Logout
@@ -56,7 +56,7 @@
                             <!-- Sidenav Menu Heading (Core)-->
                             <div class="sidenav-menu-heading">Main Navigation</div>
                             
-                            <a class="nav-link" href="/dashboard">
+                            <a class="nav-link" href="/">
                                 <div class="nav-link-icon"><i data-feather="activity"></i></div>
                                 Dashboard
                             </a>

@@ -7,17 +7,13 @@
                         <div class="container-xl px-4">
                             <div class="page-header-content pt-4">
                                 <div class="row align-items-center justify-content-between">
-                                    <div class="col-auto mt-4">
-                                        <h1 class="page-header-title">
-                                            <div class="page-header-icon"><i data-feather="activity"></i></div>
-                                            Dashboard
-                                        </h1>
-                                        <div class="page-header-subtitle">Sistem Cerdas Penjadwalan Mata Kuliah FST</div>
-                                    </div>
-                                    <div class="col-12 col-xl-auto mt-4">
-                                        <div class="input-group input-group-joined border-0" style="width: 16.5rem">
-                                            <span class="input-group-text"><i class="text-primary" data-feather="calendar"></i></span>
-                                            <input class="form-control ps-0 pointer" id="litepickerRangePlugin" placeholder="Select date range..." />
+                                    <div class="col-auto mt-4 d-flex align-items-center">
+                                        <img src="<?= base_url('img/fst.png') ?>" alt="Logo" class="me-3" width="80" height="80">
+                                        <div>
+                                            <h1 class="page-header-title">
+                                                <i class="me-2" data-feather="activity"></i> Dashboard
+                                            </h1>
+                                            <div class="page-header-subtitle text-white-75">Sistem Cerdas Penjadwalan Mata Kuliah FST</div>
                                         </div>
                                     </div>
                                 </div>
@@ -29,15 +25,15 @@
                         <div class="row">
                             <div class="col-12 mb-4">
                                 <div class="card h-100">
-                                    <div class="card-body h-100 p-5">
+                                    <div class="card-body h-100 p-4">
                                         <div class="row align-items-center">
                                             
-                                                <div class="col-lg-8 text-center text-lg-start mb-4 mb-lg-0">
+                                                <div class="col-lg-8 text-center text-lg-start mb-2 mb-lg-0">
                                                     <h1 class="text-primary">Selamat Datang di Sistem Cerdas Penjadwalan Mata Kuliah FST!</h1>
                                                     <p class="text-gray-700 mb-0">Kelola jadwal mata kuliah dengan mudah, cepat, dan akurat. Sistem ini dirancang untuk membantu mengatur jadwal secara efisien, mengurangi resiko bentrok jadwal, dan mendukung kegiatan akademik di Fakultas Sains dan Teknologi.</p>
                                                 </div>
                                             
-                                            <div class="col-lg-4 text-center"><img class="img-fluid" src="<?= base_url(); ?>/assets/img/illustrations/at-work.svg" style="max-width: 20rem" /></div>
+                                            <div class="col-lg-4 text-center"><img class="img-fluid" src="<?= base_url(); ?>/img/ilustrasi2.jpg" style="max-width: 19rem" /></div>
                                         </div>
                                     </div>
                                 </div>

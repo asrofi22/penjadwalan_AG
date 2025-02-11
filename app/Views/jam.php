@@ -12,7 +12,7 @@
                                 <div class="page-header-icon"><i data-feather="filter"></i></div>
                                 Tabel Data Jam
                             </h1>
-                            <div class="page-header-subtitle">An extension of the Simple DataTables library, customized for SB Admin Pro</div>
+                            <!-- <div class="page-header-subtitle">An extension of the Simple DataTables library, customized for SB Admin Pro</div> -->
                         </div>
                         <div class="col-auto mt-4">
                             <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalTambah">Tambah Data</button>
@@ -27,7 +27,7 @@
             <div class="card mb-4">
                 <div class="card-header">Data Jam</div>
                 <div class="card-body">
-                    <table id="datatablesSimple" style="font-size: 12px;">
+                    <table id="datatablesSimple" class="table table-striped table-bordered" style="font-size: 12px;">
                         <thead>
                             <tr>
                                 <th>No</th>
@@ -38,16 +38,7 @@
                                 <th>Aksi</th>
                             </tr>
                         </thead>
-                        <tfoot>
-                            <tr>
-                                <th>No</th>
-                                <th>Range Jam</th>
-                                <th>SKS</th>
-                                <th>Sesi</th>
-                                <th>ID Jam</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </tfoot>
+                        
                         <tbody>
                             <?php $no = 1; // Inisialisasi nomor urut ?>
                             <?php foreach ($jam_list as $jam): ?>

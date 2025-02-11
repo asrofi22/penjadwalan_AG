@@ -12,7 +12,6 @@
                                 <div class="page-header-icon"><i data-feather="filter"></i></div>
                                 Tabel Data Hari
                             </h1>
-                            <div class="page-header-subtitle">An extension of the Simple DataTables library, customized for SB Admin Pro</div>
                         </div>
                         <div class="col-auto mt-4">
                             <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalTambah">Tambah Data</button>
@@ -27,7 +26,7 @@
             <div class="card mb-4">
                 <div class="card-header">Data Hari</div>
                 <div class="card-body">
-                    <table id="datatablesSimple" style="font-size: 12px;">
+                    <table id="datatablesSimple" class="table table-striped table-bordered" style="font-size: 12px;">
                         <thead>
                             <tr>
                                 <th>No</th>
@@ -36,14 +35,7 @@
                                 <th>Aksi</th>
                             </tr>
                         </thead>
-                        <tfoot>
-                            <tr>
-                                <th>No</th>
-                                <th>Hari</th>
-                                <th>ID Hari</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </tfoot>
+                        
                         <tbody>
                             <?php $no = 1; // Inisialisasi nomor urut ?>
                             <?php foreach ($hari_list as $hari): ?>

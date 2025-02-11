@@ -22,12 +22,15 @@
         </header>
         <div class="container-xl px-4 mt-n10">
             <div class="card mb-4">
-                <div class="card-header">Data Dosen</div>
-                <div class="card-body">
-                <div class="col-auto">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span>Data Dosen</span>
                     <a href="/dosen/cetak" class="btn btn-primary" target="_blank">Cetak Data</a>
                 </div>
-                    <table id="datatablesSimple" style="font-size: 12px;">
+                <div class="card-body">
+                <!-- <div class="col-auto">
+                    <a href="/dosen/cetak" class="btn btn-primary" target="_blank">Cetak Data</a>
+                </div> -->
+                    <table id="datatablesSimple" class="table table-striped table-bordered" style="font-size: 12px;">
                         <thead>
                             <tr>
                                 <th>No</th>

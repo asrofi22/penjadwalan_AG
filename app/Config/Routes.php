@@ -8,14 +8,14 @@ use CodeIgniter\Router\RouteCollection;
 
 // Halaman publik (tidak memerlukan login)
 
-$routes->get('/', 'Jadwal::index'); // Halaman publik untuk menampilkan jadwal
+// $routes->get('/', 'Jadwal::index'); // Halaman publik untuk menampilkan jadwal
 $routes->get('/jadwal', 'Jadwal::index'); // Halaman publik untuk menampilkan jadwal
 $routes->get('/jadwal/cetak_pdf', 'Jadwal::cetak_pdf'); // Halaman publik untuk menampilkan jadwal
 
 // Grup route yang memerlukan login
 $routes->group('', ['filter' => 'login'], function ($routes) {
     // Route untuk fitur admin
-    $routes->get('/dashboard', 'Home::index');
+    $routes->get('/', 'Home::index');
     $routes->get('home/user', 'Home::user');
 
     $routes->get('/jam', 'Jam::index');
