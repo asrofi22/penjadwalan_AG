@@ -42,6 +42,7 @@ class Dosen extends BaseController
         $validation->setRules([
             'nip' => 'required|numeric',
             'nama' => 'required',
+            'status_dosen' => 'required',
             'id_prodi' => 'required',
         ]);
 

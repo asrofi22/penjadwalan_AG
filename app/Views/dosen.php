@@ -136,11 +136,11 @@
                         <div class="modal-body">
                             <div class="mb-3">
                                 <label for="nip" class="form-label">NIP</label>
-                                <input type="text" class="form-control" id="nip" name="nip" >
+                                <input type="text" class="form-control" id="nip" name="nip" required>
                             </div>
                             <div class="mb-3">
                                 <label for="nama" class="form-label">Nama</label>
-                                <input type="text" class="form-control" id="nama" name="nama" >
+                                <input type="text" class="form-control" id="nama" name="nama" required>
                             </div>
                             <div class="mb-3">
                                 <label for="pangkat" class="form-label">Pangkat/Gol</label>
@@ -160,7 +160,7 @@
                             </div>
                             <div class="mb-3">
                                 <label for="status_dosen" class="form-label">Status</label>
-                                <select class="form-control" id="status_dosen" name="status_dosen" >
+                                <select class="form-control" id="status_dosen" name="status_dosen" required>
                                     <option value="">Pilih Status</option>
                                     <option value="1">Dosen Tetap PNS</option>
                                     <option value="2">Dosen PPPK</option>
@@ -171,7 +171,7 @@
                             </div>
                             <div class="mb-3">
                                 <label for="id_prodi" class="form-label">Homebase</label>
-                                <select class="form-control" id="id_prodi" name="id_prodi" >
+                                <select class="form-control" id="id_prodi" name="id_prodi" required>
                                     <?php foreach ($prodi_list as $prodi): ?>
                                     <option value="<?= $prodi['id']; ?>"><?= $prodi['nama_prodi']; ?></option>
                                     <?php endforeach; ?>
