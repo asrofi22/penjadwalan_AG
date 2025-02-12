@@ -157,6 +157,7 @@ class Penjadwalan2 extends Controller
 
     public function store()
     {
+        // set_time_limit(0);
 
         $data = [
             'prodi_list' => $this->ProdiModel->findAll(),

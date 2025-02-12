@@ -27,6 +27,19 @@
                     <a href="/dosen/cetak" class="btn btn-primary" target="_blank">Cetak Data</a>
                 </div>
                 <div class="card-body">
+                <?php if (session()->getFlashdata('error')): ?>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <?= session()->getFlashdata('error') ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <?php endif; ?>
+
+            <?php if (session()->getFlashdata('success')): ?>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <?= session()->getFlashdata('success') ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <?php endif; ?>
                 <!-- <div class="col-auto">
                     <a href="/dosen/cetak" class="btn btn-primary" target="_blank">Cetak Data</a>
                 </div> -->
@@ -249,7 +262,15 @@
     </main>
 </div>
 
+<script>// Script untuk menampilkan modal tambah jika ada error
+    $(document).ready(function() {
+        <?php if (session()->getFlashdata('error') || session()->get('errors')): ?>
+            $('#modalTambah').modal('show');
+        <?php endif; ?>
+    });
+</script>
 <script>
+    
     // Isi modal edit dengan data dari tombol yang diklik
     const modalEdit = document.getElementById('modalEdit');
     modalEdit.addEventListener('show.bs.modal', function (event) {

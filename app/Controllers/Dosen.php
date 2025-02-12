@@ -33,20 +33,48 @@ class Dosen extends BaseController
 
     public function store()
     {
+        // Ambil data dari form
+        $nip = $this->request->getPost('nip');
+        $nama = $this->request->getPost('nama');
+
+        // Validasi input
+        $validation = \Config\Services::validation();
+        $validation->setRules([
+            'nip' => 'required|numeric',
+            'nama' => 'required',
+            'id_prodi' => 'required',
+        ]);
+
+        if (!$validation->withRequest($this->request)->run()) {
+            // Jika validasi gagal, kembalikan ke form dengan pesan error
+            return redirect()->to('/dosen')->withInput()->with('errors', $validation->getErrors());
+        }
+
+        // Cek apakah NIP atau Nama sudah ada di database
+        $existingNip = $this->dosenModel->where('nip', $nip)->first();
+        $existingNama = $this->dosenModel->where('nama', $nama)->first();
+
+        if ($existingNip || $existingNama) {
+            // Jika data sudah ada, set flashdata dan redirect kembali ke form
+            session()->setFlashdata('error', 'Data dengan NIP atau Nama yang sama sudah ada dalam database.');
+            return redirect()->to('/dosen')->withInput();
+        }
+
+        // Jika data belum ada, simpan data baru
         $this->dosenModel->save([
-            'nip' => $this->request->getPost('nip'),
-            'nama' => $this->request->getPost('nama'),
+            'nip' => $nip,
+            'nama' => $nama,
             'pangkat' => $this->request->getPost('pangkat'),
             'telp' => $this->request->getPost('telp'),
             'email' => $this->request->getPost('email'),
             'tgl_lahir' => $this->request->getPost('tgl_lahir'),
-            // 'password' => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
             'status_dosen' => $this->request->getPost('status_dosen'),
             'id_prodi' => $this->request->getPost('id_prodi'),
             'id_scopus' => $this->request->getPost('id_scopus'),
             'id_dosen' => $this->request->getPost('id_dosen'),
         ]);
 
+        session()->setFlashdata('success', 'Data berhasil disimpan.');
         return redirect()->to('/dosen');
     }
 
