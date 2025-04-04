@@ -10,78 +10,86 @@
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/litepicker/dist/css/litepicker.css" rel="stylesheet" />
     <link href="<?= base_url(); ?>/css/styles.css" rel="stylesheet" />
-    <link rel="icon" type="image/x-icon" href="<?= base_url(); ?>/assets/img/favicon.png" />
+    <link rel="icon" type="image/x-icon" href="<?= base_url(); ?>/img/fst.png" />
     <script data-search-pseudo-elements defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/js/all.min.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.28.0/feather.min.js" crossorigin="anonymous"></script>
 
     <style>
     /* Tabel Responsive */
     .table-responsive {
-        overflow-x: auto; /* Aktifkan scroll horizontal jika tabel terlalu lebar */
-        -webkit-overflow-scrolling: touch; /* Smooth scrolling untuk perangkat mobile */
-    }
-
-    /* Ukuran font untuk tabel */
-    .small-font {
-        font-size: 14px; /* Ubah ukuran sesuai kebutuhan */
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
     }
 
     .small-font th, .small-font td {
-        font-size: 13.5px; /* Terapkan ukuran font pada sel header dan isi tabel */
+        font-size: 13.5px;
     }
 
-    /* Sembunyikan elemen pencarian bawaan DataTables */
-    .dataTables_filter {
-        display: none;
-    }
-
-    /* Tata letak untuk input pencarian dan entries per page */
-    .datatable-top {
+    /* Tata letak header agar tidak menutupi konten */
+    .page-header {
+        background: url('<?= base_url(); ?>/img/uinjambibanner.jpg') no-repeat center center;
+        background-size: cover;
+        height: 200px;
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        margin-bottom: 1rem;
+        justify-content: center;
+        text-align: center;
+        color: white;
     }
 
-    .datatable-top .datatable-dropdown {
-        margin-right: 1rem;
+    .content-container {
+        margin-top: -50px; /* Menggeser konten ke bawah agar tidak menutupi header */
     }
 
-    .datatable-top .custom-search {
-        display: flex;
-        align-items: center;
-        flex-grow: 1; /* Input pencarian akan mengisi sisa ruang yang tersedia */
-        margin-left: 1rem; /* Jarak antara entries per page dan input pencarian */
+    /* Styling Navigasi */
+    .navbar {
+        background-color: #343a40;
     }
-
-    .datatable-top .custom-search input {
-        margin-left: 1rem;
+    .navbar .nav-link {
+        color: white;
     }
-</style>
+    .navbar .nav-link:hover {
+        color: #f8f9fa;
+    }
+    .navbar-brand img {
+        height: 40px;
+        margin-right: 10px;
+    }
+    </style>
 </head>
 <body class="nav-fixed">
 
+<!-- Navigasi -->
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="#">
+        <img src="<?= base_url(); ?>/img/fst.png" alt="Logo">Sistem Penjadwalan FST UIN Sutha</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link btn btn-primary text-white px-3" href="/">Login</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
 <div id="layoutSidenav_content">
     <main>
-        <header class="page-header page-header-dark bg-gradient-primary-to-secondary pb-10">
-            <div class="container-xl px-4">
-                <div class="page-header-content pt-4">
-                    <div class="row align-items-center justify-content-between">
-                        <div class="col-auto">
-                            <h1 class="page-header-title">
-                                <div class="page-header-icon"><i data-feather="calendar"></i></div>
-                                Jadwal Kuliah
-                            </h1>
-                        </div>
-                    </div>
-                </div>
+        <header class="page-header">
+            <div class="container">
+                <h1 class="page-header-title text-white">
+                    <i data-feather=""></i> Jadwal Kuliah Fakultas Sains dan Teknologi UIN Sutha Jambi
+                </h1>
             </div>
         </header>
 
-        <div class="container-xl px-4 mt-n10">
-    <div class="card mb-4">
-        <div class="card-header">Data Jadwal Kuliah</div>
-        <div class="card-body">
+        <div class="container-xl px-4 content-container">
+
+            <div class="card mb-4">
+                <div class="card-header">Data Jadwal Kuliah</div>
+                <div class="card-body">
             <!-- Form Filter -->
             <form method="GET" action="<?= base_url('jadwal'); ?>">
                 <div class="row mb-3">
@@ -224,7 +232,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const customSearch = document.createElement('div');
         customSearch.className = 'custom-search';
         customSearch.innerHTML = `
-            <input type="text" id="searchInput" class="form-control" placeholder="Cari berdasarkan kata kunci (contoh: Kimia, III B, LIDIA)">
+            <input type="text" id="searchInput" class="form-control" placeholder="Masukkan kata kunci">
         `;
         datatableTop.appendChild(customSearch);
     }

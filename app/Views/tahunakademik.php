@@ -3,6 +3,7 @@
 <?= $this->section('content'); ?>
 <div id="layoutSidenav_content">
     <main>
+        
         <header class="page-header page-header-dark bg-gradient-primary-to-secondary pb-10">
             <div class="container-xl px-4">
                 <div class="page-header-content pt-4">
@@ -25,6 +26,18 @@
             <div class="card mb-4">
                 <div class="card-header">Tabel Data Tahun Akademik</div>
                 <div class="card-body">
+                    <?php if (session()->getFlashdata('error')): ?>
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <?= session()->getFlashdata('error') ?>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    <?php endif; ?>
+                    <?php if (session()->getFlashdata('message')): ?>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <?= session()->getFlashdata('message') ?>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    <?php endif; ?>
                     <table id="datatablesSimple" class="table table-striped table-bordered" style="font-size: 12px;">
                         <thead>
                             <tr>

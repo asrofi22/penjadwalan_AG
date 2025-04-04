@@ -116,7 +116,7 @@
                     <?php endif; ?>
 
                     <?php if (isset($rs_jadwal) && count($rs_jadwal) !== 0): ?>  
-                        <a href="<?= base_url(); ?>penjadwalan/hapus_jadwal" class="btn btn-danger pull-right" onclick="ShowProgressAnimation();">Hapus Jadwal</a>
+                        <!-- <a href="<?= base_url(); ?>penjadwalan/hapus_jadwal" class="btn btn-danger pull-right" onclick="ShowProgressAnimation();">Hapus Jadwal</a> -->
                         <a href="<?= base_url(); ?>penjadwalan/simpan_jadwal" class="btn btn-success pull-right" onclick="ShowProgressAnimation();">Simpan Jadwal</a>
                         <!-- <a href="<?= base_url(); ?>penjadwalan/excel_report" class="btn btn-primary pull-right">Cetak Excel</a> -->
                     <?php endif; ?>

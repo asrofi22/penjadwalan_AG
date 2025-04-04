@@ -29,12 +29,22 @@ class Hari extends BaseController
     // 3. Simpan data baru
     public function store()
     {
+        $nama = $this->request->getPost('nama');
+        $id_hari = $this->request->getPost('id_hari');
+
+        // Cek duplikasi data
+        $existingData = $this->HariModel->where('nama', $nama)->orWhere('id_hari', $id_hari)->first();
+        if ($existingData) {
+            return redirect()->to('/hari')->with('error', 'Data hari sudah ada!');
+        }
+
         $this->HariModel->save([
-            'nama'      => $this->request->getPost('nama'),
-            'id_hari'    => $this->request->getPost('id_hari'),
+            'nama'      => $nama,
+            'id_hari'   => $id_hari,
         ]);
-        return redirect()->to('/hari')->with('message', 'Data berhasil ditambahkan!');
+        return redirect()->to('/hari')->with('message', 'Data hari berhasil ditambahkan!');
     }
+
 
     // 4. Form edit data
     public function edit($id)
@@ -47,11 +57,20 @@ class Hari extends BaseController
     // 5. Update data
     public function update($id)
     {
+        $nama = $this->request->getPost('nama');
+        $id_hari = $this->request->getPost('id_hari');
+
+        // Cek duplikasi data, kecuali data yang sedang diupdate
+        $existingData = $this->HariModel->where('nama', $nama)->orWhere('id_hari', $id_hari)->where('id !=', $id)->first();
+        if ($existingData) {
+            return redirect()->to('/hari')->with('error', 'Data hari sudah ada!');
+        }
+
         $this->HariModel->update($id, [
-            'hari'      => $this->request->getPost('hari'),
-            'id_hari'    => $this->request->getPost('id_hari'),
+            'nama'      => $nama,
+            'id_hari'   => $id_hari,
         ]);
-        return redirect()->to('/hari')->with('message', 'Data berhasil diperbarui!');
+        return redirect()->to('/hari')->with('message', 'Data hari berhasil diperbarui!');
     }
 
     // 6. Hapus data

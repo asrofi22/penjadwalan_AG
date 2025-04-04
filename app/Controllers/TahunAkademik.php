@@ -23,12 +23,28 @@ class TahunAkademik extends BaseController
     }
 
     // Menyimpan data baru
+    // public function store()
+    // {
+    //     $this->tahunakademikModel->save([
+    //         'tahun' => $this->request->getPost('tahun')
+    //     ]);
+    //     return redirect()->to('/tahunakademik')->with('success', 'Data berhasil ditambahkan.');
+    // }
+
     public function store()
     {
+        $tahun = $this->request->getPost('tahun');
+
+        // Cek duplikasi data
+        $existingData = $this->tahunakademikModel->where('tahun', $tahun)->first();
+        if ($existingData) {
+            return redirect()->to('/tahunakademik')->with('error', 'Data tahun akademik sudah ada!');
+        }
+
         $this->tahunakademikModel->save([
-            'tahun' => $this->request->getPost('tahun')
+            'tahun'      => $tahun,
         ]);
-        return redirect()->to('/tahunakademik')->with('success', 'Data berhasil ditambahkan.');
+        return redirect()->to('/tahunakademik')->with('message', 'Data tahun akademik berhasil ditambahkan!');
     }
 
     // Menampilkan data untuk diedit
@@ -41,12 +57,28 @@ class TahunAkademik extends BaseController
     }
 
     // Memperbarui data
+    // public function update($id)
+    // {
+    //     $this->tahunakademikModel->update($id, [
+    //         'tahun' => $this->request->getPost('tahun')
+    //     ]);
+    //     return redirect()->to('/tahunakademik')->with('success', 'Data berhasil diperbarui.');
+    // }
+
     public function update($id)
     {
+        $tahun = $this->request->getPost('tahun');
+
+        // Cek duplikasi data, kecuali data yang sedang diupdate
+        $existingData = $this->tahunakademikModel->where('tahun', $tahun)->where('id !=', $id)->first();
+        if ($existingData) {
+            return redirect()->to('/tahunakademik')->with('error', 'Data tahun akademik sudah ada!');
+        }
+
         $this->tahunakademikModel->update($id, [
-            'tahun' => $this->request->getPost('tahun')
+            'tahun'      => $tahun,
         ]);
-        return redirect()->to('/tahunakademik')->with('success', 'Data berhasil diperbarui.');
+        return redirect()->to('/tahunakademik')->with('message', 'Data tahun akademik berhasil diperbarui!');
     }
 
     // Menghapus data

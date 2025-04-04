@@ -27,26 +27,51 @@ class Ruang extends BaseController
 
     public function store()
     {
+        $nama = $this->request->getPost('nama');
+        $id_ruang = $this->request->getPost('id_ruang');
+
+        // Cek duplikasi data
+        $existingData = $this->ruangModel
+            ->where('nama', $nama)
+            ->orWhere('id_ruang', $id_ruang)
+            ->first();
+
+        if ($existingData) {
+            return redirect()->to('/ruang')->with('error', 'Data sudah ada!');
+        }
+
         $this->ruangModel->save([
-            'nama' => $this->request->getPost('nama'),
-            // 'kapasitas' => $this->request->getPost('kapasitas'),
+            'nama' => $nama,
             'jenis' => $this->request->getPost('jenis'),
             'id_prodi' => $this->request->getPost('id_prodi'),
             'lantai' => $this->request->getPost('lantai'),
-            'id_ruang' => $this->request->getPost('id_ruang') ?? null, // Optional
+            'id_ruang' => $id_ruang ?? null, // Optional
         ]);
         return redirect()->to('/ruang')->with('message', 'Data ruang berhasil ditambahkan!');
     }
 
     public function update($id)
     {
+        $nama = $this->request->getPost('nama');
+        $id_ruang = $this->request->getPost('id_ruang');
+
+        // Cek duplikasi data, kecuali data yang sedang diupdate
+        $existingData = $this->ruangModel
+            ->where('nama', $nama)
+            ->orWhere('id_ruang', $id_ruang)
+            ->where('id !=', $id)
+            ->first();
+
+        if ($existingData) {
+            return redirect()->to('/ruang')->with('error', 'Data sudah ada!');
+        }
+
         $this->ruangModel->update($id, [
-            'nama' => $this->request->getPost('nama'),
-            // 'kapasitas' => $this->request->getPost('kapasitas'),
+            'nama' => $nama,
             'jenis' => $this->request->getPost('jenis'),
             'id_prodi' => $this->request->getPost('id_prodi'),
             'lantai' => $this->request->getPost('lantai'),
-            'id_ruang' => $this->request->getPost('id_ruang') ?? null,
+            'id_ruang' => $id_ruang ?? null,
         ]);
         return redirect()->to('/ruang')->with('message', 'Data ruang berhasil diperbarui!');
     }

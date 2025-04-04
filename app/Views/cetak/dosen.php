@@ -41,7 +41,7 @@
     </style>
 </head>
 <body>
-    <h1>Data Dosen</h1>
+    <h1>Data Dosen FST UIN Sutha Jambi</h1>
     <table>
         <thead>
             <tr>

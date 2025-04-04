@@ -29,11 +29,24 @@ class Jam extends BaseController
     // 3. Simpan data baru
     public function store()
     {
+        $range_jam = $this->request->getPost('range_jam');
+        $id_jam = $this->request->getPost('id_jam');
+
+        // Cek duplikasi data
+        $existingData = $this->JamModel
+            ->where('range_jam', $range_jam)
+            ->orWhere('id_jam', $id_jam)
+            ->first();
+
+        if ($existingData) {
+            return redirect()->to('/jam')->with('error', 'Data sudah ada!');
+        }
+
         $this->JamModel->save([
-            'range_jam' => $this->request->getPost('range_jam'),
+            'range_jam' => $range_jam,
             'sks'       => $this->request->getPost('sks'),
             'sesi'      => $this->request->getPost('sesi'),
-            'id_jam'    => $this->request->getPost('id_jam'),
+            'id_jam'    => $id_jam,
         ]);
         return redirect()->to('/jam')->with('message', 'Data berhasil ditambahkan!');
     }
@@ -49,11 +62,25 @@ class Jam extends BaseController
     // 5. Update data
     public function update($id)
     {
+        $range_jam = $this->request->getPost('range_jam');
+        $id_jam = $this->request->getPost('id_jam');
+
+        // Cek duplikasi data, kecuali data yang sedang diupdate
+        $existingData = $this->JamModel
+            ->where('range_jam', $range_jam)
+            ->orWhere('id_jam', $id_jam)
+            ->where('id !=', $id)
+            ->first();
+
+        if ($existingData) {
+            return redirect()->to('/jam')->with('error', 'Data sudah ada!');
+        }
+
         $this->JamModel->update($id, [
-            'range_jam' => $this->request->getPost('range_jam'),
+            'range_jam' => $range_jam,
             'sks'       => $this->request->getPost('sks'),
             'sesi'      => $this->request->getPost('sesi'),
-            'id_jam'    => $this->request->getPost('id_jam'),
+            'id_jam'    => $id_jam,
         ]);
         return redirect()->to('/jam')->with('message', 'Data berhasil diperbarui!');
     }

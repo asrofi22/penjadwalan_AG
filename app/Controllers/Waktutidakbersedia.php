@@ -32,34 +32,78 @@ class Waktutidakbersedia extends BaseController
         return view('waktutidakbersedia', $data);
     }
 
+    // public function store()
+    // {
+    //     $this->waktutidakbersediaModel = new WaktutidakbersediaModel();
+
+    //     $data = [
+    //         'id_dosen' => $this->request->getPost('id_dosen'),
+    //         'id_hari'  => $this->request->getPost('id_hari'),
+    //         'id_jam'   => implode(',', $this->request->getPost('id_jam')),
+    //     ];
+
+    //     $this->waktutidakbersediaModel->save($data);
+
+    //     return redirect()->to('/waktutidakbersedia')->with('success', 'Data berhasil ditambahkan.');
+    // }
+
     public function store()
     {
+        // Inisialisasi model
         $this->waktutidakbersediaModel = new WaktutidakbersediaModel();
 
-        $data = [
-            'id_dosen' => $this->request->getPost('id_dosen'),
-            'id_hari'  => $this->request->getPost('id_hari'),
-            'id_jam'   => implode(',', $this->request->getPost('id_jam')),
-        ];
+        $id_dosen = $this->request->getPost('id_dosen');
+        $id_hari = $this->request->getPost('id_hari');
+        $id_jam = $this->request->getPost('id_jam');
 
-        $this->waktutidakbersediaModel->save($data);
+        // Cek duplikasi data
+        $existingData = $this->waktutidakbersediaModel->where('id_dosen', $id_dosen)->orWhere('id_hari', $id_hari)->orWhere('id_jam', $id_jam)->first();
+        if ($existingData) {
+            return redirect()->to('/waktutidakbersedia')->with('error', 'Data WTB sudah ada!');
+        }
 
-        return redirect()->to('/waktutidakbersedia')->with('success', 'Data berhasil ditambahkan.');
+        $this->waktutidakbersediaModel->save([
+            'id_dosen' => $id_dosen,
+            'id_hari'  => $id_hari,
+            'id_jam'   => $id_jam,
+        ]);
+
+        return redirect()->to('/waktutidakbersedia')->with('message', 'Data WTB berhasil ditambahkan!');
     }
+
+    // public function update($id)
+    // {
+    //     $this->waktutidakbersediaModel = new WaktutidakbersediaModel();
+
+    //     $data = [
+    //         'id_dosen' => $this->request->getPost('id_dosen'),
+    //         'id_hari'  => $this->request->getPost('id_hari'),
+    //         'id_jam'   => implode(',', $this->request->getPost('id_jam')),
+    //     ];
+
+    //     $this->waktutidakbersediaModel->update($id, $data);
+
+    //     return redirect()->to('/waktutidakbersedia')->with('success', 'Data berhasil diperbarui.');
+    // }
 
     public function update($id)
     {
-        $this->waktutidakbersediaModel = new WaktutidakbersediaModel();
+        $id_dosen = $this->request->getPost('id_dosen');
+        $id_hari = $this->request->getPost('id_hari');
+        $id_jam = $this->request->getPost('id_jam');
 
-        $data = [
-            'id_dosen' => $this->request->getPost('id_dosen'),
-            'id_hari'  => $this->request->getPost('id_hari'),
-            'id_jam'   => implode(',', $this->request->getPost('id_jam')),
-        ];
+        // Cek duplikasi data, kecuali data yang sedang diupdate
+        $existingData = $this->waktutidakbersediaModel->where('id_dosen', $id_dosen)->orWhere('id_hari', $id_hari)->orWhere('id_jam', $id_jam)->where('id !=', $id)->first();
+        if ($existingData) {
+            return redirect()->to('/waktutidakbersedia')->with('error', 'Data WTB sudah ada!');
+        }
 
-        $this->waktutidakbersediaModel->update($id, $data);
-
-        return redirect()->to('/waktutidakbersedia')->with('success', 'Data berhasil diperbarui.');
+        $this->waktutidakbersediaModel->update($id, [
+            'id_dosen'      => $id_dosen,
+            'id_hari'   => $id_hari,
+            'id_jam'   => $id_jam,
+        ]);
+        return redirect()->to('/waktutidakbersedia')->with('message', 'Data WTB berhasil diperbarui!');
     }
 
     public function delete($id)
