@@ -47,7 +47,22 @@ class Kelas extends BaseController
 
     public function delete($id)
     {
-        $this->kelasModel->delete($id);
-        return redirect()->to('/kelas')->with('message', 'Data kelas berhasil dihapus!');
+        try {
+            $delete = $this->kelasModel->delete($id);
+            
+            if ($delete) {
+                session()->setFlashdata('success', 'Data berhasil dihapus');
+            } else {
+                session()->setFlashdata('error', 'Gagal menghapus data');
+            }
+        } catch (\CodeIgniter\Database\Exceptions\DatabaseException $e) {
+            if ($e->getCode() == 1451) {
+                session()->setFlashdata('error', 'Data tidak dapat dihapus karena masih digunakan di sistem');
+            } else {
+                session()->setFlashdata('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            }
+        }
+        
+        return redirect()->to('/kelas');
     }
 }

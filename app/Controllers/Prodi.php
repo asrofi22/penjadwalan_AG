@@ -62,7 +62,22 @@ class Prodi extends BaseController
 
     public function delete($id)
     {
-        $this->prodiModel->delete($id);
+        try {
+            $delete = $this->prodiModel->delete($id);
+            
+            if ($delete) {
+                session()->setFlashdata('success', 'Data berhasil dihapus');
+            } else {
+                session()->setFlashdata('error', 'Gagal menghapus data');
+            }
+        } catch (\CodeIgniter\Database\Exceptions\DatabaseException $e) {
+            if ($e->getCode() == 1451) {
+                session()->setFlashdata('error', 'Data tidak dapat dihapus karena masih digunakan di sistem');
+            } else {
+                session()->setFlashdata('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            }
+        }
+        
         return redirect()->to('/prodi');
     }
 }

@@ -84,8 +84,23 @@ class TahunAkademik extends BaseController
     // Menghapus data
     public function delete($id)
     {
-        $this->tahunakademikModel->delete($id);
-        return redirect()->to('/tahunakademik')->with('success', 'Data berhasil dihapus.');
+        try {
+            $delete = $this->tahunakademikModel->delete($id);
+            
+            if ($delete) {
+                session()->setFlashdata('success', 'Data berhasil dihapus');
+            } else {
+                session()->setFlashdata('error', 'Gagal menghapus data');
+            }
+        } catch (\CodeIgniter\Database\Exceptions\DatabaseException $e) {
+            if ($e->getCode() == 1451) {
+                session()->setFlashdata('error', 'Data tidak dapat dihapus karena masih digunakan di sistem');
+            } else {
+                session()->setFlashdata('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            }
+        }
+        
+        return redirect()->to('/tahunakademik');
     }
 
     public function semua_tahun()

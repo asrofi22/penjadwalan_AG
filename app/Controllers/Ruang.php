@@ -78,7 +78,22 @@ class Ruang extends BaseController
 
     public function delete($id)
     {
-        $this->ruangModel->delete($id);
-        return redirect()->to('/ruang')->with('message', 'Data ruang berhasil dihapus!');
+        try {
+            $delete = $this->ruangModel->delete($id);
+            
+            if ($delete) {
+                session()->setFlashdata('success', 'Data berhasil dihapus');
+            } else {
+                session()->setFlashdata('error', 'Gagal menghapus data');
+            }
+        } catch (\CodeIgniter\Database\Exceptions\DatabaseException $e) {
+            if ($e->getCode() == 1451) {
+                session()->setFlashdata('error', 'Data tidak dapat dihapus karena masih digunakan di sistem');
+            } else {
+                session()->setFlashdata('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            }
+        }
+        
+        return redirect()->to('/ruang');
     }
 }
