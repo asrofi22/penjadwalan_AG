@@ -28,6 +28,7 @@ class Semester extends BaseController
             'id_semester'   => $this->request->getPost('id_semester'),
         ];
 
+        session()->setFlashdata('success', 'Data berhasil disimpan.');
         $semesterModel->save($data);
         return redirect()->to('/semester');
     }

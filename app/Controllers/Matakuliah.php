@@ -60,7 +60,7 @@ class Matakuliah extends BaseController
         ]);
 
         // Tampilkan notifikasi sukses
-        session()->setFlashdata('success', 'Data mata kuliah berhasil ditambahkan!');
+        session()->setFlashdata('success', 'Data berhasil disimpan');
         return redirect()->to('/matakuliah');
     }
 

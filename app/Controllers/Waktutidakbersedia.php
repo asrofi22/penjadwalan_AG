@@ -68,7 +68,7 @@ class Waktutidakbersedia extends BaseController
             'id_jam'   => $id_jam,
         ]);
 
-        return redirect()->to('/waktutidakbersedia')->with('message', 'Data WTB berhasil ditambahkan!');
+        return redirect()->to('/waktutidakbersedia')->with('message', 'Data berhasil disimpan');
     }
 
     // public function update($id)

@@ -242,7 +242,7 @@ class Penjadwalan2 extends Controller
                 } 
                 
                 elseif($rs_data->getNumRows() < 3){
-                    $data['msg'] = 'Pengemapu Minimal 3 Data';
+                    $data['msg'] = 'Pengampu Minimal 3 Data';
                 }
                 else {
 
@@ -354,7 +354,7 @@ class Penjadwalan2 extends Controller
                         $finish = microtime(true);
                         $total_time = $finish - $start;
                         $total_menit = round(($total_time / 60), 4);
-                        $data['waktu'] = "Selesai dalam " . $total_menit . " menit";
+                        $data['waktu'] = "Data berhasil diproses, selesai dalam " . $total_menit . " menit";
                     }
                 }
             } else {

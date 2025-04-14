@@ -90,7 +90,7 @@ class Pengampu extends BaseController
         ]);
 
         // Tampilkan notifikasi sukses
-        session()->setFlashdata('success', 'Data pengampu berhasil ditambahkan!');
+        session()->setFlashdata('success', 'Data berhasil disimpan');
         return redirect()->to('/pengampu');
     }
 

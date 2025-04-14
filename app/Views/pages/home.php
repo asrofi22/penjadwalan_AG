@@ -3,7 +3,7 @@
 <?= $this->section('content'); ?>
             <div id="layoutSidenav_content">
                 <main>
-                    <header class="page-header page-header-dark bg-gradient-primary-to-secondary pb-10">
+                    <header class="page-header page-header-dark pb-10" style="background-color: #800000;">
                         <div class="container-xl px-4">
                             <div class="page-header-content pt-4">
                                 <div class="row align-items-center justify-content-between">
@@ -29,7 +29,7 @@
                                         <div class="row align-items-center">
                                             
                                                 <div class="col-lg-8 text-center text-lg-start mb-2 mb-lg-0">
-                                                    <h1 class="text-primary">Selamat Datang di Sistem Cerdas Penjadwalan Mata Kuliah FST!</h1>
+                                                    <h1 class="text-danger">Selamat Datang di Sistem Cerdas Penjadwalan Mata Kuliah FST!</h1>
                                                     <p class="text-gray-700 mb-0">Kelola jadwal mata kuliah dengan mudah, cepat, dan akurat. Sistem ini dirancang untuk membantu mengatur jadwal secara efisien, mengurangi resiko bentrok jadwal, dan mendukung kegiatan akademik di Fakultas Sains dan Teknologi.</p>
                                                 </div>
                                             
@@ -42,7 +42,7 @@
                         <!-- Example Colored Cards for Dashboard Demo-->
                         <div class="row">
                             <div class="col-lg-6 col-xl-3 mb-4">
-                                <div class="card bg-success text-white h-100">
+                                <div class="card bg-danger text-white h-100">
                                     <div class="card-body">
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div class="me-3">
@@ -76,7 +76,7 @@
                                 </div>
                             </div>
                             <div class="col-lg-6 col-xl-3 mb-4">
-                                <div class="card bg-primary text-white h-100">
+                                <div class="card bg-danger text-white h-100">
                                     <div class="card-body">
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div class="me-3">
@@ -93,7 +93,7 @@
                                 </div>
                             </div>
                             <div class="col-lg-6 col-xl-3 mb-4">
-                                <div class="card bg-warning text-white h-100">
+                                <div class="card bg-danger text-white h-100">
                                     <div class="card-body">
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div class="me-3">

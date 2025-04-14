@@ -32,6 +32,7 @@ class Kelas extends BaseController
             'id_prodi' => $this->request->getPost('id_prodi'),
             'id_kelas' => $this->request->getPost('id_kelas') ?? null, // Optional
         ]);
+        session()->setFlashdata('success', 'Data berhasil disimpan.');
         return redirect()->to('/kelas')->with('message', 'Data kelas berhasil ditambahkan!');
     }
 

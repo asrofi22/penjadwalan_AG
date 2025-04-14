@@ -36,6 +36,7 @@ class Prodi extends BaseController
             // 'id_jurusan' => $this->request->getPost('id_jurusan'),
         ]);
 
+        session()->setFlashdata('success', 'Data berhasil disimpan.');
         return redirect()->to('/prodi');
     }
 

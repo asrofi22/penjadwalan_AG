@@ -39,7 +39,7 @@ class Jam extends BaseController
             ->first();
 
         if ($existingData) {
-            return redirect()->to('/jam')->with('error', 'Data sudah ada!');
+            return redirect()->to('/jam')->with('error', 'Data jam sudah ada!');
         }
 
         $this->JamModel->save([
@@ -48,7 +48,7 @@ class Jam extends BaseController
             'sesi'      => $this->request->getPost('sesi'),
             'id_jam'    => $id_jam,
         ]);
-        return redirect()->to('/jam')->with('message', 'Data berhasil ditambahkan!');
+        return redirect()->to('/jam')->with('message', 'Data berhasil disimpan');
     }
 
     // 4. Form edit data

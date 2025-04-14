@@ -3,7 +3,7 @@
 <?= $this->section('content'); ?>
 <div id="layoutSidenav_content">
     <main>
-        <header class="page-header page-header-dark bg-gradient-primary-to-secondary pb-10">
+        <header class="page-header page-header-dark pb-10" style="background-color: #800000;">
             <div class="container-xl px-4">
                 <div class="page-header-content pt-4">
                     <div class="row align-items-center justify-content-between">
@@ -113,7 +113,7 @@
                                             >
                                         <i data-feather="edit"></i>
                                     </button>
-                                    <a href="/dosen/delete/<?= $dosen['id'] ?>" class="btn btn-datatable btn-icon btn-transparent-dark" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')"><i data-feather="trash-2"></i></a>
+                                    <a href="/dosen/delete/<?= $dosen['id'] ?>" class="btn btn-datatable btn-icon btn-transparent-dark"><i data-feather="trash-2"></i></a>
                                 </td>
                             </tr>
                             <?php endforeach; ?>
@@ -213,19 +213,19 @@
                             </div>
                             <div class="mb-3">
                                 <label for="editPangkat" class="form-label">Pangkat/Gol</label>
-                                <input type="text" class="form-control" id="editPangkat" name="pangkat" required>
+                                <input type="text" class="form-control" id="editPangkat" name="pangkat">
                             </div>
                             <div class="mb-3">
                                 <label for="editTelp" class="form-label">Telepon</label>
-                                <input type="text" class="form-control" id="editTelp" name="telp" required>
+                                <input type="text" class="form-control" id="editTelp" name="telp">
                             </div>
                             <div class="mb-3">
                                 <label for="editEmail" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="editEmail" name="email" required>
+                                <input type="email" class="form-control" id="editEmail" name="email">
                             </div>
                             <div class="mb-3">
                                 <label for="editTgl_lahir" class="form-label">Tgl Lahir</label>
-                                <input type="date" class="form-control" id="editTgl_lahir" name="tgl_lahir" required>
+                                <input type="date" class="form-control" id="editTgl_lahir" name="tgl_lahir">
                             </div>
                             <div class="mb-3">
                                 <label for="editStatusDosen" class="form-label">Status</label>
@@ -248,7 +248,7 @@
                             </div>
                             <div class="mb-3">
                                 <label for="editId_scopus" class="form-label">Id Scopus</label>
-                                <input type="text" class="form-control" id="editId_scopus" name="id_scopus" required>
+                                <input type="text" class="form-control" id="editId_scopus" name="id_scopus" >
                             </div>
                         </div>
                         <div class="modal-footer">

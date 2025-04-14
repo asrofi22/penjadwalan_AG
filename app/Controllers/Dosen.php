@@ -108,6 +108,7 @@ class Dosen extends BaseController
             'id_dosen' => $this->request->getPost('id_dosen')
         ]);
 
+        session()->setFlashdata('success', 'Data berhasil diperbarui.');
         return redirect()->to('/dosen');
     }
 

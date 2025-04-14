@@ -44,6 +44,7 @@ class TahunAkademik extends BaseController
         $this->tahunakademikModel->save([
             'tahun'      => $tahun,
         ]);
+        session()->setFlashdata('success', 'Data berhasil disimpan.');
         return redirect()->to('/tahunakademik')->with('message', 'Data tahun akademik berhasil ditambahkan!');
     }
 

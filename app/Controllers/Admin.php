@@ -39,7 +39,7 @@ class Admin extends BaseController
 
         $model->insert($data);
 
-        return redirect()->to('/admin')->with('message', 'Admin berhasil ditambahkan');
+        return redirect()->to('/admin')->with('message', 'Data berhasil disimpan');
     }
 
     public function edit($id)

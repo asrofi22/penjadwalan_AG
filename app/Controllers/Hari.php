@@ -42,7 +42,7 @@ class Hari extends BaseController
             'nama'      => $nama,
             'id_hari'   => $id_hari,
         ]);
-        return redirect()->to('/hari')->with('message', 'Data hari berhasil ditambahkan!');
+        return redirect()->to('/hari')->with('message', 'Data berhasil disimpan');
     }
 
 

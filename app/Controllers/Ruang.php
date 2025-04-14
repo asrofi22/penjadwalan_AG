@@ -37,7 +37,7 @@ class Ruang extends BaseController
             ->first();
 
         if ($existingData) {
-            return redirect()->to('/ruang')->with('error', 'Data sudah ada!');
+            return redirect()->to('/ruang')->with('error', 'Data ruang sudah ada!');
         }
 
         $this->ruangModel->save([
@@ -47,7 +47,7 @@ class Ruang extends BaseController
             'lantai' => $this->request->getPost('lantai'),
             'id_ruang' => $id_ruang ?? null, // Optional
         ]);
-        return redirect()->to('/ruang')->with('message', 'Data ruang berhasil ditambahkan!');
+        return redirect()->to('/ruang')->with('message', 'Data berhasil disimpan');
     }
 
     public function update($id)
