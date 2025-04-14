@@ -63,7 +63,7 @@
                                             data-id-prodi="<?= $prodi['id_prodi'] ?>">
                                         <i data-feather="edit"></i>
                                     </button>
-                                    <a href="/prodi/delete/<?= $prodi['id'] ?>" class="btn btn-datatable btn-icon btn-transparent-dark">
+                                    <a href="/prodi/delete/<?= $prodi['id'] ?>" class="btn btn-datatable btn-icon btn-transparent-dark"  onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
                                         <i data-feather="trash-2"></i>
                                     </a>
                                 </td>

@@ -113,7 +113,7 @@
                                             >
                                         <i data-feather="edit"></i>
                                     </button>
-                                    <a href="/dosen/delete/<?= $dosen['id'] ?>" class="btn btn-datatable btn-icon btn-transparent-dark"><i data-feather="trash-2"></i></a>
+                                    <a href="/dosen/delete/<?= $dosen['id'] ?>" class="btn btn-datatable btn-icon btn-transparent-dark" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?');"><i data-feather="trash-2"></i></a>
                                 </td>
                             </tr>
                             <?php endforeach; ?>

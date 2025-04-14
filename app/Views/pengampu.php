@@ -81,7 +81,7 @@
                                             data-id_ruang="<?= $pengampu['id_ruang']; ?>">
                                             <i data-feather="edit"></i>
                                     </button>
-                                    <a href="/pengampu/delete/<?= $pengampu['id'] ?>" class="btn btn-datatable btn-icon btn-transparent-dark"><i data-feather="trash-2"></i></a>
+                                    <a href="/pengampu/delete/<?= $pengampu['id'] ?>" class="btn btn-datatable btn-icon btn-transparent-dark"  onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?');"><i data-feather="trash-2"></i></a>
                                 </td>
                             </tr>
                             <?php endforeach; ?>
