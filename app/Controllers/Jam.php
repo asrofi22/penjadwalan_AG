@@ -82,7 +82,7 @@ class Jam extends BaseController
             'sesi'      => $this->request->getPost('sesi'),
             'id_jam'    => $id_jam,
         ]);
-        return redirect()->to('/jam')->with('message', 'Data berhasil diperbarui!');
+        return redirect()->to('/jam')->with('message', 'Data berhasil diperbarui.');
     }
 
     // 6. Hapus data

@@ -43,7 +43,7 @@ class Kelas extends BaseController
             'id_prodi' => $this->request->getPost('id_prodi'),
             'id_kelas' => $this->request->getPost('id_kelas'),
         ]);
-        return redirect()->to('/kelas')->with('message', 'Data kelas berhasil diperbarui!');
+        return redirect()->to('/kelas')->with('message', 'Data berhasil diperbarui');
     }
 
     public function delete($id)

@@ -70,7 +70,7 @@ class Hari extends BaseController
             'nama'      => $nama,
             'id_hari'   => $id_hari,
         ]);
-        return redirect()->to('/hari')->with('message', 'Data hari berhasil diperbarui!');
+        return redirect()->to('/hari')->with('message', 'Data berhasil diperbarui.');
     }
 
     // 6. Hapus data

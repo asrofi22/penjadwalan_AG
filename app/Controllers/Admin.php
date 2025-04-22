@@ -75,7 +75,7 @@ class Admin extends BaseController
 
         $model->update($id, $data);
 
-        return redirect()->to('/admin')->with('message', 'Admin berhasil diperbarui');
+        return redirect()->to('/admin')->with('message', 'Data berhasil diperbarui');
     }
 
     public function delete($id)
@@ -83,6 +83,6 @@ class Admin extends BaseController
         $model = new AdminModel();
         $model->delete($id);
 
-        return redirect()->to('/admin')->with('message', 'Admin berhasil dihapus');
+        return redirect()->to('/admin')->with('message', 'Data berhasil dihapus');
     }
 }

@@ -157,7 +157,9 @@ class Penjadwalan2 extends Controller
 
     public function store()
     {
-        // set_time_limit(0);
+        set_time_limit(300);
+        $startTime = time(); // Catat waktu mulai
+        $timeoutSeconds = 180; // 3 menit timeout
 
         $data = [
             'prodi_list' => $this->ProdiModel->findAll(),
@@ -168,19 +170,20 @@ class Penjadwalan2 extends Controller
             'tahun_akademik_list' => $this->TahunakademikModel->findAll(),
             'semester_list' => $this->SemesterModel->findAll(),
             'ruang_list' => $this->RuangModel->findAll(),
-            'rs_jadwal' => $this->PenjadwalanModel->get(), // Ambil data jadwal di sini
+            'rs_jadwal' => $this->PenjadwalanModel->getAllJadwal(),
             'rs_tahun' => $this->TahunakademikModel->findAll(),
-            'semua_prodi' => $this->ProdiModel->semua_prodi() // Panggil findAll() di sini
+            'semua_prodi' => $this->ProdiModel->semua_prodi()
         ];
 
         $found = false;
+        $timeout = false;
+        $processedPengampu = []; 
 
         $jenis_semester = $this->request->getPost('tipe_semester');
         $prodi = $this->request->getPost('prodi');
         $tahun_akademik = $this->request->getPost('tahun_akademik');
 
         if ($this->request->getMethod() === 'POST') {
-
             $data['rs_tahun'] = $this->TahunakademikModel->findAll();
 
             $validation = \Config\Services::validation();
@@ -192,13 +195,11 @@ class Penjadwalan2 extends Controller
                 'probabilitas_mutasi' => 'required',
                 'jumlah_generasi' => 'required'
             ]);
+
             if (true) {
                 $start = microtime(true);
-
-                // Bismillahhhhhh, Asrofi soon to be S.Kom
                 $jumlah_populasi = $this->request->getPost('jumlah_populasi');
                 $jenis_semester = $this->request->getPost('tipe_semester');
-                $prodi = $this->request->getPost('prodi');
                 $tahun_akademik = $this->request->getPost('tahun_akademik');
                 $crossOver = $this->request->getPost('probabilitas_crossover');
                 $mutasi = $this->request->getPost('probabilitas_mutasi');
@@ -206,155 +207,119 @@ class Penjadwalan2 extends Controller
                 $rs_jadwal = $this->PenjadwalanModel->get();
                 $rs_tahun = $this->TahunakademikModel->findAll();
 
-                $data['semester_a'] = $this->request->getPost('tipe_semester') ?? false;
-                $data['tahun_a'] = $this->request->getPost('tahun_akademik') ?? false; // atau default ke false jika tidak diatur
-                $data['tahun_a'] = $this->request->getPost('tahun_akademik') ?? false; // atau default ke false jika tidak diatur
-                $data['prodi'] = $this->request->getPost('prodi') ?? false; // atau default ke false jika tidak diatur
-
-                // Menyimpan data yang dikirim
                 $data['semester_a'] = $jenis_semester;
+                $data['tahun_a'] = $tahun_akademik;
                 $data['prodi'] = $prodi;
                 $data['semua_prodi'] = $this->ProdiModel->findAll();
-                $data['tahun_a'] = $tahun_akademik;
-                $datas['tipe_semester'] = $jenis_semester;
-                $datas['tahun_akademik'] = $tahun_akademik;
-                $datas['probabilitas_crossover'] = $crossOver;
-                $datas['probabilitas_mutasi'] = $mutasi;
-                $datas['jumlah_generasi'] = $jumlah_generasi;
 
-                // Query untuk mendapatkan data berdasarkan semester dan tahun akademik
+                // Di dalam method store() di Penjadwalan2.php
+
                 if ($prodi != 0) {
-                    $rs_data = $this->db->query("SELECT a.id FROM pengampu a 
-                    LEFT JOIN semester b ON a.semester = b.id
-                    LEFT JOIN tahun_akademik c ON a.tahun_akademik = c.id
-                    WHERE b.semester_tipe = ? AND a.tahun_akademik = ? AND a.id_prodi = ?", [$jenis_semester, $tahun_akademik, $prodi]);
+                    $rs_data = $this->db->query("
+                        SELECT a.id 
+                        FROM pengampu a
+                        JOIN semester b ON a.semester = b.id
+                        JOIN matakuliah m ON a.id_mk = m.id
+                        WHERE b.semester_tipe = ? 
+                        AND a.tahun_akademik = ? 
+                        AND a.id_prodi = ?", 
+                        [$jenis_semester, $tahun_akademik, $prodi]);
                 } else {
-                    $rs_data = $this->db->query("SELECT a.id FROM pengampu a 
-                        LEFT JOIN semester b ON a.semester = b.id
-                        LEFT JOIN tahun_akademik c ON a.tahun_akademik = c.id
-                        WHERE b.semester_tipe = :jenis_semester: AND a.tahun_akademik = :tahun_akademik:", [
-                        'jenis_semester' => $jenis_semester,
-                        'tahun_akademik' => $tahun_akademik
-                    ]);
+                    $rs_data = $this->db->query("
+                        SELECT a.id 
+                        FROM pengampu a
+                        JOIN semester b ON a.semester = b.id
+                        JOIN matakuliah m ON a.id_mk = m.id
+                        WHERE b.semester_tipe = ? 
+                        AND a.tahun_akademik = ?", 
+                        [$jenis_semester, $tahun_akademik]);
                 }
+    
                 if ($rs_data->getNumRows() == 0) {
                     $data['msg'] = 'Tidak ada data dengan semester dan tahun akademik ini';
-                } 
-                
-                elseif($rs_data->getNumRows() < 3){
+                } elseif($rs_data->getNumRows() < 3) {
                     $data['msg'] = 'Pengampu Minimal 3 Data';
-                }
-                else {
-
-                    $data_all_query = [];
-                    $n = 0;
-                    $found = false;
-
-                    if ($rs_data->getNumRows() % 2 == 0) { //Mengecek apakah jumlah pengampu genap atau ganjil menggunakan operator modulus (%).
-                        $jumlah_populasi = $rs_data->getNumRows(); // Jika genap, jumlah populasi = jumlah pengampu    (untuk crossover)
-                    } else {
-                        $jumlah_populasi = $rs_data->getNumRows() + 1; // Jika ganjil, tambah 1
-                    }
-
-                    $banyak_populasi = intval($rs_data->getNumRows() / 2); //Membagi jumlah pengampu dengan 2 dalam proses crossover
-
-                    $e = 0;
-                    $c = 0;
-                    $this->db->query("TRUNCATE TABLE jadwalkuliah"); // Menghapus data jadwal di database  jika ada
-
-                    $data_fitness_all = []; // Inisialisasi array untuk menyimpan data fitness dan jadwal yang dihasilkan
+                } else {
+                    $this->db->query("TRUNCATE TABLE jadwalkuliah");
+                    $allPengampu = $rs_data->getResultArray();
+                    $totalPengampu = count($allPengampu);
                     
-                    // Loop untuk setiap pasangan populasi
-                    for ($f = 0; $f <= $banyak_populasi; $f++) {
-
-                        $query = [$e, 2]; //menentukan query untuk mengambil data pengampu (mengambil 2 data pengampu per iterasi)
-
-                        $mod = intval($rs_data->getNumRows() % 2); // Hitung sisa pembagian jumlah pengampu dengan 2
-                        $banyak_populasi = intval($rs_data->getNumRows() / 2);
-
-                        // Jika iterasi terakhir, ambil sisa data pengampu
-                        if ($f == $banyak_populasi) {
-                            $query = [$e, $mod];
+                    // Set populasi minimal 20 atau jumlah pengampu, mana yang lebih besar
+                    $jumlah_populasi = max(20, $totalPengampu);
+                    
+                    // Inisialisasi semua pengampu sekaligus
+                    $this->AmbilData($jenis_semester, $tahun_akademik, $jumlah_populasi, $prodi, [0, $totalPengampu], 0, 0);
+                    $this->Inisialisasi($jumlah_populasi);
+    
+                    for ($i = 0; $i < $jumlah_generasi; $i++) {
+                        if ((time() - $startTime) > $timeoutSeconds) {
+                            $timeout = true;
+                            break;
                         }
-
-                        // Simpan query ke dalam array
-                        $data_all_query[] = $query;
-
-                        $this->AmbilData($jenis_semester, $tahun_akademik, $jumlah_populasi, $prodi, $query, $e, $mod);
-                        $this->Inisialisasi($jumlah_populasi);
-
-                        // Cek kapasitas ruang, jika tidak mencukupi, hentikan proses
-                        // if ($this->kap == false) {
-                        //     $this->db->table('jadwalkuliah')->truncate();
-                        //     break;
-                        // }
-
-                        $found = false; // Flag untuk menandai apakah solusi optimal ditemukan
-
-                        //Proses Algoritma Genetika
-                        for ($i = 0; $i < $jumlah_generasi; $i++) {
-                            $fitness = $this->Hitungfitness($jumlah_populasi, $prodi);
-
+    
+                        $fitness = $this->Hitungfitness($jumlah_populasi, $prodi);
+                        if (count($this->induk) < $jumlah_populasi) {
+                            // Jika jumlah induk tidak cukup, lakukan seleksi ulang
                             $this->Seleksi($fitness, $jumlah_populasi);
-                            $this->StartCrossOver($jumlah_populasi, $crossOver);
-
-                            // Mengecek apakah ada individu dengan fitness = 1 (solusi optimal)
-                            $fitnessAfterMutation = $this->Mutasi($jumlah_populasi, $mutasi, $prodi);
-                            for ($j = 0; $j < count($fitnessAfterMutation); $j++) {
-                                if ($fitnessAfterMutation[$j] == 1) {
-                                    $jadwal_kuliah = [[]];
-                                    $jadwal_kuliah = $this->GetIndividu($j);
-
-                                    foreach ($jadwal_kuliah as $row) {
-
-                                        // Simpan jadwal ke database
+                        }                        $this->StartCrossOver($jumlah_populasi, $crossOver);
+                        $fitnessAfterMutation = $this->Mutasi($jumlah_populasi, $mutasi, $prodi);
+    
+                        for ($j = 0; $j < count($fitnessAfterMutation); $j++) {
+                            if ($fitnessAfterMutation[$j] == 1) {
+                                $jadwal_kuliah = $this->GetIndividu($j);
+                                
+                                foreach ($jadwal_kuliah as $row) {
+                                    $id_pengampu = intval($row[0]);
+                                    
+                                    // Skip jika pengampu sudah diproses
+                                    if (in_array($id_pengampu, $processedPengampu)) {
+                                        continue;
+                                    }
+                                    
+                                    // Cek duplikasi
+                                    $exists = $this->db->table('jadwalkuliah')
+                                        ->where('id_pengampu', $id_pengampu)
+                                        ->countAllResults();
+                                    
+                                    if (!$exists) {
                                         $data = [
-                                            'id_pengampu' => intval($row[0]),
+                                            'id_pengampu' => $id_pengampu,
                                             'id_jam' => intval($row[1]),
                                             'id_hari' => intval($row[2]),
                                             'id_ruang' => intval($row[3])
                                         ];
-                                        // Simpan data fitness dan jadwal ke array
-                                        $data_fitness_all[] = ['j' => $j, 'data' => [
-                                            'id_pengampu' => intval($row[0]),
-                                            'id_jam' => intval($row[1]),
-                                            'id_hari' => intval($row[2]),
-                                            'id_ruang' => intval($row[3])
-                                        ]];
-
-                                        $this->db->table('jadwalkuliah')->insert($data);
-
-
+                                        
+                                        if ($this->db->table('jadwalkuliah')->insert($data)) {
+                                            $processedPengampu[] = $id_pengampu;
+                                        }
                                     }
-                                    // Menandai
+                                }
+                                
+                                // Jika semua pengampu sudah diproses, keluar
+                                if (count($processedPengampu) >= $totalPengampu) {
                                     $found = true;
-                                    // $this->kap = true;
+                                    break 2;
                                 }
-
-                                if ($found) {
-                                    break;
-                                }
-                            }
-
-                            if ($found) {
-                                break;
                             }
                         }
-
-                        // Update nilai offset(posisi awal) untuk mengambil data pengampu berikutnya pada iterasi (Tanpa update offset, sistem akan terus mengambil data yang sama (dari offset yang sama))
-                        $e += 2; //$e += 2 artinya: menambah 2 ke nilai $e
-                        $c++; // Hitung jumlah iterasi
                     }
-
-                    if (!$found) {
-                        $data['msg'] = 'Tidak ditemukan solusi optimal';
+    
+                    // Bersihkan duplikat setelah selesai
+                    $this->PenjadwalanModel->cleanDuplicates();
+                    
+                    if ($timeout) {
+                        $data['msg'] = 'Proses penjadwalan melebihi batas waktu 3 menit. ' . 
+                                      count($processedPengampu) . ' dari ' . $totalPengampu . ' pengampu berhasil diproses.';
+                    } elseif (!$found) {
+                        $data['msg'] = 'Tidak ditemukan solusi optimal untuk semua pengampu. ' . 
+                                      count($processedPengampu) . ' dari ' . $totalPengampu . ' pengampu berhasil diproses.';
                     } else {
-                        // $this->db->query("DELETE FROM jadwalkuliah WHERE id IN (SELECT id FROM (SELECT min(id) FROM jadwalkuliah GROUP BY id_pengampu HAVING COUNT(*) > 1) AS A)");
-
                         $finish = microtime(true);
                         $total_time = $finish - $start;
-                        $total_menit = round(($total_time / 60), 4);
-                        $data['waktu'] = "Data berhasil diproses, selesai dalam " . $total_menit . " menit";
+                        $data['waktu'] = "Data berhasil diproses (" . count($processedPengampu) . " pengampu), " . 
+                                        "selesai dalam " . round(($total_time / 60), 2) . " menit";
+                
+            
                     }
                 }
             } else {
@@ -362,7 +327,7 @@ class Penjadwalan2 extends Controller
                 return view('penjadwalan', $data);
             }
         }
-        // Data yang dikirimkan ke view
+
         $data['page_name'] = 'penjadwalan';
         $data['rs_tahun'] = $this->TahunakademikModel->findAll();
         $data['rs_jadwal'] = $this->PenjadwalanModel->get();
@@ -537,61 +502,62 @@ class Penjadwalan2 extends Controller
     }
 
     public function Inisialisasi($jumlah_populasi)
-    {
-        $this->populasi = $jumlah_populasi;
-        $jumlah_pengampu = count($this->pengampu);
-        $jumlah_hari = count($this->hari);
+{
+    $this->populasi = $jumlah_populasi;
+    $jumlah_pengampu = count($this->pengampu);
+    $jumlah_hari = count($this->hari);
 
-        for ($i = 0; $i < $this->populasi; $i++) {
-            for ($j = 0; $j < $jumlah_pengampu; $j++) {
-                $sks = $this->sks[$j];
-                $this->individu[$i][$j][0] = $j;
+    // Pastikan semua pengampu diproses
+    if ($this->populasi < $jumlah_pengampu) {
+        $this->populasi = $jumlah_pengampu;
+    }
 
-                // Pilih jam berdasarkan SKS
-                if ($sks == 1) {
-                    $jumlah_jam = count($this->jam1);
-                    $this->individu[$i][$j][1] = intval($this->jam1[mt_rand(0, $jumlah_jam - 1)]);
-                } elseif ($sks == 2) {
-                    $jumlah_jam = count($this->jam2);
-                    $this->individu[$i][$j][1] = intval($this->jam2[mt_rand(0, $jumlah_jam - 1)]);
-                } elseif ($sks == 3) {
-                    $jumlah_jam = count($this->jam3);
-                    $this->individu[$i][$j][1] = intval($this->jam3[mt_rand(0, $jumlah_jam - 1)]);
-                } elseif ($sks == 4) {
-                    $jumlah_jam = count($this->jam4);
-                    $this->individu[$i][$j][1] = intval($this->jam4[mt_rand(0, $jumlah_jam - 1)]);
-                }
+    for ($i = 0; $i < $this->populasi; $i++) {
+        for ($j = 0; $j < $jumlah_pengampu; $j++) {
+            // Pastikan array memiliki 4 elemen
+            $this->individu[$i][$j] = [0, 0, 0, 0];
+            
+            $sks = $this->sks[$j];
+            $this->individu[$i][$j][0] = $j;
 
-                $this->individu[$i][$j][2] = mt_rand(0, $jumlah_hari - 1);
+            // Pilih jam berdasarkan SKS
+            if ($sks == 1) {
+                $jumlah_jam = count($this->jam1);
+                $this->individu[$i][$j][1] = intval($this->jam1[mt_rand(0, $jumlah_jam - 1)]);
+            } elseif ($sks == 2) {
+                $jumlah_jam = count($this->jam2);
+                $this->individu[$i][$j][1] = intval($this->jam2[mt_rand(0, $jumlah_jam - 1)]);
+            } elseif ($sks == 3) {
+                $jumlah_jam = count($this->jam3);
+                $this->individu[$i][$j][1] = intval($this->jam3[mt_rand(0, $jumlah_jam - 1)]);
+            } elseif ($sks == 4) {
+                $jumlah_jam = count($this->jam4);
+                $this->individu[$i][$j][1] = intval($this->jam4[mt_rand(0, $jumlah_jam - 1)]);
+            }
 
-                $prodi = intval($this->prodi[$j]);
-                // $kuota = intval($this->kuota_pengampu[$j]);
+            $this->individu[$i][$j][2] = mt_rand(0, $jumlah_hari - 1);
 
-                if ($this->jenis_mk[$j] === $this->TEORI) {
-                    $rs_RuangReguler = $this->db->query("SELECT id 
-                        FROM ruang 
-                        WHERE jenis = '$this->TEORI' AND id_prodi = '$prodi'");
-                    if ($rs_RuangReguler->getNumRows() == 0) {
-                        log_message('error', 'Tidak ada ruangan teori yang sesuai untuk pengampu ID: ' . $this->pengampu[$j]);
-                        // $this->kap = false;
-                        $this->id_pengampu = $this->pengampu[$j];
-                        break;
-                    }
+            $prodi = intval($this->prodi[$j]);
+
+            // Inisialisasi ruang default
+            $this->individu[$i][$j][3] = 0; // Nilai default jika tidak ada ruang
+
+            if ($this->jenis_mk[$j] === $this->TEORI) {
+                $rs_RuangReguler = $this->db->query("SELECT id 
+                    FROM ruang 
+                    WHERE jenis = '$this->TEORI' AND id_prodi = '$prodi'");
+                if ($rs_RuangReguler->getNumRows() > 0) {
                     $ruangReguler = [];
                     foreach ($rs_RuangReguler->getResult() as $data) {
                         $ruangReguler[] = intval($data->id);
                     }
                     $this->individu[$i][$j][3] = $ruangReguler[mt_rand(0, count($ruangReguler) - 1)];
-                } elseif ($this->jenis_mk[$j] === $this->PRAKTIKUM) {
-                    $rs_RuangLaboratorium = $this->db->query("SELECT id 
-                        FROM ruang 
-                        WHERE jenis = 'LABORATORIUM' AND id_prodi = '$prodi'");
-                    if ($rs_RuangLaboratorium->getNumRows() == 0) {
-                        log_message('error', 'Tidak ada ruangan laboratorium yang sesuai untuk pengampu ID: ' . $this->pengampu[$j]);
-                        // $this->kap = false;
-                        $this->id_pengampu = $this->pengampu[$j];
-                        break;
-                    }
+                }
+            } elseif ($this->jenis_mk[$j] === $this->PRAKTIKUM) {
+                $rs_RuangLaboratorium = $this->db->query("SELECT id 
+                    FROM ruang 
+                    WHERE jenis = 'LABORATORIUM' AND id_prodi = '$prodi'");
+                if ($rs_RuangLaboratorium->getNumRows() > 0) {
                     $ruangLaboratorium = [];
                     foreach ($rs_RuangLaboratorium->getResult() as $data) {
                         $ruangLaboratorium[] = intval($data->id);
@@ -601,6 +567,7 @@ class Penjadwalan2 extends Controller
             }
         }
     }
+}
 
     public function HitungFitness($jumlah_populasi, $prodi)
     {
@@ -623,12 +590,17 @@ class Penjadwalan2 extends Controller
         $jumlah_pengampu = count($this->pengampu);
 
         for ($i = 0; $i < $jumlah_pengampu; $i++) {
-            $sks = intval($this->sks[$i]);
+            // Pastikan array individu memiliki semua elemen yang diperlukan
+        if (!isset($this->individu[$indv][$i]) || count($this->individu[$indv][$i]) < 4) {
+            $penalty += 1000; // Beri penalty besar untuk solusi tidak valid
+            continue;
+        }
 
-            $jam_a = intval($this->individu[$indv][$i][1]);
-            $hari_a = intval($this->individu[$indv][$i][2]);
-            $ruang_a = intval($this->individu[$indv][$i][3]);
+        $sks = intval($this->sks[$i]);
 
+        $jam_a = intval($this->individu[$indv][$i][1]);
+        $hari_a = intval($this->individu[$indv][$i][2]);
+        $ruang_a = isset($this->individu[$indv][$i][3]) ? intval($this->individu[$indv][$i][3]) : 0;
             $dosen_a = intval($this->dosen[$i]);
             // $kuota = intval($this->kuota_pengampu[$i]);
             $semester_a = intval($this->semester[$i]);
@@ -786,6 +758,7 @@ class Penjadwalan2 extends Controller
         $jumlah = 0;
         $rank = [];
 
+        // Hitung ranking fitness
         for ($i = 0; $i < $this->populasi; $i++) {
             $rank[$i] = 1;
             for ($j = 0; $j < $this->populasi; $j++) {
@@ -796,21 +769,26 @@ class Penjadwalan2 extends Controller
                     $rank[$i] += 1;
                 }
             }
-
             $jumlah += $rank[$i];
         }
 
-        $jumlah_rank = count($rank);
+        // Seleksi roulette wheel
+        $this->induk = [];
         for ($i = 0; $i < $this->populasi; $i++) {
             $target = mt_rand(0, $jumlah - 1);
             $cek = 0;
 
-            for ($j = 0; $j < $jumlah_rank; $j++) {
+            for ($j = 0; $j < $this->populasi; $j++) {
                 $cek += $rank[$j];
-                if (intval($cek) >= intval($target)) {
+                if ($cek >= $target) {
                     $this->induk[$i] = $j;
                     break;
                 }
+            }
+
+            // Pastikan selalu ada induk terpilih
+            if (!isset($this->induk[$i])) {
+                $this->induk[$i] = mt_rand(0, $this->populasi - 1);
             }
         }
     }
@@ -822,7 +800,15 @@ class Penjadwalan2 extends Controller
         $individu_baru = [];
         $jumlah_pengampu = count($this->pengampu);
 
-        for ($i = 0; $i < $this->populasi; $i += 2) {
+        // Pastikan populasi genap untuk crossover berpasangan
+        $populasi_genap = ($this->populasi % 2 == 0) ? $this->populasi : $this->populasi - 1;
+
+        for ($i = 0; $i < $populasi_genap; $i += 2) {
+            // Pastikan induk terdefinisi
+            if (!isset($this->induk[$i]) || !isset($this->induk[$i + 1])) {
+                continue;
+            }
+
             $b = 0;
             $cr = mt_rand(0, mt_getrandmax() - 1) / mt_getrandmax();
 
@@ -855,18 +841,36 @@ class Penjadwalan2 extends Controller
             } else {
                 for ($j = 0; $j < $jumlah_pengampu; $j++) {
                     for ($k = 0; $k < 4; $k++) {
-                        $individu_baru[$i][$j][$k] = $this->individu[$this->induk[$i]][$j][$k];
-                        $individu_baru[$i + 1][$j][$k] = $this->individu[$this->induk[$i + 1]][$j][$k];
+                        // Tambahkan pengecekan isset
+                        $individu_baru[$i][$j][$k] = isset($this->individu[$this->induk[$i]][$j][$k]) 
+                            ? $this->individu[$this->induk[$i]][$j][$k] 
+                            : $this->individu[$i][$j][$k];
+                            
+                        $individu_baru[$i + 1][$j][$k] = isset($this->individu[$this->induk[$i + 1]][$j][$k]) 
+                            ? $this->individu[$this->induk[$i + 1]][$j][$k] 
+                            : $this->individu[$i + 1][$j][$k];
                     }
                 }
             }
         }
 
-        for ($i = 0; $i < $this->populasi; $i += 2) {
+        // Jika populasi ganjil, tambahkan individu terakhir tanpa crossover
+        if ($this->populasi % 2 != 0) {
+            $last = $this->populasi - 1;
             for ($j = 0; $j < $jumlah_pengampu; $j++) {
                 for ($k = 0; $k < 4; $k++) {
-                    $this->individu[$i][$j][$k] = $individu_baru[$i][$j][$k];
-                    $this->individu[$i + 1][$j][$k] = $individu_baru[$i + 1][$j][$k];
+                    $individu_baru[$last][$j][$k] = $this->individu[$last][$j][$k];
+                }
+            }
+        }
+
+        // Update populasi dengan individu baru
+        for ($i = 0; $i < $this->populasi; $i++) {
+            for ($j = 0; $j < $jumlah_pengampu; $j++) {
+                for ($k = 0; $k < 4; $k++) {
+                    if (isset($individu_baru[$i][$j][$k])) {
+                        $this->individu[$i][$j][$k] = $individu_baru[$i][$j][$k];
+                    }
                 }
             }
         }
@@ -887,6 +891,11 @@ class Penjadwalan2 extends Controller
         for ($i = 0; $i < $this->populasi; $i++) {
             if ($r < $this->mutasi) {
                 $krom = mt_rand(0, $jumlah_pengampu - 1);
+                // Pastikan array ada sebelum dimutasi
+                if (!isset($this->individu[$i][$krom])) {
+                    $this->individu[$i][$krom] = [0, 0, 0, 0];
+                }
+                
                 $j = intval($this->sks[$krom]);
 
                 switch ($j) {
@@ -912,6 +921,10 @@ class Penjadwalan2 extends Controller
 
                 $prodi = intval($this->prodi[$krom]);
                 // $kuota = intval($this->kuota_pengampu[$krom]);
+
+                // Mutasi ruang dengan pengecekan
+            $prodi = intval($this->prodi[$krom]);
+            $this->individu[$i][$krom][3] = 0; // Nilai default
 
                 if ($this->jenis_mk[$krom] === $this->TEORI) {
                     $this->ruangReguler = []; // Inisialisasi sebagai array kosong

@@ -79,7 +79,7 @@ class TahunAkademik extends BaseController
         $this->tahunakademikModel->update($id, [
             'tahun'      => $tahun,
         ]);
-        return redirect()->to('/tahunakademik')->with('message', 'Data tahun akademik berhasil diperbarui!');
+        return redirect()->to('/tahunakademik')->with('message', 'Data berhasil diperbarui.');
     }
 
     // Menghapus data

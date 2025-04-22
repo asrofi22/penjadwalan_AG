@@ -134,7 +134,7 @@ class Pengampu extends BaseController
         ]);
 
         // Tampilkan notifikasi sukses
-        session()->setFlashdata('success', 'Data pengampu berhasil diupdate!');
+        session()->setFlashdata('success', 'Data berhasil diperbarui');
         return redirect()->to('/pengampu');
     }
 

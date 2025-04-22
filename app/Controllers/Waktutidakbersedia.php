@@ -56,8 +56,13 @@ class Waktutidakbersedia extends BaseController
         $id_hari = $this->request->getPost('id_hari');
         $id_jam = $this->request->getPost('id_jam');
 
-        // Cek duplikasi data
-        $existingData = $this->waktutidakbersediaModel->where('id_dosen', $id_dosen)->orWhere('id_hari', $id_hari)->orWhere('id_jam', $id_jam)->first();
+        // Cek duplikasi data - harus sama semua (dosen, hari, dan jam)
+        $existingData = $this->waktutidakbersediaModel
+            ->where('id_dosen', $id_dosen)
+            ->where('id_hari', $id_hari)
+            ->where('id_jam', $id_jam)
+            ->first();
+            
         if ($existingData) {
             return redirect()->to('/waktutidakbersedia')->with('error', 'Data WTB sudah ada!');
         }
@@ -88,22 +93,31 @@ class Waktutidakbersedia extends BaseController
 
     public function update($id)
     {
+        $this->waktutidakbersediaModel = new WaktutidakbersediaModel();
+        
         $id_dosen = $this->request->getPost('id_dosen');
         $id_hari = $this->request->getPost('id_hari');
         $id_jam = $this->request->getPost('id_jam');
 
         // Cek duplikasi data, kecuali data yang sedang diupdate
-        $existingData = $this->waktutidakbersediaModel->where('id_dosen', $id_dosen)->orWhere('id_hari', $id_hari)->orWhere('id_jam', $id_jam)->where('id !=', $id)->first();
+        $existingData = $this->waktutidakbersediaModel
+            ->where('id_dosen', $id_dosen)
+            ->where('id_hari', $id_hari)
+            ->where('id_jam', $id_jam)
+            ->where('id !=', $id)
+            ->first();
+            
         if ($existingData) {
-            return redirect()->to('/waktutidakbersedia')->with('error', 'Data WTB sudah ada!');
+            return redirect()->to('/waktutidakbersedia')->with('error', 'Data sudah ada!');
         }
 
         $this->waktutidakbersediaModel->update($id, [
-            'id_dosen'      => $id_dosen,
-            'id_hari'   => $id_hari,
+            'id_dosen' => $id_dosen,
+            'id_hari'  => $id_hari,
             'id_jam'   => $id_jam,
         ]);
-        return redirect()->to('/waktutidakbersedia')->with('message', 'Data WTB berhasil diperbarui!');
+        
+        return redirect()->to('/waktutidakbersedia')->with('message', 'Data berhasil diperbarui');
     }
 
     public function delete($id)

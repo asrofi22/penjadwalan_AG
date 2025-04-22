@@ -71,19 +71,19 @@ class Matakuliah extends BaseController
         $nama_id = $this->request->getPost('nama_id');
 
         // Cek apakah data sudah ada (kecuali data yang sedang diupdate)
-        $existingData = $this->matakuliahModel
-            ->where('id !=', $id) // Abaikan data yang sedang diupdate
-            ->groupStart()
-                ->where('nama', $nama)
-                ->orWhere('nama_id', $nama_id)
-            ->groupEnd()
-            ->first();
+        // $existingData = $this->matakuliahModel
+        //     ->where('id !=', $id) // Abaikan data yang sedang diupdate
+        //     ->groupStart()
+        //         ->where('nama', $nama)
+        //         ->orWhere('nama_id', $nama_id)
+        //     ->groupEnd()
+        //     ->first();
 
-        if ($existingData) {
-            // Jika data sudah ada, tampilkan notifikasi error
-            session()->setFlashdata('error', 'Data mata kuliah atau kode MK sudah ada!');
-            return redirect()->to('/matakuliah');
-        }
+        // if ($existingData) {
+        //     // Jika data sudah ada, tampilkan notifikasi error
+        //     session()->setFlashdata('error', 'Data mata kuliah atau kode MK sudah ada!');
+        //     return redirect()->to('/matakuliah');
+        // }
 
         // Jika data belum ada, update data
         $this->matakuliahModel->update($id, [
@@ -98,7 +98,7 @@ class Matakuliah extends BaseController
         ]);
 
         // Tampilkan notifikasi sukses
-        session()->setFlashdata('success', 'Data mata kuliah berhasil diupdate!');
+        session()->setFlashdata('success', 'Data berhasil diperbarui');
         return redirect()->to('/matakuliah');
     }
 

@@ -73,7 +73,7 @@ class Ruang extends BaseController
             'lantai' => $this->request->getPost('lantai'),
             'id_ruang' => $id_ruang ?? null,
         ]);
-        return redirect()->to('/ruang')->with('message', 'Data ruang berhasil diperbarui!');
+        return redirect()->to('/ruang')->with('message', 'Data berhasil diperbarui.');
     }
 
     public function delete($id)

@@ -14,6 +14,8 @@ class PenjadwalanModel extends Model
         'id_kelas', 'id_prodi', 'id_semester', 'nama_ruang', 'nama_mk', 'nama_dosen', 'tahun_akademik', 
         'nama_kelas', 'nama_prodi', 'nama_semester',
     ]; 
+    protected $afterInsert = ['cleanDuplicateAfterInsert'];
+
 
     public function get()
     {
@@ -289,6 +291,46 @@ class PenjadwalanModel extends Model
     public function hapusRiwayatJadwal($id)
     {
         return $this->db->table('riwayat_penjadwalan')->where('id', $id)->delete();
+    }
+
+    protected function cleanDuplicateAfterInsert(array $data)
+    {
+        $this->cleanDuplicates();
+        return $data;
+    }
+
+    /**
+     * Membersihkan jadwal duplikat
+     */
+    public function cleanDuplicates()
+    {
+        // Hapus duplikat berdasarkan id_pengampu (1 pengampu hanya 1 jadwal)
+        $this->db->query("
+            DELETE t1 FROM jadwalkuliah t1
+            INNER JOIN (
+                SELECT MIN(id) as min_id, id_pengampu
+                FROM jadwalkuliah
+                GROUP BY id_pengampu
+                HAVING COUNT(*) > 1
+            ) t2 ON t1.id_pengampu = t2.id_pengampu
+            WHERE t1.id != t2.min_id
+        ");
+        
+        // Hapus jadwal dengan waktu dan ruang yang sama
+        $this->db->query("
+            DELETE t1 FROM jadwalkuliah t1
+            INNER JOIN (
+                SELECT MIN(id) as min_id, id_jam, id_hari, id_ruang
+                FROM jadwalkuliah
+                GROUP BY id_jam, id_hari, id_ruang
+                HAVING COUNT(*) > 1
+            ) t2 ON t1.id_jam = t2.id_jam 
+                AND t1.id_hari = t2.id_hari 
+                AND t1.id_ruang = t2.id_ruang
+            WHERE t1.id != t2.min_id
+        ");
+        
+        return $this->db->affectedRows();
     }
 
     public function cekBanyakProdi($semester_tipe, $tahun_akademik)

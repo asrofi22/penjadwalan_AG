@@ -271,7 +271,7 @@ class Riwayatpenjadwalan extends BaseController
         } else {
             // Jika tidak ada bentrok, update data
             $this->RiwayatpenjadwalanModel->update_jadwal($id, $data);
-            return redirect()->to('/riwayatpenjadwalan')->with('msg', 'Jadwal berhasil diupdate.');
+            return redirect()->to('/riwayatpenjadwalan')->with('msg', 'Data berhasil diperbarui.');
         }
     }
 
